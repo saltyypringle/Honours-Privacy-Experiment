@@ -1,6 +1,6 @@
 "use strict";
 
-import { getSession, saveSession, logEvent } from "../experiment-core.js";
+import { getSession, saveSession, logEvent } from "./experiment-core.js";
 
 function normaliseAnswer(value) {
   return value.replace(/\s+/g, " ").trim().toLowerCase();

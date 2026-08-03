@@ -12,7 +12,7 @@ import {
 
 import {
   initialiseTaskController
-} from "./js/task-controller.js";
+} from "./task-controller.js";
 
 const SITE_CONFIGS = {
   site1: {
