@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website Interaction Study</title>
+  <script>
+    const nextUrl = new URL("frontend/index.html", window.location.href);
+    nextUrl.search = window.location.search;
+    window.location.replace(nextUrl.toString());
+  </script>
+</head>
+<body>
+  <p>Redirecting to the study page...</p>
+</body>
+</html>
