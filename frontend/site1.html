@@ -21,6 +21,7 @@
   data-study-site="site1"
 >
   <main class="container">
+
     <header class="fake-site-header">
       <h1>DailyScope News</h1>
 
@@ -30,8 +31,37 @@
       </p>
     </header>
 
+
+    <!-- =====================================================
+         WEBSITE TASK
+         ===================================================== -->
+
+    <div class="next-box">
+
+      <!--
+        The task-controller.js file automatically inserts
+        the task panel here.
+      -->
+
+      <button
+        type="button"
+        class="danger-btn"
+        id="completeTaskButton"
+      >
+        Continue to next website
+      </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         MOCK WEBSITE CONTENT
+         ===================================================== -->
+
     <section class="fake-site-content">
+
       <div class="featured-story">
+
         <div class="story-hero-media">
           <img
             src="https://picsum.photos/seed/dailyscope-hero/1200/700"
@@ -52,14 +82,21 @@
           pressures ease. Major indices respond with significant gains
           across all sectors.
         </p>
+
       </div>
 
+
       <div class="content-wrapper">
+
         <main class="main-column">
+
           <section class="story-section">
+
             <h3>Latest Stories</h3>
 
+
             <article class="story-item story-item--with-media">
+
               <div>
                 <h4>
                   Tech Giants Report Strong Earnings Despite Market
@@ -71,6 +108,7 @@
                 </p>
               </div>
 
+
               <div class="story-thumb-wrap">
                 <img
                   class="story-thumb"
@@ -78,6 +116,7 @@
                   alt="Person reviewing analytics on a laptop in a modern office"
                 />
               </div>
+
 
               <div>
                 <p>
@@ -96,9 +135,12 @@
                   Read Full Story
                 </a>
               </div>
+
             </article>
 
+
             <article class="story-item story-item--with-media">
+
               <div>
                 <h4>
                   Travel Industry Sees Record Bookings for Summer Season
@@ -109,6 +151,7 @@
                 </p>
               </div>
 
+
               <div class="story-thumb-wrap">
                 <img
                   class="story-thumb"
@@ -116,6 +159,7 @@
                   alt="Busy airport terminal with travellers and departure boards"
                 />
               </div>
+
 
               <div>
                 <p>
@@ -134,9 +178,12 @@
                   Read Full Story
                 </a>
               </div>
+
             </article>
 
+
             <article class="story-item">
+
               <h4>
                 Healthcare Sector Innovates With New Digital Solutions
               </h4>
@@ -159,9 +206,12 @@
               >
                 Read Full Story
               </a>
+
             </article>
 
+
             <article class="story-item">
+
               <h4>
                 Climate Report Highlights Progress on Environmental
                 Goals
@@ -185,15 +235,22 @@
               >
                 Read Full Story
               </a>
+
             </article>
+
           </section>
+
         </main>
 
+
         <aside class="sidebar">
+
           <div class="sidebar-box trending">
+
             <h4>Trending Now</h4>
 
             <ul>
+
               <li>
                 <a
                   href="https://www.reuters.com/markets/"
@@ -243,10 +300,14 @@
                   Markets close strong
                 </a>
               </li>
+
             </ul>
+
           </div>
 
+
           <div class="sidebar-box">
+
             <h4>Newsletter</h4>
 
             <p>
@@ -254,7 +315,9 @@
               inbox.
             </p>
 
+
             <div class="newsletter-form">
+
               <input
                 type="email"
                 placeholder="Your email"
@@ -267,33 +330,30 @@
               >
                 Subscribe
               </a>
+
             </div>
+
           </div>
+
         </aside>
+
       </div>
 
-      <div class="next-box">
-        <p>
-          Answer the website task below, then continue to the next
-          website.
-        </p>
-
-        <button
-          type="button"
-          class="danger-btn"
-          id="completeTaskButton"
-        >
-          Continue to next website
-        </button>
-      </div>
     </section>
+
   </main>
+
+
+  <!-- =====================================================
+       COOKIE BANNER
+       ===================================================== -->
 
   <section
     id="cookieBanner"
     class="cookie-banner"
     aria-label="Cookie choices"
   >
+
     <h2>Cookie choices</h2>
 
     <p>
@@ -303,7 +363,9 @@
       advertising cookies to provide personalised content.
     </p>
 
+
     <div class="cookie-actions">
+
       <button
         type="button"
         class="danger-btn"
@@ -311,6 +373,7 @@
       >
         Accept All Cookies
       </button>
+
 
       <button
         type="button"
@@ -320,6 +383,7 @@
         Manage Preferences
       </button>
 
+
       <button
         type="button"
         class="text-btn"
@@ -327,13 +391,17 @@
       >
         Reject Optional Cookies
       </button>
+
     </div>
+
 
     <div
       id="settingsPanel"
       class="settings-panel"
     >
+
       <h3>Cookie preferences</h3>
+
 
       <label>
         <input
@@ -345,6 +413,7 @@
         Necessary cookies, always active
       </label>
 
+
       <label>
         <input
           id="functionalCookies"
@@ -353,6 +422,7 @@
 
         Functional cookies, remember your preferences
       </label>
+
 
       <label>
         <input
@@ -363,6 +433,7 @@
         Analytics cookies, help us understand website use
       </label>
 
+
       <label>
         <input
           id="advertisingCookies"
@@ -372,6 +443,7 @@
         Advertising cookies, provide personalised content
       </label>
 
+
       <button
         type="button"
         class="primary-btn"
@@ -379,12 +451,16 @@
       >
         Save Settings
       </button>
+
     </div>
+
   </section>
+
 
   <script
     type="module"
     src="js/site-controller.js"
   ></script>
+
 </body>
 </html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Website 4 - LocalLoop Events</title>
+
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  />
+</head>
+
+<body
+  data-site-id="site4_local_events"
+  data-study-site="site4"
+>
+  <main class="container">
+
+    <header class="fake-site-header">
+      <h1>LocalLoop Events</h1>
+
+      <p>
+        Discover simple things to do around the city this weekend.
+      </p>
+    </header>
+
+
+    <!-- =====================================================
+         WEBSITE TASK
+         ===================================================== -->
+
+    <div class="next-box">
+
+      <!--
+        task-controller.js automatically inserts
+        the multiple-choice task here.
+      -->
+
+      <button
+        type="button"
+        class="primary-btn"
+        id="completeTaskButton"
+      >
+        Finish website tasks
+      </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         MOCK WEBSITE CONTENT
+         ===================================================== -->
+
+    <section class="fake-site-content">
+
+      <div class="featured-story">
+
+        <div class="story-hero-media">
+          <img
+            src="https://picsum.photos/seed/localloop-market/1200/700"
+            alt="Outdoor weekend market with stalls and visitors"
+          />
+        </div>
+
+        <h2>
+          Saturday Riverside Market
+        </h2>
+
+        <p class="featured-meta">
+          Saturday | 10:00 AM – 2:00 PM
+        </p>
+
+        <p class="featured-summary">
+          Browse local food stalls, handmade goods and small
+          independent businesses at the Riverside Market.
+        </p>
+
+      </div>
+
+
+      <div class="content-wrapper">
+
+        <main class="main-column">
+
+          <section class="story-section">
+
+            <h3>More Weekend Events</h3>
+
+
+            <article class="story-item story-item--with-media">
+
+              <div>
+
+                <h4>
+                  Outdoor Movie Night
+                </h4>
+
+                <p class="story-meta">
+                  Friday | 7:30 PM
+                </p>
+
+              </div>
+
+
+              <div class="story-thumb-wrap">
+
+                <img
+                  class="story-thumb"
+                  src="https://picsum.photos/seed/localloop-movie/900/600"
+                  alt="Outdoor cinema screen at sunset"
+                />
+
+              </div>
+
+
+              <div>
+
+                <p>
+                  Bring a picnic blanket and enjoy a relaxed movie
+                  screening in the park.
+                </p>
+
+                <a
+                  href="https://example.com/movie"
+                  class="read-more"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Event details
+                </a>
+
+              </div>
+
+            </article>
+
+
+            <article class="story-item story-item--with-media">
+
+              <div>
+
+                <h4>
+                  Sunday Food Festival
+                </h4>
+
+                <p class="story-meta">
+                  Sunday | 11:00 AM
+                </p>
+
+              </div>
+
+
+              <div class="story-thumb-wrap">
+
+                <img
+                  class="story-thumb"
+                  src="https://picsum.photos/seed/localloop-food/900/600"
+                  alt="Food festival stalls with visitors"
+                />
+
+              </div>
+
+
+              <div>
+
+                <p>
+                  Sample food from local vendors and enjoy live music
+                  throughout the afternoon.
+                </p>
+
+                <a
+                  href="https://example.com/food"
+                  class="read-more"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Event details
+                </a>
+
+              </div>
+
+            </article>
+
+
+            <article class="story-item">
+
+              <h4>
+                Community Art Workshop
+              </h4>
+
+              <p class="story-meta">
+                Saturday | 1:00 PM
+              </p>
+
+              <p>
+                Join a beginner-friendly afternoon workshop focused
+                on simple painting techniques.
+              </p>
+
+              <a
+                href="https://example.com/art"
+                class="read-more"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Event details
+              </a>
+
+            </article>
+
+
+            <article class="story-item">
+
+              <h4>
+                Morning Garden Tour
+              </h4>
+
+              <p class="story-meta">
+                Sunday | 9:30 AM
+              </p>
+
+              <p>
+                Explore seasonal gardens with a volunteer guide and
+                learn about local plants.
+              </p>
+
+              <a
+                href="https://example.com/garden"
+                class="read-more"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Event details
+              </a>
+
+            </article>
+
+          </section>
+
+        </main>
+
+
+        <aside class="sidebar">
+
+          <div class="sidebar-box">
+
+            <h4>Weekend Highlights</h4>
+
+            <ul>
+
+              <li>
+                Riverside Market
+              </li>
+
+              <li>
+                Outdoor Movie Night
+              </li>
+
+              <li>
+                Food Festival
+              </li>
+
+              <li>
+                Art Workshop
+              </li>
+
+            </ul>
+
+          </div>
+
+
+          <div class="sidebar-box">
+
+            <h4>Weekly Updates</h4>
+
+            <p>
+              Get a short list of local events delivered each week.
+            </p>
+
+
+            <div class="newsletter-form">
+
+              <input
+                type="email"
+                placeholder="Your email"
+                aria-label="Email address"
+              />
+
+              <a
+                class="newsletter-button"
+                href="mailto:events@localloop.example"
+              >
+                Subscribe
+              </a>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       COOKIE BANNER
+       ===================================================== -->
+
+  <section
+    id="cookieBanner"
+    class="cookie-banner"
+    aria-label="Cookie choices"
+  >
+
+    <h2>Cookie choices</h2>
+
+    <p>
+      We use necessary cookies to operate this website. With your
+      permission, we also use functional cookies to remember your
+      preferences, analytics cookies to understand site usage and
+      advertising cookies to provide personalised content.
+    </p>
+
+
+    <div class="cookie-actions">
+
+      <button
+        type="button"
+        class="secondary-btn"
+        data-choice="reject_optional"
+      >
+        Reject Optional Cookies
+      </button>
+
+
+      <button
+        type="button"
+        class="secondary-btn"
+        data-choice="customise"
+      >
+        Customise
+      </button>
+
+
+      <button
+        type="button"
+        class="secondary-btn"
+        data-choice="accept_all"
+      >
+        Accept All Cookies
+      </button>
+
+    </div>
+
+
+    <div
+      id="settingsPanel"
+      class="settings-panel"
+    >
+
+      <h3>Cookie preferences</h3>
+
+
+      <label>
+        <input
+          type="checkbox"
+          checked
+          disabled
+        />
+
+        Necessary cookies, always active
+      </label>
+
+
+      <label>
+        <input
+          id="functionalCookies"
+          type="checkbox"
+        />
+
+        Functional cookies, remember your preferences
+      </label>
+
+
+      <label>
+        <input
+          id="analyticsCookies"
+          type="checkbox"
+        />
+
+        Analytics cookies, help us understand website use
+      </label>
+
+
+      <label>
+        <input
+          id="advertisingCookies"
+          type="checkbox"
+        />
+
+        Advertising cookies, provide personalised content
+      </label>
+
+
+      <button
+        type="button"
+        class="primary-btn"
+        data-choice="save_settings"
+      >
+        Save Settings
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <script
+    type="module"
+    src="js/site-controller.js"
+  ></script>
+
+</body>
+</html>

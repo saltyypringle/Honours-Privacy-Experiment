@@ -17,23 +17,37 @@
 </head>
 
 <body>
+
   <main class="study-container">
+
+    <!-- =====================================================
+         LOADING PANEL
+         ===================================================== -->
+
     <section
       id="loadingPanel"
       class="study-card"
     >
+
       <h1>Preparing the website tasks</h1>
 
       <p>
         Please wait while your study session is prepared.
       </p>
+
     </section>
+
+
+    <!-- =====================================================
+         ERROR PANEL
+         ===================================================== -->
 
     <section
       id="errorPanel"
       class="study-card hidden"
       role="alert"
     >
+
       <h1>Unable to begin the study</h1>
 
       <p id="errorMessage">
@@ -44,16 +58,23 @@
         Please return to the survey and use the experiment link
         provided there.
       </p>
+
     </section>
+
+
+    <!-- =====================================================
+         STANDARD START PANEL
+         ===================================================== -->
 
     <section
       id="standardStartPanel"
       class="study-card hidden"
     >
+
       <h1>Website interaction tasks</h1>
 
       <p>
-        You will complete three short tasks using mock websites.
+        You will complete four short tasks using mock websites.
         Please interact with each website as you normally would.
       </p>
 
@@ -62,15 +83,27 @@
         taken to complete each task will be recorded.
       </p>
 
+
       <div class="instruction-box">
+
         <strong>Before beginning</strong>
 
         <ul>
-          <li>Complete the study in this browser tab.</li>
-          <li>Do not use the browser Back button.</li>
-          <li>Do not refresh a website unless necessary.</li>
+          <li>
+            Complete the study in this browser tab.
+          </li>
+
+          <li>
+            Do not use the browser Back button.
+          </li>
+
+          <li>
+            Do not refresh a website unless necessary.
+          </li>
         </ul>
+
       </div>
+
 
       <button
         id="standardStartButton"
@@ -79,187 +112,96 @@
       >
         Begin website tasks
       </button>
+
     </section>
 
-    <section
-      id="automationPanel"
-      class="study-card hidden"
-    >
-      <h1>Set your general cookie preference</h1>
-
-      <p>
-        Select how you would generally prefer optional cookies to be
-        handled. This preference will be applied when you visit the
-        mock websites.
-      </p>
-
-      <form id="automationForm">
-        <fieldset>
-          <legend>Choose a general preference</legend>
-
-          <label class="choice-card">
-            <input
-              type="radio"
-              name="automationChoice"
-              value="accept_all"
-              required
-            />
-
-            <span>
-              <strong>Accept all cookies</strong>
-              <small>
-                Allow necessary, analytics and advertising cookies.
-              </small>
-            </span>
-          </label>
-
-          <label class="choice-card">
-            <input
-              type="radio"
-              name="automationChoice"
-              value="reject_optional"
-              required
-            />
-
-            <span>
-              <strong>Reject optional cookies</strong>
-              <small>
-                Allow necessary cookies only.
-              </small>
-            </span>
-          </label>
-
-          <label class="choice-card">
-            <input
-              type="radio"
-              name="automationChoice"
-              value="custom"
-              required
-            />
-
-            <span>
-              <strong>Customise my preference</strong>
-              <small>
-                Choose which optional cookie categories are allowed.
-              </small>
-            </span>
-          </label>
-        </fieldset>
-
-        <div
-          id="customSettings"
-          class="custom-settings hidden"
-        >
-          <label>
-            <input
-              type="checkbox"
-              checked
-              disabled
-            />
-
-            Necessary cookies
-          </label>
-
-          <label>
-            <input
-              id="functionalPreference"
-              type="checkbox"
-            />
-
-            Functional cookies
-          </label>
-
-          <label>
-            <input
-              id="analyticsPreference"
-              type="checkbox"
-            />
-
-            Analytics cookies
-          </label>
-
-          <label>
-            <input
-              id="advertisingPreference"
-              type="checkbox"
-            />
-
-            Advertising cookies
-          </label>
-        </div>
-
-        <p
-          id="automationValidationMessage"
-          class="validation-message hidden"
-          role="alert"
-        >
-          Please select a cookie preference before continuing.
-        </p>
-
-        <button
-          class="primary-button"
-          type="submit"
-        >
-          Save preference and begin
-        </button>
-      </form>
-    </section>
   </main>
 
-  <script
-    type="module"
-  >
+
+  <!-- =====================================================
+       STUDY INITIALISATION
+       ===================================================== -->
+
+  <script type="module">
+
     import {
       initialiseSessionFromUrl,
       beginExperiment,
-      logEvent,
-      setAutomationPreference
+      logEvent
     } from "./js/experiment-core.js";
 
+
     const loadingPanel =
-      document.getElementById("loadingPanel");
-
-    const errorPanel =
-      document.getElementById("errorPanel");
-
-    const errorMessage =
-      document.getElementById("errorMessage");
-
-    const standardStartPanel =
-      document.getElementById("standardStartPanel");
-
-    const automationPanel =
-      document.getElementById("automationPanel");
-
-    const standardStartButton =
-      document.getElementById("standardStartButton");
-
-    const automationForm =
-      document.getElementById("automationForm");
-
-    const customSettings =
-      document.getElementById("customSettings");
-
-    const automationValidationMessage =
       document.getElementById(
-        "automationValidationMessage"
+        "loadingPanel"
       );
 
-    function showPanel(panel) {
-      loadingPanel.classList.add("hidden");
-      errorPanel.classList.add("hidden");
-      standardStartPanel.classList.add("hidden");
-      automationPanel.classList.add("hidden");
 
-      panel.classList.remove("hidden");
+    const errorPanel =
+      document.getElementById(
+        "errorPanel"
+      );
+
+
+    const errorMessage =
+      document.getElementById(
+        "errorMessage"
+      );
+
+
+    const standardStartPanel =
+      document.getElementById(
+        "standardStartPanel"
+      );
+
+
+    const standardStartButton =
+      document.getElementById(
+        "standardStartButton"
+      );
+
+
+    /**
+     * Show one study panel and hide the others.
+     *
+     * @param {HTMLElement} panel
+     */
+    function showPanel(panel) {
+
+      loadingPanel.classList.add(
+        "hidden"
+      );
+
+      errorPanel.classList.add(
+        "hidden"
+      );
+
+      standardStartPanel.classList.add(
+        "hidden"
+      );
+
+      panel.classList.remove(
+        "hidden"
+      );
+
     }
 
+
     try {
-      const session = initialiseSessionFromUrl();
 
       /*
-       * Remove the participant ID and condition from the visible URL.
-       * They remain saved in sessionStorage.
+       * Initialise the participant's session using
+       * the participant ID and assigned condition
+       * supplied by Qualtrics.
+       */
+      initialiseSessionFromUrl();
+
+
+      /*
+       * Remove the participant ID and assigned condition
+       * from the visible browser URL.
+       *
+       * They remain stored in sessionStorage.
        */
       window.history.replaceState(
         {},
@@ -267,118 +209,53 @@
         window.location.pathname
       );
 
+
+      /*
+       * Record arrival at the experiment.
+       */
       logEvent(
         "experiment_start",
         "entry_page_loaded"
       );
 
-      if (session.condition === "automation") {
-        showPanel(automationPanel);
-      } else {
-        showPanel(standardStartPanel);
-      }
+
+      /*
+       * All participants begin in exactly the same way.
+       *
+       * Their assigned experimental condition is retained
+       * in the session but is not applied during Sites 1–2.
+       */
+      showPanel(
+        standardStartPanel
+      );
+
     } catch (error) {
+
       console.error(error);
 
-      errorMessage.textContent = error.message;
+      errorMessage.textContent =
+        error.message;
 
-      showPanel(errorPanel);
+      showPanel(
+        errorPanel
+      );
+
     }
 
+
+    /*
+     * Begin Site 1.
+     */
     standardStartButton.addEventListener(
       "click",
       function () {
+
         beginExperiment();
+
       }
     );
 
-    document
-      .querySelectorAll(
-        'input[name="automationChoice"]'
-      )
-      .forEach(function (radioButton) {
-        radioButton.addEventListener(
-          "change",
-          function () {
-            const customSelected =
-              radioButton.value === "custom";
-
-            customSettings.classList.toggle(
-              "hidden",
-              !customSelected
-            );
-
-            automationValidationMessage.classList.add(
-              "hidden"
-            );
-          }
-        );
-      });
-
-    automationForm.addEventListener(
-      "submit",
-      function (event) {
-        event.preventDefault();
-
-        const selectedChoice =
-          document.querySelector(
-            'input[name="automationChoice"]:checked'
-          );
-
-        if (!selectedChoice) {
-          automationValidationMessage.classList.remove(
-            "hidden"
-          );
-
-          return;
-        }
-
-        let preference;
-
-        if (selectedChoice.value === "accept_all") {
-          preference = {
-            choice: "accept_all",
-            necessary: true,
-            functional: true,
-            analytics: true,
-            advertising: true
-          };
-        } else if (
-          selectedChoice.value === "reject_optional"
-        ) {
-          preference = {
-            choice: "reject_optional",
-            necessary: true,
-            functional: false,
-            analytics: false,
-            advertising: false
-          };
-        } else {
-          preference = {
-            choice: "custom",
-            necessary: true,
-
-            functional:
-              document.getElementById(
-                "functionalPreference"
-              ).checked,
-
-            analytics:
-              document.getElementById(
-                "analyticsPreference"
-              ).checked,
-
-            advertising:
-              document.getElementById(
-                "advertisingPreference"
-              ).checked
-          };
-        }
-
-        setAutomationPreference(preference);
-        beginExperiment();
-      }
-    );
   </script>
+
 </body>
 </html>

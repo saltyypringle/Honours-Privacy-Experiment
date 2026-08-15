@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Continue Website Tasks</title>
+
+  <link
+    rel="stylesheet"
+    href="css/start.css"
+  />
+</head>
+
+<body>
+
+  <main class="study-container">
+
+    <!-- =====================================================
+         STANDARD TRANSITION
+         Control + Suggestions
+         ===================================================== -->
+
+    <section
+      id="standardTransitionPanel"
+      class="study-card hidden"
+    >
+
+      <h1>Continue website tasks</h1>
+
+      <p>
+        You have completed the first two website tasks.
+      </p>
+
+      <p>
+        You will now continue with two more short website tasks.
+        Please interact with the websites as you normally would.
+      </p>
+
+      <button
+        id="standardContinueButton"
+        class="primary-button"
+        type="button"
+      >
+        Continue
+      </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         AUTOMATION TRANSITION
+         ===================================================== -->
+
+    <section
+      id="automationPanel"
+      class="study-card hidden"
+    >
+
+      <h1>Set your general cookie preference</h1>
+
+      <p>
+        Before continuing, select how you would generally prefer
+        optional cookies to be handled.
+      </p>
+
+      <p>
+        Your preference will be applied automatically on the
+        remaining websites. You will still be able to review or
+        change the applied choice.
+      </p>
+
+
+      <form id="automationForm">
+
+        <fieldset>
+
+          <legend>
+            Choose a general preference
+          </legend>
+
+
+          <label class="choice-card">
+
+            <input
+              type="radio"
+              name="automationChoice"
+              value="accept_all"
+              required
+            />
+
+            <span>
+
+              <strong>
+                Accept all cookies
+              </strong>
+
+              <small>
+                Allow necessary, functional, analytics and
+                advertising cookies.
+              </small>
+
+            </span>
+
+          </label>
+
+
+          <label class="choice-card">
+
+            <input
+              type="radio"
+              name="automationChoice"
+              value="reject_optional"
+              required
+            />
+
+            <span>
+
+              <strong>
+                Reject optional cookies
+              </strong>
+
+              <small>
+                Allow necessary cookies only.
+              </small>
+
+            </span>
+
+          </label>
+
+
+          <label class="choice-card">
+
+            <input
+              type="radio"
+              name="automationChoice"
+              value="custom"
+              required
+            />
+
+            <span>
+
+              <strong>
+                Customise my preference
+              </strong>
+
+              <small>
+                Choose which optional cookie categories are allowed.
+              </small>
+
+            </span>
+
+          </label>
+
+        </fieldset>
+
+
+        <!-- =================================================
+             CUSTOM COOKIE SETTINGS
+             ================================================= -->
+
+        <div
+          id="customSettings"
+          class="custom-settings hidden"
+        >
+
+          <label>
+
+            <input
+              type="checkbox"
+              checked
+              disabled
+            />
+
+            Necessary cookies
+
+          </label>
+
+
+          <label>
+
+            <input
+              id="functionalPreference"
+              type="checkbox"
+            />
+
+            Functional cookies
+
+          </label>
+
+
+          <label>
+
+            <input
+              id="analyticsPreference"
+              type="checkbox"
+            />
+
+            Analytics cookies
+
+          </label>
+
+
+          <label>
+
+            <input
+              id="advertisingPreference"
+              type="checkbox"
+            />
+
+            Advertising cookies
+
+          </label>
+
+        </div>
+
+
+        <p
+          id="automationValidationMessage"
+          class="validation-message hidden"
+          role="alert"
+        >
+          Please select a cookie preference before continuing.
+        </p>
+
+
+        <button
+          class="primary-button"
+          type="submit"
+        >
+          Save preference and continue
+        </button>
+
+      </form>
+
+    </section>
+
+
+    <!-- =====================================================
+         ERROR PANEL
+         ===================================================== -->
+
+    <section
+      id="errorPanel"
+      class="study-card hidden"
+      role="alert"
+    >
+
+      <h1>Unable to continue the study</h1>
+
+      <p id="errorMessage">
+        The study session could not be found.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <script type="module">
+
+    import {
+      getSession,
+      setAutomationPreference,
+      logEvent
+    } from "./js/experiment-core.js";
+
+
+    const session =
+      getSession();
+
+
+    const standardTransitionPanel =
+      document.getElementById(
+        "standardTransitionPanel"
+      );
+
+
+    const automationPanel =
+      document.getElementById(
+        "automationPanel"
+      );
+
+
+    const errorPanel =
+      document.getElementById(
+        "errorPanel"
+      );
+
+
+    const errorMessage =
+      document.getElementById(
+        "errorMessage"
+      );
+
+
+    const standardContinueButton =
+      document.getElementById(
+        "standardContinueButton"
+      );
+
+
+    const automationForm =
+      document.getElementById(
+        "automationForm"
+      );
+
+
+    const customSettings =
+      document.getElementById(
+        "customSettings"
+      );
+
+
+    const automationValidationMessage =
+      document.getElementById(
+        "automationValidationMessage"
+      );
+
+
+    /**
+     * Hide all panels and display one.
+     */
+    function showPanel(panel) {
+
+      standardTransitionPanel
+        .classList
+        .add("hidden");
+
+      automationPanel
+        .classList
+        .add("hidden");
+
+      errorPanel
+        .classList
+        .add("hidden");
+
+      panel
+        .classList
+        .remove("hidden");
+
+    }
+
+
+    /**
+     * Move into the experimental phase.
+     */
+    function continueToSite3() {
+
+      logEvent(
+        "experiment_transition",
+        "experimental_phase_started",
+        {
+          assignedCondition:
+            session.condition,
+
+          phase:
+            "experimental"
+        }
+      );
+
+
+      window.location.assign(
+        "site3.html"
+      );
+
+    }
+
+
+    /*
+     * Check that the participant has a study session.
+     */
+    if (!session) {
+
+      errorMessage.textContent =
+        "The study session could not be found. Please return to the original survey.";
+
+      showPanel(
+        errorPanel
+      );
+
+    } else {
+
+      /*
+       * Record arrival after the common baseline.
+       */
+      logEvent(
+        "experiment_transition",
+        "transition_page_loaded",
+        {
+          assignedCondition:
+            session.condition,
+
+          completedPhase:
+            "baseline"
+        }
+      );
+
+
+      /*
+       * Only automation participants need an additional
+       * preference-setting step.
+       */
+      if (
+        session.condition ===
+        "automation"
+      ) {
+
+        showPanel(
+          automationPanel
+        );
+
+      } else {
+
+        showPanel(
+          standardTransitionPanel
+        );
+
+      }
+
+    }
+
+
+    /*
+     * Control and suggestions:
+     * simply continue to Site 3.
+     */
+    standardContinueButton
+      .addEventListener(
+        "click",
+        function () {
+
+          continueToSite3();
+
+        }
+      );
+
+
+    /*
+     * Show custom settings only when the custom
+     * automation option is selected.
+     */
+    document
+      .querySelectorAll(
+        'input[name="automationChoice"]'
+      )
+      .forEach(
+        function (radioButton) {
+
+          radioButton
+            .addEventListener(
+              "change",
+              function () {
+
+                const customSelected =
+                  radioButton.value ===
+                  "custom";
+
+
+                customSettings
+                  .classList
+                  .toggle(
+                    "hidden",
+                    !customSelected
+                  );
+
+
+                automationValidationMessage
+                  .classList
+                  .add(
+                    "hidden"
+                  );
+
+              }
+            );
+
+        }
+      );
+
+
+    /*
+     * Save the automation preference.
+     */
+    automationForm
+      .addEventListener(
+        "submit",
+        function (event) {
+
+          event.preventDefault();
+
+
+          const selectedChoice =
+            document.querySelector(
+              'input[name="automationChoice"]:checked'
+            );
+
+
+          if (!selectedChoice) {
+
+            automationValidationMessage
+              .classList
+              .remove(
+                "hidden"
+              );
+
+            return;
+
+          }
+
+
+          let preference;
+
+
+          if (
+            selectedChoice.value ===
+            "accept_all"
+          ) {
+
+            preference = {
+
+              choice:
+                "accept_all",
+
+              necessary:
+                true,
+
+              functional:
+                true,
+
+              analytics:
+                true,
+
+              advertising:
+                true
+
+            };
+
+          } else if (
+            selectedChoice.value ===
+            "reject_optional"
+          ) {
+
+            preference = {
+
+              choice:
+                "reject_optional",
+
+              necessary:
+                true,
+
+              functional:
+                false,
+
+              analytics:
+                false,
+
+              advertising:
+                false
+
+            };
+
+          } else {
+
+            preference = {
+
+              choice:
+                "custom",
+
+              necessary:
+                true,
+
+
+              functional:
+                document
+                  .getElementById(
+                    "functionalPreference"
+                  )
+                  .checked,
+
+
+              analytics:
+                document
+                  .getElementById(
+                    "analyticsPreference"
+                  )
+                  .checked,
+
+
+              advertising:
+                document
+                  .getElementById(
+                    "advertisingPreference"
+                  )
+                  .checked
+
+            };
+
+          }
+
+
+          setAutomationPreference(
+            preference
+          );
+
+
+          continueToSite3();
+
+        }
+      );
+
+  </script>
+
+</body>
+</html>

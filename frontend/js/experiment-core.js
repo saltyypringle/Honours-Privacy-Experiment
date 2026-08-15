@@ -22,7 +22,8 @@ const VALID_CONDITIONS = new Set([
 const DEFAULT_SITE_ORDER = [
   "site1",
   "site2",
-  "site3"
+  "site3",
+  "site4"
 ];
 
 /**

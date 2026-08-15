@@ -15,11 +15,15 @@
     href="css/start.css"
   />
 
+
   <style>
+
     .summary-output {
       max-height: 360px;
+
       margin-top: 20px;
       padding: 16px;
+
       overflow: auto;
 
       border: 1px solid #d5dde5;
@@ -40,35 +44,57 @@
       overflow-wrap: anywhere;
     }
 
+
     .development-message {
       margin-top: 18px;
+
       color: #52667a;
+
       font-size: 0.94rem;
     }
+
   </style>
+
 </head>
 
+
 <body>
+
   <main class="study-container">
+
+
+    <!-- =====================================================
+         COMPLETION PANEL
+         ===================================================== -->
+
     <section
       id="completionPanel"
       class="study-card"
     >
-      <h1>Website tasks complete</h1>
+
+      <h1>
+        Website tasks complete
+      </h1>
+
 
       <p>
-        You have completed all three mock website tasks.
+        You have completed all four mock website tasks.
       </p>
 
+
       <div class="instruction-box">
+
         <strong id="statusHeading">
           Preparing your study results
         </strong>
 
+
         <p id="statusMessage">
           Please wait while the study results are prepared.
         </p>
+
       </div>
+
 
       <button
         id="continueButton"
@@ -79,6 +105,7 @@
         Continue to the post-study questionnaire
       </button>
 
+
       <p
         id="developmentMessage"
         class="development-message hidden"
@@ -87,155 +114,242 @@
         post-study survey address before deployment.
       </p>
 
+
       <pre
         id="summaryOutput"
         class="summary-output hidden"
       ></pre>
+
     </section>
+
+
+    <!-- =====================================================
+         ERROR PANEL
+         ===================================================== -->
 
     <section
       id="errorPanel"
       class="study-card hidden"
       role="alert"
     >
-      <h1>Unable to complete the study</h1>
+
+      <h1>
+        Unable to complete the study
+      </h1>
+
 
       <p id="errorMessage">
         The study session could not be found.
       </p>
+
     </section>
+
   </main>
 
+
   <script type="module">
+
     import {
       getSession
     } from "./js/experiment-core.js";
+
 
     import {
       buildResultsSummary,
       buildQualtricsUrl
     } from "./js/results-summary.js";
 
+
     /*
      * Leave this blank during development.
      *
-     * Later, replace it with the anonymous link for your
-     * Qualtrics post-study survey.
+     * Later, replace this with the anonymous URL for
+     * the Qualtrics post-study questionnaire.
      */
-    const QUALTRICS_POST_SURVEY_URL = "";
+    const QUALTRICS_POST_SURVEY_URL =
+      "";
+
 
     const session =
       getSession();
+
 
     const completionPanel =
       document.getElementById(
         "completionPanel"
       );
 
+
     const errorPanel =
       document.getElementById(
         "errorPanel"
       );
+
 
     const errorMessage =
       document.getElementById(
         "errorMessage"
       );
 
+
     const statusHeading =
       document.getElementById(
         "statusHeading"
       );
+
 
     const statusMessage =
       document.getElementById(
         "statusMessage"
       );
 
+
     const continueButton =
       document.getElementById(
         "continueButton"
       );
+
 
     const developmentMessage =
       document.getElementById(
         "developmentMessage"
       );
 
+
     const summaryOutput =
       document.getElementById(
         "summaryOutput"
       );
 
-    function showError(message) {
-      completionPanel.classList.add(
-        "hidden"
-      );
 
-      errorPanel.classList.remove(
-        "hidden"
-      );
+    /**
+     * Display the completion error state.
+     *
+     * @param {string} message
+     */
+    function showError(message) {
+
+      completionPanel
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      errorPanel
+        .classList
+        .remove(
+          "hidden"
+        );
+
 
       errorMessage.textContent =
         message;
+
     }
 
+
     try {
+
+      /*
+       * The participant should only reach this page
+       * after Site 4 has been completed.
+       */
       if (
         !session ||
         !session.experimentCompleted
       ) {
+
         throw new Error(
           "The study session is incomplete or could not be found."
         );
+
       }
 
+
+      /*
+       * Condense the complete experimental record into
+       * one participant-level result.
+       */
       const summary =
         buildResultsSummary();
 
+
       /*
-       * Store a copy locally so the final result can still be
-       * inspected during development.
+       * Store a local copy during development.
        */
       sessionStorage.setItem(
         "privacyExperimentResultsSummary",
-        JSON.stringify(summary)
+        JSON.stringify(
+          summary
+        )
       );
+
 
       statusHeading.textContent =
         "Study results prepared";
+
 
       statusMessage.textContent =
         `${summary.total_event_count} study events were ` +
         `condensed into one participant-level result.`;
 
+
+      /*
+       * Production behaviour:
+       *
+       * append the participant-level results to the
+       * Qualtrics URL and continue to the post-study
+       * questionnaire.
+       */
       if (
         QUALTRICS_POST_SURVEY_URL.trim()
       ) {
+
         const redirectUrl =
           buildQualtricsUrl(
             QUALTRICS_POST_SURVEY_URL,
             summary
           );
 
-        continueButton.disabled = false;
 
-        continueButton.addEventListener(
-          "click",
-          function () {
-            window.location.assign(
-              redirectUrl
-            );
-          }
-        );
+        continueButton.disabled =
+          false;
+
+
+        continueButton
+          .addEventListener(
+            "click",
+            function () {
+
+              window.location.assign(
+                redirectUrl
+              );
+
+            }
+          );
+
       } else {
-        developmentMessage.classList.remove(
-          "hidden"
-        );
 
-        summaryOutput.classList.remove(
-          "hidden"
-        );
+        /*
+         * Development behaviour:
+         *
+         * show the generated result on screen so it can
+         * be inspected before Qualtrics is connected.
+         */
+        developmentMessage
+          .classList
+          .remove(
+            "hidden"
+          );
+
+
+        summaryOutput
+          .classList
+          .remove(
+            "hidden"
+          );
+
 
         summaryOutput.textContent =
           JSON.stringify(
@@ -244,16 +358,26 @@
             2
           );
 
+
         continueButton.textContent =
           "Qualtrics link not configured";
+
       }
+
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        error
+      );
+
 
       showError(
         error.message
       );
+
     }
+
   </script>
+
 </body>
 </html>

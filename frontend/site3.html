@@ -21,6 +21,7 @@
   data-study-site="site3"
 >
   <main class="container">
+
     <header class="fake-site-header">
       <h1>FitStart Guide</h1>
 
@@ -29,82 +30,101 @@
       </p>
     </header>
 
+
+    <!-- =====================================================
+         WEBSITE TASK
+         ===================================================== -->
+
+    <div class="next-box">
+
+      <!--
+        task-controller.js automatically inserts
+        the multiple-choice task here.
+      -->
+
+      <button
+        type="button"
+        class="primary-btn"
+        id="completeTaskButton"
+      >
+        Continue to next website
+      </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         MOCK WEBSITE CONTENT
+         ===================================================== -->
+
     <section class="fake-site-content">
-      <div class="featured-article">
-        <div class="article-hero-media">
+
+      <!--
+        Walking plan is deliberately placed near the top because
+        the study task asks participants to identify the Week 3
+        walk duration.
+      -->
+
+      <article class="fitness-article">
+
+        <div class="fitness-article-media">
           <img
-            src="https://picsum.photos/seed/fitstart-hero/1200/700"
-            alt="Person stretching before a workout in a bright studio"
+            src="https://picsum.photos/seed/fitstart-walking/900/600"
+            alt="Person walking outdoors on a city path"
           />
         </div>
 
-        <h2>
-          Getting Started With Your Fitness Journey: A Beginner's Guide
-        </h2>
+        <h2>4-Week Beginner Walking Plan</h2>
 
         <p class="article-meta">
-          Published 3 weeks ago | Reading time: 8 minutes
+          2 weeks ago | Fitness Level: Beginner
         </p>
 
-        <p class="article-preview">
-          Starting a fitness routine does not require expensive
-          equipment or intense workouts. This guide walks you through
-          realistic, sustainable approaches to building healthy habits
-          that stick.
+        <p>
+          Build a consistent walking habit with this progressive
+          four-week plan. Start at your own pace and gradually
+          increase duration and intensity.
         </p>
-      </div>
+
+        <ul class="article-highlights">
+
+          <li>
+            Weeks 1–2: 20–30 minute walks, three times per week
+          </li>
+
+          <li>
+            Week 3: Add one 45-minute walk
+          </li>
+
+          <li>
+            Week 4: Aim for daily 30-minute walks
+          </li>
+
+        </ul>
+
+        <a
+          href="https://www.nhs.uk/live-well/exercise/walking-for-health/"
+          class="read-more"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Full Plan
+        </a>
+
+      </article>
+
 
       <div class="content-layout">
+
         <main class="fitness-main">
+
           <section class="article-section">
-            <h3>Popular Articles</h3>
+
+            <h3>More Popular Articles</h3>
+
 
             <article class="fitness-article">
-              <div class="fitness-article-media">
-                <img
-                  src="https://picsum.photos/seed/fitstart-walking/900/600"
-                  alt="Person walking outdoors on a city path"
-                />
-              </div>
 
-              <h4>4-Week Beginner Walking Plan</h4>
-
-              <p class="article-meta">
-                2 weeks ago | Fitness Level: Beginner
-              </p>
-
-              <p>
-                Build a consistent walking habit with this progressive
-                four-week plan. Start at your own pace and gradually
-                increase duration and intensity. No special equipment
-                is needed.
-              </p>
-
-              <ul class="article-highlights">
-                <li>
-                  Weeks 1–2: 20–30 minute walks, three times per week
-                </li>
-
-                <li>
-                  Week 3: Add one 45-minute walk
-                </li>
-
-                <li>
-                  Week 4: Aim for daily 30-minute walks
-                </li>
-              </ul>
-
-              <a
-                href="https://www.nhs.uk/live-well/exercise/walking-for-health/"
-                class="read-more"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Full Plan
-              </a>
-            </article>
-
-            <article class="fitness-article">
               <div class="fitness-article-media">
                 <img
                   src="https://picsum.photos/seed/fitstart-meal-prep/900/600"
@@ -125,6 +145,7 @@
               </p>
 
               <ul class="article-highlights">
+
                 <li>
                   Choose two or three simple recipes each week
                 </li>
@@ -136,6 +157,7 @@
                 <li>
                   Use appropriate storage containers
                 </li>
+
               </ul>
 
               <a
@@ -146,9 +168,12 @@
               >
                 Full Guide
               </a>
+
             </article>
 
+
             <article class="fitness-article">
+
               <div class="fitness-article-media">
                 <img
                   src="https://picsum.photos/seed/fitstart-habit/900/600"
@@ -164,11 +189,11 @@
 
               <p>
                 Use simple habit-tracking methods to maintain
-                motivation and visualise progress. Visual reminders and
-                progress tracking can support consistency.
+                motivation and visualise progress.
               </p>
 
               <ul class="article-highlights">
+
                 <li>
                   Calendar-marking technique
                 </li>
@@ -180,6 +205,7 @@
                 <li>
                   Celebrating small wins
                 </li>
+
               </ul>
 
               <a
@@ -190,9 +216,12 @@
               >
                 Full Article
               </a>
+
             </article>
 
+
             <article class="fitness-article">
+
               <div class="fitness-article-media">
                 <img
                   src="https://picsum.photos/seed/fitstart-home-workout/900/600"
@@ -213,6 +242,7 @@
               </p>
 
               <ul class="article-highlights">
+
                 <li>
                   15-minute daily routines
                 </li>
@@ -224,6 +254,7 @@
                 <li>
                   Full-body and targeted workouts
                 </li>
+
               </ul>
 
               <a
@@ -234,15 +265,22 @@
               >
                 View Workouts
               </a>
+
             </article>
+
           </section>
+
         </main>
 
+
         <aside class="fitness-sidebar">
+
           <div class="sidebar-card">
+
             <h4>Quick Tips</h4>
 
             <ul>
+
               <li>
                 Stay hydrated throughout the day
               </li>
@@ -262,13 +300,18 @@
               <li>
                 Rest days are important
               </li>
+
             </ul>
+
           </div>
 
+
           <div class="sidebar-card">
+
             <h4>Resource Library</h4>
 
             <ul>
+
               <li>
                 <a
                   href="https://www.eatright.org/food/nutrition"
@@ -308,32 +351,30 @@
                   Community Forum
                 </a>
               </li>
+
             </ul>
+
           </div>
+
         </aside>
+
       </div>
 
-      <div class="next-box">
-        <p>
-          Answer the website task below, then finish the study.
-        </p>
-
-        <button
-          type="button"
-          class="primary-btn"
-          id="completeTaskButton"
-        >
-          Finish website tasks
-        </button>
-      </div>
     </section>
+
   </main>
+
+
+  <!-- =====================================================
+       COOKIE BANNER
+       ===================================================== -->
 
   <section
     id="cookieBanner"
     class="cookie-banner"
     aria-label="Cookie choices"
   >
+
     <h2>Cookie choices</h2>
 
     <p>
@@ -343,7 +384,9 @@
       advertising cookies to provide personalised content.
     </p>
 
+
     <div class="cookie-actions">
+
       <button
         type="button"
         class="secondary-btn"
@@ -351,6 +394,7 @@
       >
         Reject Optional Cookies
       </button>
+
 
       <button
         type="button"
@@ -360,6 +404,7 @@
         Customise
       </button>
 
+
       <button
         type="button"
         class="secondary-btn"
@@ -367,13 +412,17 @@
       >
         Accept All Cookies
       </button>
+
     </div>
+
 
     <div
       id="settingsPanel"
       class="settings-panel"
     >
+
       <h3>Cookie preferences</h3>
+
 
       <label>
         <input
@@ -385,6 +434,7 @@
         Necessary cookies, always active
       </label>
 
+
       <label>
         <input
           id="functionalCookies"
@@ -393,6 +443,7 @@
 
         Functional cookies, remember your preferences
       </label>
+
 
       <label>
         <input
@@ -403,6 +454,7 @@
         Analytics cookies, help us understand website use
       </label>
 
+
       <label>
         <input
           id="advertisingCookies"
@@ -412,6 +464,7 @@
         Advertising cookies, provide personalised content
       </label>
 
+
       <button
         type="button"
         class="primary-btn"
@@ -419,12 +472,16 @@
       >
         Save Settings
       </button>
+
     </div>
+
   </section>
+
 
   <script
     type="module"
     src="js/site-controller.js"
   ></script>
+
 </body>
 </html>
