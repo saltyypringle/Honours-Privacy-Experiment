@@ -23,28 +23,33 @@ import {
  */
 const SITE_CONFIGS = {
   site1: {
-    siteId: "site1",
+  siteId: "site1",
 
-    taskId: "site1_author_lookup",
+  taskId:
+    "site1_gut_genug_translation",
 
-    heading: "Website task",
+  heading:
+    "Website task",
 
-    prompt:
-      "Who wrote the featured article?",
+  prompt:
+    'What does "Du bist gut genug" mean in English?',
 
-    options: [
-      "Sarah Mitchell",
-      "James Carter",
-      "Emily Brown",
-      "Daniel Lee"
-    ],
+  options: [
+    "You are good enough",
+    "You are very lucky",
+    "You should be careful",
+    "You are doing well"
+  ],
 
-    correctAnswer: "Sarah Mitchell",
+  correctAnswer:
+    "You are good enough",
 
-    answerInputId: "site1TaskAnswer",
+  answerInputId:
+    "site1TaskAnswer",
 
-    continueButtonId: "completeTaskButton"
-  },
+  continueButtonId:
+    "completeTaskButton"
+},
 
 
   site2: {
@@ -73,28 +78,33 @@ const SITE_CONFIGS = {
 
 
   site3: {
-    siteId: "site3",
+  siteId: "site3",
 
-    taskId: "site3_week3_walk",
+  taskId:
+    "site3_7x7_meaning",
 
-    heading: "Website task",
+  heading:
+    "Website task",
 
-    prompt:
-      "How long is the Week 3 walk?",
+  prompt:
+    'In the "7 × 7 = 49" trend, what does the equation represent?',
 
-    options: [
-      "20 minutes",
-      "30 minutes",
-      "45 minutes",
-      "60 minutes"
-    ],
+  options: [
+    "Something that feels obviously attractive or right",
+    "Someone who is exactly 49 years old",
+    "A difficult maths problem",
+    "A way of saying something is expensive"
+  ],
 
-    correctAnswer: "45 minutes",
+  correctAnswer:
+    "Something that feels obviously attractive or right",
 
-    answerInputId: "site3TaskAnswer",
+  answerInputId:
+    "site3TaskAnswer",
 
-    continueButtonId: "completeTaskButton"
-  },
+  continueButtonId:
+    "completeTaskButton"
+},
 
 
   site4: {
