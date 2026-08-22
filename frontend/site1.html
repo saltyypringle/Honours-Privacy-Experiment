@@ -2,725 +2,287 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>Website 1 - WAVES Music</title>
-
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <title>WAVES — Music, Memes & Internet Culture</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
+<body data-site-id="site1_dark_pattern" data-study-site="site1">
+  <!-- Fixed magazine navigation -->
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="WAVES home">WAVES<span>✦</span></a>
 
-<body
-  data-site-id="site1_dark_pattern"
-  data-study-site="site1"
->
+      <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
 
-  <main class="container">
+      <div class="nav-links" id="navLinks">
+        <a href="#trending">Trending</a>
+        <a href="#meaning">Meaning</a>
+        <a href="#culture">Culture</a>
+        <a href="#newsletter">Newsletter</a>
+      </div>
 
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch colour theme" title="Toggle dark/light mode">
+        <span class="theme-icon" aria-hidden="true">☾</span>
+      </button>
+    </div>
+  </nav>
 
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
-
-    <header class="fake-site-header">
-
-      <h1>
-        WAVES
-      </h1>
-
-      <p>
-        Music, internet culture and the sounds everyone
-        is talking about.
-      </p>
-
+  <main id="top">
+    <!-- Playful hero -->
+    <header class="hero fake-site-header">
+      <div class="hero-bubble hero-bubble--one" aria-hidden="true"></div>
+      <div class="hero-bubble hero-bubble--two" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="eyebrow">MUSIC • MEMES • INTERNET CULTURE</p>
+        <h1>The sound everyone heard wrong — then loved for the right reason.</h1>
+        <p class="hero-copy">
+          How <strong>“Du bist gut genug”</strong> went from a funny misheard lyric to one of the internet’s sweetest little affirmations.
+        </p>
+        <div class="hero-actions">
+          <a class="hero-button" href="#trending">Read the story</a>
+          <span class="hero-note">6 min read · Trending now</span>
+        </div>
+      </div>
     </header>
 
-
-    <!-- =====================================================
-         WEBSITE TASK
-         ===================================================== -->
-
-    <div class="next-box">
-
-      <!--
-        task-controller.js automatically inserts
-        the task here.
-      -->
-
-      <button
-        type="button"
-        class="primary-btn"
-        id="completeTaskButton"
-      >
-        Continue to next website
-      </button>
-
-    </div>
-
-
-    <!-- =====================================================
-         WEBSITE CONTENT
-         ===================================================== -->
-
-    <section class="fake-site-content">
-
-
-      <section class="site-pulse" aria-label="WAVES at a glance">
-
-        <div class="site-pulse__item">
-          <span class="site-pulse__label">Sound of the week</span>
-          <strong class="site-pulse__value">Gut genug</strong>
-        </div>
-
-        <div class="site-pulse__item">
-          <span class="site-pulse__label">From</span>
-          <strong class="site-pulse__value">KitschKrieg, Blumengarten &amp; Shirin David</strong>
-        </div>
-
-        <div class="site-pulse__item">
-          <span class="site-pulse__label">Why it landed</span>
-          <strong class="site-pulse__value">A meme sound with a sincere message</strong>
-        </div>
-
-      </section>
-
-
-      <!-- FEATURED STORY -->
-
-      <div class="featured-story">
-
-
-        <div class="story-hero-media">
-
-          <img
-            src="https://picsum.photos/seed/gutgenug-music/1200/700"
-            alt="Young people enjoying music at an outdoor festival"
-          />
-
-        </div>
-
-
-        <p class="story-meta">
-          TRENDING NOW · MUSIC
-        </p>
-
-
-        <h2>
-          Why everyone is singing
-          “Du bist gut genug”
-        </h2>
-
-
-        <p class="featured-meta">
-          Music &amp; Culture · 6 min read
-        </p>
-
-
-        <p class="featured-summary">
-
-          A German-language song has unexpectedly become
-          one of the internet's most recognisable sounds.
-
-          The phrase
-
-          <strong>
-            “Du bist gut genug”
-          </strong>
-
-          simply means
-
-          <strong>
-            “You are good enough.”
-          </strong>
-
-        </p>
-
-
-        <p>
-
-          The line comes from the song
-          <em>Gut genug</em>, by KitschKrieg,
-          Blumengarten and Shirin David.
-
-          Its reassuring message has connected with listeners
-          far beyond Germany, even among people who do not
-          speak German.
-
-        </p>
-
+    <div class="container">
+      <!-- =====================================================
+           WEBSITE TASK — preserved for the experiment.
+           task-controller.js automatically inserts the task here.
+           ===================================================== -->
+      <div class="next-box">
+        <button type="button" class="primary-btn" id="completeTaskButton">
+          Continue to next website
+        </button>
       </div>
 
-
-      <!-- =================================================
-           TREND EXPLANATION
-           ================================================= -->
-
-      <div class="content-wrapper">
-
-
-        <main class="main-column">
-
-
-          <section class="story-section">
-
-
-            <h3>
-              So why did it go viral?
-            </h3>
-
-
-            <article class="story-item">
-
-
-              <h4>
-                First came “Doobie Scoot Canoe”
-              </h4>
-
-
-              <p class="story-meta">
-                INTERNET CULTURE
-              </p>
-
-
-              <p>
-
-                Many English-speaking listeners initially
-                had no idea what the German words meant.
-
-                Instead, they jokingly heard
-
-                <strong>
-                  “Du bist gut genug”
-                </strong>
-
-                as something resembling
-
-                <strong>
-                  “doobie scoot canoe.”
-                </strong>
-
-              </p>
-
-
-              <p>
-
-                The misheard version spread through memes,
-                reaction videos and short-form clips.
-
-                Linguists call this type of misheard lyric
-                a <em>mondegreen</em>.
-
-              </p>
-
-            </article>
-
-
-
-            <article class="story-item story-item--with-media">
-
-
-              <div>
-
-                <h4>
-                  Then people discovered what it actually meant
-                </h4>
-
-
-                <p class="story-meta">
-                  THE MEANING
-                </p>
-
-              </div>
-
-
-              <div class="story-thumb-wrap">
-
-                <img
-                  class="story-thumb"
-                  src="https://picsum.photos/seed/waves-headphones/900/600"
-                  alt="Person listening to music through headphones"
-                />
-
-              </div>
-
-
-              <div>
-
-                <p>
-
-                  The joke took on a different tone once people
-                  translated the phrase.
-
-                </p>
-
-
-                <p>
-
-                  <strong>
-                    “Du bist gut genug”
-                  </strong>
-
-                  means
-
-                  <strong>
-                    “You are good enough.”
-                  </strong>
-
-                </p>
-
-
-                <p>
-
-                  Rather than being a novelty phrase, the
-                  song centres on reassurance and pushing back
-                  against feelings of inadequacy.
-
-                </p>
-
-              </div>
-
-            </article>
-
-
-
-            <!-- =============================================
-                 LYRIC MEANING
-                 ============================================= -->
-
-            <article class="story-item">
-
-
-              <h4>
-                What are the lyrics about?
-              </h4>
-
-
-              <p class="story-meta">
-                LYRIC EXPLAINER
-              </p>
-
-
-              <p>
-
-                The lyrics revolve around a simple idea:
-                people can be much harsher toward themselves
-                than they would ever be toward somebody else.
-
-              </p>
-
-
-              <p>
-
-                The song responds to that insecurity with
-                reassurance. Its central message is that you do
-                not need to become richer, more attractive,
-                more successful or more impressive before you
-                deserve to feel worthwhile.
-
-              </p>
-
-
-              <p>
-
-                That makes the repeated German phrase especially
-                important. Rather than presenting self-worth as
-                something that must be earned, it treats being
-                “good enough” as something worth recognising
-                already.
-
-              </p>
-
-            </article>
-
-
-
-            <article class="story-item story-item--with-media">
-
-
-              <div>
-
-                <h4>
-                  From joke audio to affirmation
-                </h4>
-
-
-                <p class="story-meta">
-                  SOCIAL MEDIA
-                </p>
-
-              </div>
-
-
-              <div class="story-thumb-wrap">
-
-                <img
-                  class="story-thumb"
-                  src="https://picsum.photos/seed/waves-social/900/600"
-                  alt="Phone displaying social media videos"
-                />
-
-              </div>
-
-
-              <div>
-
-                <p>
-
-                  That contrast helped the sound spread.
-
-                  One person might use it for a joke about the
-                  misheard lyric, while another might use the
-                  same audio for a self-confidence video,
-                  friendship edit or personal milestone.
-
-                </p>
-
-
-                <p>
-
-                  The song therefore moved beyond the original
-                  meme and became associated with the much more
-                  sincere message behind its hook.
-
-                </p>
-
-              </div>
-
-            </article>
-
-
-
-            <article class="story-item">
-
-
-              <h4>
-                Why does it work even if you don't speak German?
-              </h4>
-
-
-              <p class="story-meta">
-                MUSIC
-              </p>
-
-
-              <p>
-
-                Part of the appeal is the contrast between not
-                understanding the lyric at first and then
-                discovering that it carries such a direct,
-                positive message.
-
-              </p>
-
-
-              <p>
-
-                The phrase is short, memorable and easy to
-                recognise, while the melodic delivery gives it
-                an emotional quality even before the listener
-                looks up the translation.
-
-              </p>
-
-            </article>
-
-
-          </section>
-
-        </main>
-
-
-
-        <!-- =================================================
-             SIDEBAR
-             ================================================= -->
-
-        <aside class="sidebar">
-
-
-          <div class="sidebar-box trending">
-
-
-            <h4>
-              The trend in 20 seconds
-            </h4>
-
-
-            <ul>
-
-              <li>
-                German song goes viral
-              </li>
-
-              <li>
-                Listeners hear “doobie scoot canoe”
-              </li>
-
-              <li>
-                The misheard lyric becomes a meme
-              </li>
-
-              <li>
-                People discover the real translation
-              </li>
-
-              <li>
-                “You are good enough” becomes the real story
-              </li>
-
-            </ul>
-
+      <section class="fake-site-content" id="trending">
+        <section class="site-pulse" aria-label="WAVES at a glance">
+          <div class="site-pulse__item">
+            <span class="site-pulse__label">Sound of the week</span>
+            <strong class="site-pulse__value">Gut genug</strong>
           </div>
-
-
-
-          <div class="sidebar-box">
-
-
-            <h4>
-              Quick German
-            </h4>
-
-
-            <p>
-              <strong>Du</strong>
-              = you
-            </p>
-
-
-            <p>
-              <strong>bist</strong>
-              = are
-            </p>
-
-
-            <p>
-              <strong>gut</strong>
-              = good
-            </p>
-
-
-            <p>
-              <strong>genug</strong>
-              = enough
-            </p>
-
-
-            <p>
-              <strong>
-                Du bist gut genug
-              </strong>
-              =
-              <strong>
-                You are good enough
-              </strong>
-            </p>
-
+          <div class="site-pulse__item">
+            <span class="site-pulse__label">The lyric</span>
+            <strong class="site-pulse__value">Du bist gut genug</strong>
           </div>
+          <div class="site-pulse__item">
+            <span class="site-pulse__label">Translation</span>
+            <strong class="site-pulse__value">You are good enough ♡</strong>
+          </div>
+        </section>
 
-
-
-          <div class="sidebar-box">
-
-
-            <h4>
-              WAVES Weekly
-            </h4>
-
-
-            <p>
-              New music, internet trends and culture,
-              every Friday.
+        <!-- Featured story -->
+        <article class="featured-story magazine-feature">
+          <div class="story-hero-media">
+            <img src="https://picsum.photos/seed/gutgenug-pastel/1400/850" alt="Friends enjoying music together outdoors" />
+            <span class="image-sticker">on repeat ↻</span>
+          </div>
+          <div class="feature-copy">
+            <p class="story-meta">TRENDING NOW · MUSIC</p>
+            <h2>Why everyone is singing “Du bist gut genug”</h2>
+            <p class="featured-meta">By WAVES Culture Desk · 6 min read</p>
+            <p class="featured-summary">
+              A German-language song became instantly recognisable online before many listeners knew what its words meant. The surprise? Its viral hook translates to something genuinely lovely: <strong>“You are good enough.”</strong>
             </p>
+            <p>
+              The line comes from <em>Gut genug</em> by KitschKrieg, Blumengarten and Shirin David. Its journey from misheard meme audio to sincere affirmation is exactly the kind of internet plot twist we like.
+            </p>
+          </div>
+        </article>
 
+        <div class="section-heading" id="meaning">
+          <p class="eyebrow">THE DEEP DIVE</p>
+          <h2>How the trend unfolded</h2>
+          <p>Four quick reads on the joke, the translation and why the sound stuck.</p>
+        </div>
 
-            <div class="newsletter-form">
+        <!-- Masonry / Pinterest-style magazine grid -->
+        <section class="masonry-grid" aria-label="Stories about the trend">
+          <article class="masonry-card card-pink">
+            <span class="card-number">01</span>
+            <p class="story-meta">INTERNET CULTURE</p>
+            <h3>First came “Doobie Scoot Canoe”</h3>
+            <p>
+              English-speaking listeners initially had no idea what the German hook meant. Instead, they jokingly heard <strong>“Du bist gut genug”</strong> as something close to <strong>“doobie scoot canoe.”</strong>
+            </p>
+            <p>The mondegreen spread through memes, reaction videos and short-form clips.</p>
+          </article>
 
-              <input
-                type="email"
-                placeholder="Your email"
-                aria-label="Email address"
-              />
-
-
-              <a
-                class="newsletter-button"
-                href="mailto:hello@waves.example"
-              >
-                Subscribe
-              </a>
-
+          <article class="masonry-card image-card">
+            <img src="https://picsum.photos/seed/waves-headphones-pastel/900/1100" alt="Person listening to music through headphones" />
+            <div class="card-body">
+              <p class="story-meta">THE MEANING</p>
+              <h3>Then people translated it</h3>
+              <p>The joke changed once people discovered the actual message: <strong>“You are good enough.”</strong></p>
             </div>
+          </article>
 
+          <article class="masonry-card quote-card card-blue">
+            <span class="quote-mark">“</span>
+            <blockquote>Du bist gut genug.</blockquote>
+            <p>You are good enough.</p>
+            <span class="tiny-label">YOUR GERMAN PHRASE OF THE WEEK</span>
+          </article>
+
+          <article class="masonry-card card-indigo">
+            <span class="card-number">02</span>
+            <p class="story-meta">LYRIC EXPLAINER</p>
+            <h3>What are the lyrics actually about?</h3>
+            <p>
+              The song pushes back against the feeling that you need to become richer, prettier, more successful or more impressive before you deserve to feel worthwhile.
+            </p>
+            <p>Its repeated message is simple: self-worth is not another thing you have to earn.</p>
+          </article>
+
+          <article class="masonry-card image-card tall-card" id="culture">
+            <img src="https://picsum.photos/seed/waves-social-pastel/900/1200" alt="Phone displaying short social media videos" />
+            <div class="card-body">
+              <p class="story-meta">SOCIAL MEDIA</p>
+              <h3>From joke audio to affirmation</h3>
+              <p>
+                One person might use the sound for the misheard lyric joke; another for a friendship edit, a personal milestone or a confidence video. That contrast helped it travel.
+              </p>
+            </div>
+          </article>
+
+          <article class="masonry-card mini-dictionary">
+            <p class="story-meta">QUICK GERMAN</p>
+            <h3>Four words, one very nice sentence</h3>
+            <dl>
+              <div><dt>Du</dt><dd>you</dd></div>
+              <div><dt>bist</dt><dd>are</dd></div>
+              <div><dt>gut</dt><dd>good</dd></div>
+              <div><dt>genug</dt><dd>enough</dd></div>
+            </dl>
+          </article>
+
+          <article class="masonry-card card-rose">
+            <span class="card-number">03</span>
+            <p class="story-meta">WHY IT WORKS</p>
+            <h3>You don’t need to speak German</h3>
+            <p>
+              The phrase is short, memorable and melodic. The emotional payoff arrives twice: first through the sound, then again when the listener discovers what it means.
+            </p>
+          </article>
+        </section>
+
+        <section class="trend-recap" aria-label="Trend recap">
+          <div>
+            <p class="eyebrow">THE TREND IN 20 SECONDS</p>
+            <h2>Meme first. Meaning second. Feelings immediately.</h2>
           </div>
+          <ol>
+            <li>German song goes viral.</li>
+            <li>Listeners hear “doobie scoot canoe”.</li>
+            <li>The misheard lyric becomes a meme.</li>
+            <li>People discover the translation.</li>
+            <li>“You are good enough” becomes the real story.</li>
+          </ol>
+        </section>
 
-
-        </aside>
-
-      </div>
-
-    </section>
-
+        <section class="newsletter-section" id="newsletter">
+          <div>
+            <p class="eyebrow">WAVES WEEKLY</p>
+            <h2>Culture worth opening your inbox for.</h2>
+            <p>New music, internet trends and tiny explanations of why everyone is suddenly saying that one weird thing.</p>
+          </div>
+          <form class="newsletter-form" id="newsletterForm">
+            <label class="sr-only" for="newsletterEmail">Email address</label>
+            <input id="newsletterEmail" type="email" placeholder="you@example.com" required />
+            <button type="submit" class="newsletter-button">Subscribe ✦</button>
+            <p class="newsletter-status" id="newsletterStatus" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </section>
+    </div>
   </main>
 
+  <footer class="site-footer">
+    <span>© 2026 WAVES Magazine</span>
+    <div class="social-links" aria-label="Social media links">
+      <a href="#" aria-label="Instagram">Instagram</a>
+      <a href="#" aria-label="TikTok">TikTok</a>
+      <a href="#" aria-label="YouTube">YouTube</a>
+    </div>
+  </footer>
 
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">↑</button>
 
   <!-- =====================================================
-       COOKIE BANNER
+       COOKIE BANNER — experiment structure and identifiers preserved.
        ===================================================== -->
-
-  <section
-    id="cookieBanner"
-    class="cookie-banner"
-    aria-label="Cookie choices"
-  >
-
-
-    <h2>
-      Cookie choices
-    </h2>
-
-
+  <section id="cookieBanner" class="cookie-banner" aria-label="Cookie choices">
+    <h2>Cookie choices</h2>
     <p>
-
-      We use necessary cookies to operate this website.
-
-      With your permission, we also use functional cookies
-      to remember your preferences, analytics cookies to
-      understand site usage and advertising cookies to provide
-      personalised content.
-
+      We use necessary cookies to operate this website. With your permission, we also use functional cookies to remember your preferences, analytics cookies to understand site usage and advertising cookies to provide personalised content.
     </p>
 
-
-
     <div class="cookie-actions">
-
-
-      <button
-        type="button"
-        class="secondary-btn"
-        data-choice="reject_optional"
-      >
-        Reject Optional Cookies
-      </button>
-
-
-
-      <button
-        type="button"
-        class="secondary-btn"
-        data-choice="customise"
-      >
-        Customise
-      </button>
-
-
-
-      <button
-        type="button"
-        class="primary-btn"
-        data-choice="accept_all"
-      >
-        Accept All Cookies
-      </button>
-
-
+      <button type="button" class="secondary-btn" data-choice="reject_optional">Reject Optional Cookies</button>
+      <button type="button" class="secondary-btn" data-choice="customise">Customise</button>
+      <button type="button" class="primary-btn" data-choice="accept_all">Accept All Cookies</button>
     </div>
 
-
-
-    <div
-      id="settingsPanel"
-      class="settings-panel"
-    >
-
-
-      <h3>
-        Cookie preferences
-      </h3>
-
-
-
-      <label>
-
-        <input
-          type="checkbox"
-          checked
-          disabled
-        />
-
-        Necessary cookies, always active
-
-      </label>
-
-
-
-      <label>
-
-        <input
-          id="functionalCookies"
-          type="checkbox"
-        />
-
-        Functional cookies, remember your preferences
-
-      </label>
-
-
-
-      <label>
-
-        <input
-          id="analyticsCookies"
-          type="checkbox"
-        />
-
-        Analytics cookies, help us understand website use
-
-      </label>
-
-
-
-      <label>
-
-        <input
-          id="advertisingCookies"
-          type="checkbox"
-        />
-
-        Advertising cookies, provide personalised content
-
-      </label>
-
-
-
-      <button
-        type="button"
-        class="primary-btn"
-        data-choice="save_settings"
-      >
-        Save Settings
-      </button>
-
-
+    <div id="settingsPanel" class="settings-panel">
+      <h3>Cookie preferences</h3>
+      <label><input type="checkbox" checked disabled /> Necessary cookies, always active</label>
+      <label><input id="functionalCookies" type="checkbox" /> Functional cookies, remember your preferences</label>
+      <label><input id="analyticsCookies" type="checkbox" /> Analytics cookies, help us understand website use</label>
+      <label><input id="advertisingCookies" type="checkbox" /> Advertising cookies, provide personalised content</label>
+      <button type="button" class="primary-btn" data-choice="save_settings">Save Settings</button>
     </div>
-
   </section>
 
+  <!-- Existing experiment controller -->
+  <script type="module" src="js/site-controller.js"></script>
 
+  <!-- Site-only presentation interactions. No experiment tracking logic is changed here. -->
+  <script>
+    (() => {
+      const body = document.body;
+      const menuToggle = document.getElementById('menuToggle');
+      const navLinks = document.getElementById('navLinks');
+      const themeToggle = document.getElementById('themeToggle');
+      const backToTop = document.getElementById('backToTop');
+      const newsletterForm = document.getElementById('newsletterForm');
+      const newsletterStatus = document.getElementById('newsletterStatus');
 
-  <script
-    type="module"
-    src="js/site-controller.js"
-  ></script>
+      menuToggle?.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('is-open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+      });
 
+      navLinks?.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('is-open');
+          menuToggle?.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      themeToggle?.addEventListener('click', () => {
+        const isDark = body.classList.toggle('dark-mode');
+        themeToggle.querySelector('.theme-icon').textContent = isDark ? '☀' : '☾';
+      });
+
+      window.addEventListener('scroll', () => {
+        backToTop?.classList.toggle('visible', window.scrollY > 520);
+      }, { passive: true });
+
+      backToTop?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      newsletterForm?.addEventListener('submit', event => {
+        event.preventDefault();
+        newsletterStatus.textContent = 'You’re on the list — see you Friday!';
+        newsletterForm.reset();
+      });
+    })();
+  </script>
 </body>
 </html>
