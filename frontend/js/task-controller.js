@@ -214,16 +214,26 @@ export function initialiseTaskController(
   /**
    * Display neutral submission feedback.
    */
-  function renderRecordedFeedback() {
-    feedback.textContent =
-      "Answer recorded.";
+function renderRecordedFeedback() {
 
-    feedback.dataset.state =
-      "recorded";
+  feedback.textContent =
+    "Answer recorded.";
 
-    taskPanel.dataset.submitted =
-      "true";
-  }
+  feedback.dataset.state =
+    "recorded";
+
+  taskPanel.dataset.submitted =
+    "true";
+
+
+  /*
+   * Compact the persistent task card after the
+   * participant has submitted an answer.
+   */
+  nextBox.dataset.taskComplete =
+    "true";
+
+}
 
 
   /**

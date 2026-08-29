@@ -5514,3 +5514,299 @@ body[data-site-id="site4_local_events"] .loop-reveal.is-visible {
     transform: scale(1.08) !important;
   }
 }
+
+/* =========================================================
+   EXPERIMENT WEBSITE TASK — PERSISTENT TASK CARD
+   ========================================================= */
+
+/*
+ * The task card stays visible while participants browse.
+ * It is intentionally visually separate from the mock website.
+ */
+
+.next-box {
+  position: fixed;
+  top: 88px;
+  right: 20px;
+
+  width: min(380px, calc(100vw - 40px));
+  max-height: calc(100vh - 120px);
+
+  padding: 18px;
+
+  overflow-y: auto;
+
+  z-index: 5000;
+
+  background: rgba(255, 255, 255, 0.98);
+  color: #1f2937;
+
+  border: 2px solid #334155;
+  border-radius: 14px;
+
+  box-shadow:
+    0 12px 35px rgba(15, 23, 42, 0.18);
+
+  backdrop-filter: blur(10px);
+}
+
+
+/* ---------------------------------------------------------
+   TASK HEADER
+   --------------------------------------------------------- */
+
+.task-panel h3 {
+  margin: 0 0 8px;
+
+  font-size: 0.78rem;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: #475569;
+}
+
+
+.task-panel h3::before {
+  content: "●";
+
+  display: inline-block;
+
+  margin-right: 7px;
+
+  color: #334155;
+
+  font-size: 0.75rem;
+}
+
+
+/* ---------------------------------------------------------
+   QUESTION
+   --------------------------------------------------------- */
+
+.task-instruction {
+  margin: 0 0 14px;
+
+  color: #111827;
+
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+
+/* ---------------------------------------------------------
+   ANSWER AREA
+   --------------------------------------------------------- */
+
+.task-options {
+  display: grid;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+}
+
+
+.task-answer-label {
+  margin-bottom: 7px;
+
+  color: #64748b;
+
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+
+.task-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  width: 100%;
+
+  padding: 10px 12px;
+
+  cursor: pointer;
+
+  background: #f8fafc;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+.task-option:hover {
+  background: #f1f5f9;
+  border-color: #64748b;
+}
+
+
+.task-option:has(.task-option-input:checked) {
+  background: #e8eef5;
+  border-color: #334155;
+}
+
+
+.task-option-input {
+  flex: 0 0 auto;
+
+  margin-top: 3px;
+}
+
+
+.task-option-text {
+  color: #1f2937;
+
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+
+/* ---------------------------------------------------------
+   SUBMIT BUTTON
+   --------------------------------------------------------- */
+
+.task-submit-button {
+  width: 100%;
+
+  margin-top: 14px;
+  padding: 11px 16px;
+
+  cursor: pointer;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: #334155;
+  color: #ffffff;
+
+  font: inherit;
+  font-weight: 700;
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+.task-submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+
+.task-submit-button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+
+/* ---------------------------------------------------------
+   FEEDBACK
+   --------------------------------------------------------- */
+
+.task-feedback {
+  min-height: 1.3em;
+
+  margin: 10px 0 0;
+
+  font-size: 0.87rem;
+  line-height: 1.4;
+}
+
+
+.task-feedback[data-state="recorded"] {
+  color: #166534;
+  font-weight: 700;
+}
+
+
+.task-feedback[data-state="validation"] {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+
+/* ---------------------------------------------------------
+   CONTINUE BUTTON
+   --------------------------------------------------------- */
+
+.next-box > .primary-btn {
+  width: 100%;
+
+  margin-top: 12px;
+  padding: 11px 16px;
+
+  border-radius: 8px;
+
+  font-weight: 700;
+}
+
+
+.next-box > .primary-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
+/* ---------------------------------------------------------
+   COMPLETED TASK
+   --------------------------------------------------------- */
+
+.next-box[data-task-complete="true"] .task-options,
+.next-box[data-task-complete="true"] .task-submit-button,
+.next-box[data-task-complete="true"] .task-answer-label {
+  display: none;
+}
+
+
+.next-box[data-task-complete="true"] .task-instruction {
+  margin-bottom: 6px;
+
+  font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   TABLETS / PHONES
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .next-box {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+
+    width: auto;
+    max-height: 52vh;
+
+    padding: 14px;
+
+    border-radius: 12px;
+  }
+
+
+  .task-instruction {
+    font-size: 0.98rem;
+  }
+
+
+  .task-option {
+    padding: 9px 10px;
+  }
+
+
+  .task-option-text {
+    font-size: 0.88rem;
+  }
+
+}
