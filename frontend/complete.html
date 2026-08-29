@@ -15,11 +15,40 @@
     href="css/start.css"
   />
 
-
   <style>
+    .save-status {
+      margin-top: 18px;
+      padding: 14px 16px;
 
-    .summary-output {
-      max-height: 360px;
+      border: 1px solid #d5dde5;
+      border-radius: 8px;
+
+      background: #f8fafc;
+
+      line-height: 1.5;
+    }
+
+    .save-status[data-state="success"] {
+      border-color: #9bc5a7;
+      background: #f2faf4;
+    }
+
+    .save-status[data-state="error"] {
+      border-color: #d7a1a1;
+      background: #fff6f6;
+    }
+
+    .secondary-message {
+      margin-top: 14px;
+
+      color: #52667a;
+
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .debug-output {
+      max-height: 320px;
 
       margin-top: 20px;
       padding: 16px;
@@ -37,31 +66,22 @@
         "Courier New",
         monospace;
 
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       line-height: 1.5;
 
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-
-    .development-message {
-      margin-top: 18px;
-
-      color: #52667a;
-
-      font-size: 0.94rem;
+    .hidden {
+      display: none !important;
     }
-
   </style>
-
 </head>
-
 
 <body>
 
   <main class="study-container">
-
 
     <!-- =====================================================
          COMPLETION PANEL
@@ -72,54 +92,65 @@
       class="study-card"
     >
 
-      <p class="study-step">03 / 03 &nbsp; Complete</p>
+      <p class="study-step">
+        03 / 03 &nbsp; Complete
+      </p>
 
       <h1>
         Website tasks complete
       </h1>
-
 
       <p>
         You have completed all four mock website tasks.
       </p>
 
 
-      <div class="instruction-box">
+      <div
+        id="saveStatus"
+        class="save-status"
+        data-state="saving"
+      >
 
         <strong id="statusHeading">
-          Preparing your study results
+          Saving your responses
         </strong>
 
-
         <p id="statusMessage">
-          Please wait while the study results are prepared.
+          Please wait while your website task responses are securely recorded.
         </p>
 
       </div>
 
 
       <button
-        id="continueButton"
+        id="returnButton"
         class="primary-button"
         type="button"
         disabled
       >
-        Continue to the post-study questionnaire
+        Return to survey
       </button>
 
 
       <p
-        id="developmentMessage"
-        class="development-message hidden"
+        id="returnInstructions"
+        class="secondary-message hidden"
       >
-        Development mode is active. Add the Qualtrics
-        post-study survey address before deployment.
+        Please return to the Qualtrics survey tab you left open
+        and continue with the final questionnaire.
       </p>
 
 
+      <!--
+        Development/debug output.
+
+        This remains hidden during normal use.
+        If something goes wrong while testing, you can temporarily
+        display it from the JavaScript below.
+      -->
       <pre
-        id="summaryOutput"
-        class="summary-output hidden"
+        id="debugOutput"
+        class="debug-output hidden"
       ></pre>
 
     </section>
@@ -139,7 +170,6 @@
         Unable to complete the study
       </h1>
 
-
       <p id="errorMessage">
         The study session could not be found.
       </p>
@@ -157,19 +187,8 @@
 
 
     import {
-      buildResultsSummary,
-      buildQualtricsUrl
+      buildResultsSummary
     } from "./js/results-summary.js";
-
-
-    /*
-     * Leave this blank during development.
-     *
-     * Later, replace this with the anonymous URL for
-     * the Qualtrics post-study questionnaire.
-     */
-    const QUALTRICS_POST_SURVEY_URL =
-      "";
 
 
     const session =
@@ -194,6 +213,12 @@
       );
 
 
+    const saveStatus =
+      document.getElementById(
+        "saveStatus"
+      );
+
+
     const statusHeading =
       document.getElementById(
         "statusHeading"
@@ -206,26 +231,26 @@
       );
 
 
-    const continueButton =
+    const returnButton =
       document.getElementById(
-        "continueButton"
+        "returnButton"
       );
 
 
-    const developmentMessage =
+    const returnInstructions =
       document.getElementById(
-        "developmentMessage"
+        "returnInstructions"
       );
 
 
-    const summaryOutput =
+    const debugOutput =
       document.getElementById(
-        "summaryOutput"
+        "debugOutput"
       );
 
 
     /**
-     * Display the completion error state.
+     * Display a fatal completion-page error.
      *
      * @param {string} message
      */
@@ -251,11 +276,235 @@
     }
 
 
+    /**
+     * Send the completed participant-level experiment
+     * record to the Cloudflare Worker.
+     *
+     * The Worker stores the JSON in D1.
+     *
+     * @param {object} summary
+     * @returns {Promise<object>}
+     */
+    async function saveExperimentResults(
+      summary
+    ) {
+
+      const response =
+        await fetch(
+          "/api/session",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify(
+                summary
+              )
+          }
+        );
+
+
+      let responseBody = null;
+
+
+      try {
+
+        responseBody =
+          await response.json();
+
+      } catch (error) {
+
+        responseBody = null;
+
+      }
+
+
+      if (!response.ok) {
+
+        const serverMessage =
+          responseBody?.error ||
+          `Server returned HTTP ${response.status}.`;
+
+
+        throw new Error(
+          serverMessage
+        );
+
+      }
+
+
+      if (
+        !responseBody ||
+        responseBody.success !== true
+      ) {
+
+        throw new Error(
+          "The server did not confirm that the experiment results were saved."
+        );
+
+      }
+
+
+      return responseBody;
+
+    }
+
+
+    /**
+     * Change the page to the successful-save state.
+     */
+    function showSaveSuccess() {
+
+      saveStatus.dataset.state =
+        "success";
+
+
+      statusHeading.textContent =
+        "Responses saved";
+
+
+      statusMessage.textContent =
+        "Your website task responses have been recorded successfully.";
+
+
+      returnInstructions
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      returnButton.disabled =
+        false;
+
+    }
+
+
+    /**
+     * Show a save failure without discarding the
+     * participant's locally stored data.
+     *
+     * @param {Error} error
+     * @param {object} summary
+     */
+    function showSaveFailure(
+      error,
+      summary
+    ) {
+
+      saveStatus.dataset.state =
+        "error";
+
+
+      statusHeading.textContent =
+        "We could not save your responses";
+
+
+      statusMessage.textContent =
+        "Please do not close this page. You can try saving again.";
+
+
+      returnButton.textContent =
+        "Try saving again";
+
+
+      returnButton.disabled =
+        false;
+
+
+      /*
+       * Keep the completed result in sessionStorage so that
+       * it is not lost simply because the first network
+       * request failed.
+       */
+      sessionStorage.setItem(
+        "privacyExperimentResultsSummary",
+        JSON.stringify(
+          summary
+        )
+      );
+
+
+      console.error(
+        "Unable to save experiment results:",
+        error
+      );
+
+    }
+
+
+    /**
+     * Attempt to save the experiment.
+     *
+     * @param {object} summary
+     */
+    async function attemptSave(
+      summary
+    ) {
+
+      returnButton.disabled =
+        true;
+
+
+      returnButton.textContent =
+        "Return to survey";
+
+
+      saveStatus.dataset.state =
+        "saving";
+
+
+      statusHeading.textContent =
+        "Saving your responses";
+
+
+      statusMessage.textContent =
+        "Please wait while your website task responses are securely recorded.";
+
+
+      try {
+
+        await saveExperimentResults(
+          summary
+        );
+
+
+        /*
+         * Retain a local copy during this browser session.
+         * D1 is now the persistent server-side copy.
+         */
+        sessionStorage.setItem(
+          "privacyExperimentResultsSummary",
+          JSON.stringify(
+            summary
+          )
+        );
+
+
+        showSaveSuccess();
+
+
+      } catch (error) {
+
+        showSaveFailure(
+          error,
+          summary
+        );
+
+      }
+
+    }
+
+
     try {
 
       /*
-       * The participant should only reach this page
-       * after Site 4 has been completed.
+       * Participants should only reach complete.html
+       * after Site 4 has marked the experiment complete.
        */
       if (
         !session ||
@@ -270,15 +519,15 @@
 
 
       /*
-       * Condense the complete experimental record into
-       * one participant-level result.
+       * Build the participant-level JSON record from
+       * the existing session and event data.
        */
       const summary =
         buildResultsSummary();
 
 
       /*
-       * Store a local copy during development.
+       * Keep a local fallback copy immediately.
        */
       sessionStorage.setItem(
         "privacyExperimentResultsSummary",
@@ -288,83 +537,76 @@
       );
 
 
-      statusHeading.textContent =
-        "Study results prepared";
-
-
-      statusMessage.textContent =
-        `${summary.total_event_count} study events were ` +
-        `condensed into one participant-level result.`;
+      /*
+       * Save to Cloudflare D1.
+       */
+      await attemptSave(
+        summary
+      );
 
 
       /*
-       * Production behaviour:
+       * Button behaviour:
        *
-       * append the participant-level results to the
-       * Qualtrics URL and continue to the post-study
-       * questionnaire.
+       * Success:
+       *   try to close the experiment tab.
+       *
+       * Failure:
+       *   retry the database save.
        */
-      if (
-        QUALTRICS_POST_SURVEY_URL.trim()
-      ) {
+      returnButton
+        .addEventListener(
+          "click",
+          async function () {
 
-        const redirectUrl =
-          buildQualtricsUrl(
-            QUALTRICS_POST_SURVEY_URL,
-            summary
-          );
+            if (
+              saveStatus.dataset.state ===
+              "error"
+            ) {
 
-
-        continueButton.disabled =
-          false;
-
-
-        continueButton
-          .addEventListener(
-            "click",
-            function () {
-
-              window.location.assign(
-                redirectUrl
+              await attemptSave(
+                summary
               );
 
+              return;
+
             }
-          );
-
-      } else {
-
-        /*
-         * Development behaviour:
-         *
-         * show the generated result on screen so it can
-         * be inspected before Qualtrics is connected.
-         */
-        developmentMessage
-          .classList
-          .remove(
-            "hidden"
-          );
 
 
-        summaryOutput
-          .classList
-          .remove(
-            "hidden"
-          );
+            /*
+             * The experiment was opened from Qualtrics
+             * in another tab.
+             *
+             * Browsers normally allow window.close()
+             * when the current tab was opened by script
+             * or a target="_blank" link.
+             */
+            window.close();
 
 
-        summaryOutput.textContent =
-          JSON.stringify(
-            summary,
-            null,
-            2
-          );
+            /*
+             * Some mobile browsers will not allow the
+             * tab to close automatically.
+             *
+             * If it remains open, update the instructions.
+             */
+            setTimeout(
+              function () {
+
+                statusHeading.textContent =
+                  "Return to your survey";
 
 
-        continueButton.textContent =
-          "Qualtrics link not configured";
+                statusMessage.textContent =
+                  "Please close this tab and return to the Qualtrics survey to continue.";
 
-      }
+              },
+              300
+            );
+
+          }
+        );
+
 
     } catch (error) {
 
