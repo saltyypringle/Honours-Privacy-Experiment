@@ -1,0 +1,12 @@
+{
+  "name": "honours-privacy-experiment",
+  "compatibility_date": "2026-08-29",
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "honours-privacy-data",
+      "database_id": "49ec4ad3-68ef-412b-87af-c230e3ce5f06"
+    }
+  ]
+}
