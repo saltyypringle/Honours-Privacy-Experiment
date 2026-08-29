@@ -5915,3 +5915,235 @@ body[data-site-id="site4_local_events"] .loop-reveal.is-visible {
   }
 
 }
+
+/* =========================================================
+   SUGGESTIONS CONDITION — PRIVACY LEARNING AID
+   ========================================================= */
+
+/*
+ * The most important learning point remains visible before
+ * participants expand the suggestion.
+ *
+ * The expandable area provides short explanations rather
+ * than introducing a separate privacy lesson or modal.
+ */
+
+.experiment-privacy-summary {
+  margin: 10px 0 12px;
+
+  line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   EXPAND / COLLAPSE BUTTON
+   --------------------------------------------------------- */
+
+.experiment-privacy-details-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;
+  padding: 8px 12px;
+
+  cursor: pointer;
+
+  border: 1px solid currentColor;
+  border-radius: 999px;
+
+  background: transparent;
+  color: inherit;
+
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+
+.experiment-privacy-details-toggle:hover {
+  opacity: 0.82;
+}
+
+
+/* ---------------------------------------------------------
+   LEARNING CARDS
+   --------------------------------------------------------- */
+
+.experiment-privacy-learning-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 9px;
+
+  margin-top: 4px;
+}
+
+
+.experiment-privacy-learning-item {
+  display: grid;
+
+  gap: 3px;
+
+  padding: 10px 12px;
+
+  border:
+    1px solid
+    rgba(
+      40,
+      48,
+      71,
+      0.12
+    );
+
+  border-radius: 12px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.62
+    );
+}
+
+
+.experiment-privacy-learning-item strong {
+  font-size: 0.88rem;
+
+  line-height: 1.3;
+}
+
+
+.experiment-privacy-learning-item span {
+  font-size: 0.82rem;
+
+  line-height: 1.4;
+
+  opacity: 0.88;
+}
+
+
+/* ---------------------------------------------------------
+   SMALL EXPLANATORY NOTE
+   --------------------------------------------------------- */
+
+.experiment-privacy-note {
+  margin: 12px 0 0 !important;
+
+  font-size: 0.8rem;
+
+  line-height: 1.45;
+
+  opacity: 0.8;
+}
+
+
+/* =========================================================
+   SITE 3 — VIBECHECK
+   =========================================================
+   Site 3 has the dark/cyan visual design.
+ */
+
+body[
+  data-site-id="site3_no_banner_tracking"
+]
+.experiment-privacy-learning-item {
+
+  border-color:
+    rgba(
+      0,
+      217,
+      255,
+      0.16
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+}
+
+
+body[
+  data-site-id="site3_no_banner_tracking"
+]
+.experiment-privacy-details-toggle {
+
+  border-color:
+    rgba(
+      0,
+      217,
+      255,
+      0.52
+    );
+
+  color:
+    var(
+      --vibe-cyan
+    );
+}
+
+
+/* =========================================================
+   SITE 4 — LOCALLOOP
+   =========================================================
+   Site 4 keeps the privacy-learning cards within the
+   site's warm neutral palette.
+ */
+
+body[
+  data-site-id="site4_local_events"
+]
+.experiment-privacy-learning-item {
+
+  border-color:
+    rgba(
+      110,
+      90,
+      69,
+      0.16
+    );
+
+  background:
+    rgba(
+      254,
+      250,
+      224,
+      0.58
+    );
+}
+
+
+/* =========================================================
+   SMALL SCREENS
+   ========================================================= */
+
+@media (
+  max-width: 700px
+) {
+
+  .experiment-privacy-learning-grid {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .experiment-privacy-learning-item {
+
+    padding:
+      9px 10px;
+
+  }
+
+}

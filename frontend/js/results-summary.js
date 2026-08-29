@@ -14,90 +14,152 @@ const SITE_IDS = [
 ];
 
 
-function isObject(value) {
+/**
+ * Check whether a value is a normal object.
+ */
+function isObject(
+  value
+) {
+
   return (
     value !== null &&
     typeof value === "object" &&
     !Array.isArray(value)
   );
+
 }
 
 
-function getEventValue(event) {
-  return isObject(event?.eventValue)
+/**
+ * Safely retrieve an event's value object.
+ */
+function getEventValue(
+  event
+) {
+
+  return isObject(
+    event?.eventValue
+  )
     ? event.eventValue
     : {};
+
 }
 
 
+/**
+ * Find the most recent matching event.
+ */
 function getLastEvent(
   events,
   siteId,
   eventType
 ) {
+
   for (
-    let index = events.length - 1;
+    let index =
+      events.length - 1;
+
     index >= 0;
+
     index -= 1
   ) {
-    const event = events[index];
+
+    const event =
+      events[index];
+
 
     if (
       event.siteId === siteId &&
       event.eventType === eventType
     ) {
+
       return event;
+
     }
+
   }
 
+
   return null;
+
 }
 
 
+/**
+ * Count matching events.
+ */
 function countEvents(
   events,
   siteId,
   eventType
 ) {
-  return events.filter(function (event) {
-    return (
-      event.siteId === siteId &&
-      event.eventType === eventType
-    );
-  }).length;
+
+  return events.filter(
+    function (event) {
+
+      return (
+        event.siteId === siteId &&
+        event.eventType === eventType
+      );
+
+    }
+  ).length;
+
 }
 
 
+/**
+ * Retrieve the stored task response
+ * for one website.
+ */
 function getTaskResponse(
   session,
   siteId
 ) {
+
   const responses =
-    Array.isArray(session.taskResponses)
+    Array.isArray(
+      session.taskResponses
+    )
       ? session.taskResponses
       : [];
 
+
   for (
-    let index = responses.length - 1;
+    let index =
+      responses.length - 1;
+
     index >= 0;
+
     index -= 1
   ) {
+
     if (
-      responses[index].siteId === siteId
+      responses[index].siteId ===
+      siteId
     ) {
+
       return responses[index];
+
     }
+
   }
 
+
   return null;
+
 }
 
 
+/**
+ * Build a summary for one website.
+ */
 function buildSiteSummary(
   siteId,
   session,
   events
 ) {
+
   const taskResponse =
     getTaskResponse(
       session,
@@ -141,10 +203,29 @@ function buildSiteSummary(
     );
 
 
+  /*
+   * Retrieve the privacy learning aid shown
+   * to suggestions participants.
+   */
+  const suggestionEvent =
+    getLastEvent(
+      events,
+      siteId,
+      "privacy_suggestion_shown"
+    );
+
+
+  const suggestionValue =
+    getEventValue(
+      suggestionEvent
+    );
+
+
   return {
 
     task_id:
-      taskResponse?.taskId ?? null,
+      taskResponse?.taskId ??
+      null,
 
 
     task_correct:
@@ -155,15 +236,18 @@ function buildSiteSummary(
 
 
     task_submitted_at:
-      taskResponse?.submittedAt ?? null,
+      taskResponse?.submittedAt ??
+      null,
 
 
     cookie_choice:
-      cookieValue.choice ?? null,
+      cookieValue.choice ??
+      null,
 
 
     cookie_source:
-      cookieValue.source ?? null,
+      cookieValue.source ??
+      null,
 
 
     cookie_functional:
@@ -225,6 +309,31 @@ function buildSiteSummary(
       ),
 
 
+    /*
+     * Examples:
+     *
+     * site3:
+     *   data_collection
+     *
+     * site4:
+     *   cookie_purposes
+     */
+    suggestion_topic:
+      suggestionValue
+        .suggestionTopic ??
+      null,
+
+
+    /*
+     * Useful for verifying that the treatment
+     * was actually displayed.
+     */
+    suggestion_shown:
+      Boolean(
+        suggestionEvent
+      ),
+
+
     suggestion_open_count:
       countEvents(
         events,
@@ -249,22 +358,29 @@ function buildSiteSummary(
       )
 
   };
+
 }
 
 
+/**
+ * Build one participant-level experiment record.
+ */
 export function buildResultsSummary() {
 
   const session =
     getSession();
+
 
   const events =
     getEvents();
 
 
   if (!session) {
+
     throw new Error(
       "No study session was found."
     );
+
   }
 
 
@@ -365,7 +481,8 @@ export function buildResultsSummary() {
               total +
               (
                 sites[siteId]
-                  .task_correct === true
+                  .task_correct ===
+                true
                   ? 1
                   : 0
               )
@@ -439,23 +556,47 @@ export function buildResultsSummary() {
     }
 
   };
+
 }
 
 
-function encodeBoolean(value) {
+/**
+ * Convert booleans to values suitable
+ * for URL/Qualtrics parameters.
+ */
+function encodeBoolean(
+  value
+) {
 
-  if (value === true) {
+  if (
+    value === true
+  ) {
+
     return "1";
+
   }
 
-  if (value === false) {
+
+  if (
+    value === false
+  ) {
+
     return "0";
+
   }
+
 
   return "";
+
 }
 
 
+/**
+ * Flatten the participant summary.
+ *
+ * This remains available for compatibility with
+ * the earlier Qualtrics-transfer design.
+ */
 export function flattenResultsSummary(
   summary
 ) {
@@ -471,7 +612,8 @@ export function flattenResultsSummary(
 
 
     site_order:
-      summary.site_order.join(","),
+      summary.site_order
+        .join(","),
 
 
     total_duration_ms:
@@ -505,10 +647,14 @@ export function flattenResultsSummary(
 
 
   SITE_IDS.forEach(
-    function (siteId) {
+    function (
+      siteId
+    ) {
 
       const site =
-        summary.sites[siteId];
+        summary.sites[
+          siteId
+        ];
 
 
       flattened[
@@ -522,13 +668,15 @@ export function flattenResultsSummary(
       flattened[
         `${siteId}_cookie_choice`
       ] =
-        site.cookie_choice ?? "";
+        site.cookie_choice ??
+        "";
 
 
       flattened[
         `${siteId}_cookie_source`
       ] =
-        site.cookie_source ?? "";
+        site.cookie_source ??
+        "";
 
 
       flattened[
@@ -587,16 +735,23 @@ export function flattenResultsSummary(
 
 
   return flattened;
+
 }
 
 
+/**
+ * Legacy helper for converting a summary into
+ * a Qualtrics URL.
+ */
 export function buildQualtricsUrl(
   baseUrl,
   summary
 ) {
 
   const url =
-    new URL(baseUrl);
+    new URL(
+      baseUrl
+    );
 
 
   const flattened =
@@ -608,11 +763,15 @@ export function buildQualtricsUrl(
   Object.entries(
     flattened
   ).forEach(
-    function ([key, value]) {
+    function (
+      [key, value]
+    ) {
 
       url.searchParams.set(
         key,
-        String(value)
+        String(
+          value
+        )
       );
 
     }
@@ -620,4 +779,5 @@ export function buildQualtricsUrl(
 
 
   return url.toString();
+
 }
