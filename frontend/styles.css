@@ -6147,3 +6147,667 @@ body[
   }
 
 }
+
+/* =========================================================
+   CLEAN SHARED EXPERIMENT INTERFACE
+   =========================================================
+   Experimental controls use one consistent visual language
+   regardless of the mock website underneath.
+   ========================================================= */
+
+
+/* =========================================================
+   TASK CARD
+   ========================================================= */
+
+body[data-study-site] .next-box {
+  position: fixed;
+
+  top: 84px;
+  right: 18px;
+  left: auto;
+  bottom: auto;
+
+  display: grid;
+  gap: 10px;
+
+  width: min(360px, calc(100vw - 36px));
+  max-height: calc(100vh - 110px);
+
+  margin: 0;
+  padding: 14px;
+
+  overflow-y: auto;
+
+  z-index: 3200;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.98);
+  color: #1f2937;
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.16);
+
+  backdrop-filter: blur(8px);
+}
+
+
+/*
+ * Remove the individual website theme from the
+ * experiment task itself.
+ */
+
+body[data-study-site] .task-panel {
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+  color: #1f2937;
+
+  box-shadow: none;
+}
+
+
+/* ---------------------------------------------------------
+   TASK HEADER
+   --------------------------------------------------------- */
+
+body[data-study-site] .task-panel h3 {
+  margin: 0;
+
+  color: #475569;
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  font-size: 0.76rem;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+body[data-study-site] .task-panel h3::before {
+  content: "●";
+
+  margin-right: 7px;
+
+  color: #475569;
+}
+
+
+body[data-study-site] .task-panel-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 8px;
+}
+
+
+/* ---------------------------------------------------------
+   TASK QUESTION
+   --------------------------------------------------------- */
+
+body[data-study-site] .task-instruction {
+  margin: 0 0 12px;
+
+  color: #111827;
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+
+/* ---------------------------------------------------------
+   TASK OPTIONS
+   --------------------------------------------------------- */
+
+body[data-study-site] .task-form,
+body[data-study-site] .task-options {
+  display: grid;
+
+  gap: 8px;
+}
+
+
+body[data-study-site] .task-options {
+  grid-template-columns: 1fr;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+}
+
+
+body[data-study-site] .task-answer-label {
+  margin-bottom: 3px;
+
+  color: #64748b;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+
+body[data-study-site] .task-option {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 9px;
+
+  min-height: 0;
+
+  width: 100%;
+
+  padding: 9px 11px;
+
+  cursor: pointer;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  background: #f8fafc;
+  color: #1f2937;
+
+  box-shadow: none;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+body[data-study-site] .task-option:hover {
+  border-color: #64748b;
+
+  background: #f1f5f9;
+
+  box-shadow: none;
+}
+
+
+body[data-study-site]
+.task-option:has(
+  .task-option-input:checked
+) {
+  border-color: #334155;
+
+  background: #e8eef5;
+}
+
+
+body[data-study-site] .task-option-text {
+  color: #1f2937;
+
+  font-size: 0.9rem;
+
+  line-height: 1.35;
+}
+
+
+body[data-study-site] .task-option-input {
+  flex: 0 0 auto;
+
+  width: 16px;
+  height: 16px;
+
+  margin-top: 2px;
+
+  accent-color: #334155;
+}
+
+
+/* ---------------------------------------------------------
+   TASK BUTTONS
+   --------------------------------------------------------- */
+
+body[data-study-site] .task-submit-button {
+  width: 100%;
+
+  margin-top: 10px;
+  padding: 10px 14px;
+
+  border: 1px solid #334155;
+  border-radius: 8px;
+
+  background: #334155;
+  color: #ffffff;
+
+  font: inherit;
+  font-weight: 700;
+
+  box-shadow: none;
+
+  cursor: pointer;
+}
+
+
+body[data-study-site]
+.task-submit-button:hover:not(:disabled) {
+  background: #1e293b;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+
+body[data-study-site]
+.next-box > .primary-btn {
+  width: 100%;
+
+  margin-top: 4px;
+  padding: 10px 14px;
+
+  border: 1px solid #334155;
+  border-radius: 8px;
+
+  background: #334155;
+  color: #ffffff;
+
+  font-weight: 700;
+
+  box-shadow: none;
+}
+
+
+body[data-study-site]
+.next-box > .primary-btn:hover:not(:disabled) {
+  background: #1e293b;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+
+/* ---------------------------------------------------------
+   TASK FEEDBACK
+   --------------------------------------------------------- */
+
+body[data-study-site] .task-feedback {
+  min-height: 1.2em;
+
+  margin: 8px 0 0;
+
+  color: #475569;
+
+  font-size: 0.84rem;
+}
+
+
+body[data-study-site]
+.task-feedback[data-state="recorded"] {
+  color: #166534;
+}
+
+
+body[data-study-site]
+.task-feedback[data-state="validation"] {
+  color: #b91c1c;
+}
+
+
+/* =========================================================
+   TASK COLLAPSE BUTTON
+   ========================================================= */
+
+body[data-study-site] .task-collapse-button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+
+  background: #f8fafc;
+  color: #334155;
+
+  font-size: 1.1rem;
+  font-weight: 700;
+
+  line-height: 1;
+}
+
+
+body[data-study-site]
+.task-collapse-button:hover {
+  border-color: #64748b;
+
+  background: #f1f5f9;
+}
+
+
+/*
+ * Collapsed task becomes a small tab.
+ */
+
+body[data-study-site]
+.next-box:has(
+  .task-panel[data-collapsed="true"]
+) {
+  width: 190px;
+  min-width: 0;
+
+  max-height: none;
+
+  padding: 10px 12px;
+
+  overflow: hidden;
+}
+
+
+body[data-study-site]
+.task-panel[data-collapsed="true"]
+.task-panel-header {
+  margin-bottom: 0;
+}
+
+
+body[data-study-site]
+.task-panel[data-collapsed="true"]
+.task-panel-content {
+  display: none;
+}
+
+
+body[data-study-site]
+.next-box:has(
+  .task-panel[data-collapsed="true"]
+)
+> .primary-btn {
+  display: none;
+}
+
+
+/* =========================================================
+   AUTOMATION STATUS
+   =========================================================
+   This is now a compact status card in the opposite corner
+   rather than another top-right floating panel.
+   ========================================================= */
+
+body[data-study-site]
+.experiment-automation-notice {
+  position: fixed;
+
+  top: auto;
+  right: auto;
+
+  left: 18px;
+  bottom: 18px;
+
+  z-index: 3300;
+
+  width: min(290px, calc(100vw - 36px));
+
+  padding: 12px 14px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.98);
+  color: #1f2937;
+
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.14);
+}
+
+
+body[data-study-site]
+.experiment-automation-notice strong {
+  display: block;
+
+  color: #1f2937;
+
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+
+body[data-study-site]
+.experiment-automation-notice p {
+  margin: 4px 0 8px;
+
+  color: #475569;
+
+  font-size: 0.84rem;
+
+  line-height: 1.35;
+}
+
+
+body[data-study-site]
+.experiment-automation-notice button {
+  width: 100%;
+
+  padding: 7px 10px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+
+  background: #f8fafc;
+  color: #334155;
+
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   COOKIE BANNER
+   =========================================================
+   Keep one contained panel centred at the bottom rather
+   than allowing it to span nearly the entire viewport.
+   ========================================================= */
+
+body[data-study-site] .cookie-banner {
+  position: fixed;
+
+  left: 50%;
+  right: auto;
+
+  bottom: 16px;
+
+  width: min(980px, calc(100vw - 32px));
+
+  max-height: 60vh;
+
+  margin: 0;
+
+  padding: 18px 20px;
+
+  overflow-y: auto;
+
+  transform: translateX(-50%);
+
+  z-index: 4000;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 14px 38px rgba(15, 23, 42, 0.2);
+}
+
+
+/* =========================================================
+   SUGGESTIONS
+   =========================================================
+   The suggestion remains part of the cookie interface
+   rather than becoming another floating overlay.
+   ========================================================= */
+
+body[data-study-site]
+.experiment-privacy-snapshot {
+  margin: 0 0 12px;
+
+  padding: 12px 14px;
+
+  border-radius: 12px;
+}
+
+
+body[data-study-site]
+.experiment-privacy-snapshot__heading {
+  gap: 10px;
+}
+
+
+body[data-study-site]
+.experiment-privacy-summary {
+  margin: 7px 0 9px;
+
+  font-size: 0.9rem;
+
+  line-height: 1.4;
+}
+
+
+body[data-study-site]
+.experiment-privacy-details {
+  max-height: 28vh;
+
+  margin-top: 10px;
+  padding-top: 10px;
+
+  overflow-y: auto;
+}
+
+
+/* =========================================================
+   MEDIUM / SPLIT SCREEN
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  body[data-study-site] .next-box {
+    top: 76px;
+    right: 12px;
+
+    width: min(330px, calc(100vw - 24px));
+  }
+
+
+  body[data-study-site]
+  .experiment-automation-notice {
+    left: 12px;
+    bottom: 12px;
+
+    width: min(260px, calc(100vw - 24px));
+  }
+
+
+  body[data-study-site] .cookie-banner {
+    bottom: 12px;
+
+    width: calc(100vw - 24px);
+
+    max-height: 62vh;
+
+    padding: 16px;
+  }
+
+}
+
+
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  body[data-study-site] .next-box {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+
+    width: auto;
+
+    max-height: 44vh;
+
+    padding: 12px;
+  }
+
+
+  body[data-study-site]
+  .next-box:has(
+    .task-panel[data-collapsed="true"]
+  ) {
+    left: auto;
+    right: 12px;
+
+    width: 180px;
+  }
+
+
+  body[data-study-site]
+  .experiment-automation-notice {
+    left: 12px;
+    bottom: 12px;
+
+    width: min(250px, calc(100vw - 24px));
+
+    padding: 10px 12px;
+  }
+
+
+  body[data-study-site] .cookie-banner {
+    bottom: 8px;
+
+    width: calc(100vw - 16px);
+
+    max-height: 66vh;
+
+    padding: 14px;
+
+    border-radius: 14px;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-details {
+    max-height: 32vh;
+  }
+
+}

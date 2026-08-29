@@ -6,25 +6,43 @@ import {
 } from "./experiment-core.js";
 
 
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
 const CONSENT_STORAGE_PREFIX =
   "privacyExperimentConsent:";
 
 
 /*
- * Sites 1 and 2 are the common baseline.
+ * Sites 1 and 2 are the shared baseline.
+ *
  * Sites 3 and 4 are the experimental phase.
  */
-const BASELINE_SITES = new Set([
-  "site1",
-  "site2"
-]);
+const BASELINE_SITES =
+  new Set([
+    "site1",
+    "site2"
+  ]);
 
+
+/* =========================================================
+   STUDY CONTEXT
+   ========================================================= */
 
 /**
- * Determine the experimental context for a site.
+ * Work out which experimental interface should actually
+ * be shown on the current website.
  *
- * Sites 1–2 always show the control interface.
- * Sites 3–4 show the participant's assigned condition.
+ * Sites 1–2:
+ *   interfaceCondition = control
+ *
+ * Sites 3–4:
+ *   interfaceCondition = assigned condition
+ *
+ * @param {string} siteId
+ * @param {object} session
+ * @returns {object}
  */
 function getStudyContext(
   siteId,
@@ -32,7 +50,9 @@ function getStudyContext(
 ) {
 
   const isBaseline =
-    BASELINE_SITES.has(siteId);
+    BASELINE_SITES.has(
+      siteId
+    );
 
 
   return {
@@ -57,9 +77,18 @@ function getStudyContext(
 }
 
 
+/* =========================================================
+   EVENT LOGGING
+   ========================================================= */
+
 /**
- * Record an interface event together with the condition
- * actually displayed on the current website.
+ * Record an interface event with the condition actually
+ * displayed on the current site.
+ *
+ * @param {string} siteId
+ * @param {string} eventType
+ * @param {object} context
+ * @param {object} additionalValue
  */
 function logInterfaceEvent(
   siteId,
@@ -93,9 +122,73 @@ function logInterfaceEvent(
 }
 
 
+/* =========================================================
+   TASK / COOKIE INTERFACE COORDINATION
+   ========================================================= */
+
 /**
- * Build the sessionStorage key used for one site's
- * cookie decision.
+ * Tell the task controller that the cookie interface
+ * has opened.
+ *
+ * On narrower displays the task controller can use this
+ * event to collapse the task card and prevent overlap.
+ *
+ * @param {string} siteId
+ */
+function notifyCookieInterfaceOpened(
+  siteId
+) {
+
+  document.dispatchEvent(
+    new CustomEvent(
+      "privacyExperiment:cookieInterfaceOpened",
+      {
+        detail: {
+          siteId
+        }
+      }
+    )
+  );
+
+}
+
+
+/**
+ * Tell the task controller that the cookie interface
+ * has finished.
+ *
+ * On narrower displays the task controller can then
+ * expand the task again.
+ *
+ * @param {string} siteId
+ */
+function notifyCookieInterfaceClosed(
+  siteId
+) {
+
+  document.dispatchEvent(
+    new CustomEvent(
+      "privacyExperiment:cookieInterfaceClosed",
+      {
+        detail: {
+          siteId
+        }
+      }
+    )
+  );
+
+}
+
+
+/* =========================================================
+   COOKIE STORAGE
+   ========================================================= */
+
+/**
+ * Return the sessionStorage key for one website.
+ *
+ * @param {string} siteId
+ * @returns {string}
  */
 function getConsentStorageKey(
   siteId
@@ -109,8 +202,9 @@ function getConsentStorageKey(
 
 
 /**
- * Retrieve the shared cookie-interface elements
- * from the current mock website.
+ * Retrieve the cookie-interface elements from the page.
+ *
+ * @returns {object}
  */
 function getCookieElements() {
 
@@ -176,6 +270,9 @@ function getCookieElements() {
 
 /**
  * Retrieve an existing cookie decision for one site.
+ *
+ * @param {string} siteId
+ * @returns {object|null}
  */
 function getExistingDecision(
   siteId
@@ -225,7 +322,14 @@ function getExistingDecision(
 
 
 /**
- * Store one site's cookie decision.
+ * Save the participant's cookie decision.
+ *
+ * @param {string} siteId
+ * @param {string} choice
+ * @param {object} settings
+ * @param {string} source
+ * @param {object} context
+ * @returns {object}
  */
 function saveDecision(
   siteId,
@@ -277,8 +381,12 @@ function saveDecision(
 }
 
 
+/* =========================================================
+   PRIVACY SUGGESTION HELPERS
+   ========================================================= */
+
 /**
- * Remove a suggestions-condition privacy tip.
+ * Remove the suggestions-condition privacy aid.
  */
 function removePrivacySuggestion() {
 
@@ -291,9 +399,16 @@ function removePrivacySuggestion() {
 }
 
 
+/* =========================================================
+   COOKIE SETTINGS HELPERS
+   ========================================================= */
+
 /**
- * Populate custom cookie controls with an
- * existing cookie decision.
+ * Populate the custom cookie checkboxes from a saved
+ * decision.
+ *
+ * @param {object} elements
+ * @param {object} settings
  */
 function populateSettings(
   elements,
@@ -345,8 +460,10 @@ function populateSettings(
 
 
 /**
- * Convert an automated cookie decision into
- * a participant-friendly label.
+ * Convert a stored cookie preference into a readable label.
+ *
+ * @param {string} choice
+ * @returns {string}
  */
 function getChoiceLabel(
   choice
@@ -386,8 +503,21 @@ function getChoiceLabel(
 }
 
 
+/* =========================================================
+   AUTOMATION CONDITION
+   ========================================================= */
+
 /**
- * Display the notice used by the automation condition.
+ * Display the small automation status notice.
+ *
+ * The accompanying CSS positions this away from the
+ * website task so that the two components do not overlap.
+ *
+ * @param {string} siteId
+ * @param {object} elements
+ * @param {object} decision
+ * @param {object} context
+ * @param {boolean} updated
  */
 function showAutomationNotice(
   siteId,
@@ -397,6 +527,9 @@ function showAutomationNotice(
   updated = false
 ) {
 
+  /*
+   * Only one automation notice should exist.
+   */
   document
     .getElementById(
       "automationNotice"
@@ -463,17 +596,36 @@ function showAutomationNotice(
   );
 
 
-  document
-    .getElementById(
+  const reviewButton =
+    document.getElementById(
       "reviewAutomatedChoice"
-    )
-    .addEventListener(
+    );
+
+
+  reviewButton
+    ?.addEventListener(
       "click",
       function () {
 
+        /*
+         * Remove the small automation status card while
+         * the full cookie interface is being reviewed.
+         */
         notice.remove();
 
 
+        /*
+         * Tell the task controller that another interface
+         * is about to occupy screen space.
+         */
+        notifyCookieInterfaceOpened(
+          siteId
+        );
+
+
+        /*
+         * Reopen the full cookie banner.
+         */
         elements.banner
           .classList
           .remove(
@@ -481,6 +633,10 @@ function showAutomationNotice(
           );
 
 
+        /*
+         * Restore the automated choices into the
+         * customisation controls.
+         */
         populateSettings(
           elements,
           decision.settings
@@ -513,26 +669,38 @@ function showAutomationNotice(
 }
 
 
+/* =========================================================
+   SUGGESTIONS CONDITION
+   ========================================================= */
+
 /**
  * Display the suggestions-condition privacy learning aid.
  *
- * Site 3 focuses on:
- *   - browsing activity
- *   - device information
- *   - approximate location
- *   - inferred interests
+ * Site 3:
+ *   focuses on information that optional tracking may
+ *   collect or infer.
  *
- * Site 4 focuses on:
- *   - necessary / essential cookies
- *   - functional cookies
- *   - analytics cookies
- *   - advertising cookies
+ * Site 4:
+ *   focuses on what the main cookie categories do.
+ *
+ * This gives participants two short but complementary
+ * pieces of privacy information.
+ *
+ * @param {string} siteId
+ * @param {HTMLElement} banner
+ * @param {object} context
  */
 function showPrivacySuggestion(
   siteId,
   banner,
   context
 ) {
+
+  /*
+   * Remove any stale suggestion before creating another.
+   */
+  removePrivacySuggestion();
+
 
   const suggestion =
     document.createElement(
@@ -548,16 +716,6 @@ function showPrivacySuggestion(
     "experiment-privacy-snapshot";
 
 
-  /*
-   * Each treatment website emphasises a different
-   * privacy concept.
-   */
-  const suggestionTopic =
-    siteId === "site4"
-      ? "cookie_purposes"
-      : "data_collection";
-
-
   suggestion.setAttribute(
     "aria-label",
     "Privacy tip"
@@ -565,12 +723,20 @@ function showPrivacySuggestion(
 
 
   /*
-   * =====================================================
-   * SITE 3
-   *
-   * DATA COLLECTION / INFERENCE
-   * =====================================================
+   * Site 3 teaches data collection/inference.
+   * Site 4 teaches cookie purposes.
    */
+  const suggestionTopic =
+    siteId === "site4"
+      ? "cookie_purposes"
+      : "data_collection";
+
+
+  /* =====================================================
+     SITE 3:
+     WHAT CAN OPTIONAL TRACKING LEARN?
+     ===================================================== */
+
   if (
     suggestionTopic ===
     "data_collection"
@@ -606,8 +772,8 @@ function showPrivacySuggestion(
         class="experiment-privacy-summary"
       >
 
-        Optional cookies and related tracking can help a site
-        understand your
+        Optional cookies and related tracking can help
+        a site understand your
 
         <strong>
           browsing activity
@@ -734,8 +900,8 @@ function showPrivacySuggestion(
 
           Optional tracking generally observes
           information about your visit and device;
-          it does not provide general access to the
-          contents of your computer.
+          it does not provide general access to
+          the contents of your computer.
 
         </p>
 
@@ -746,13 +912,11 @@ function showPrivacySuggestion(
   }
 
 
-  /*
-   * =====================================================
-   * SITE 4
-   *
-   * COOKIE PURPOSES
-   * =====================================================
-   */
+  /* =====================================================
+     SITE 4:
+     WHAT DO THE COOKIE TYPES DO?
+     ===================================================== */
+
   else {
 
     suggestion.innerHTML = `
@@ -928,13 +1092,20 @@ function showPrivacySuggestion(
   }
 
 
+  /*
+   * Keep the suggestion inside the cookie banner.
+   *
+   * It therefore behaves as part of the privacy
+   * interface instead of becoming another floating
+   * overlay on the page.
+   */
   banner.prepend(
     suggestion
   );
 
 
   /*
-   * Record which educational suggestion was shown.
+   * Record which treatment content was shown.
    */
   logInterfaceEvent(
     siteId,
@@ -960,6 +1131,12 @@ function showPrivacySuggestion(
     );
 
 
+  const dismissButton =
+    document.getElementById(
+      "dismissPrivacySuggestion"
+    );
+
+
   const collapsedButtonText =
     suggestionTopic ===
       "cookie_purposes"
@@ -968,62 +1145,61 @@ function showPrivacySuggestion(
 
 
   /*
-   * Expand / collapse the educational detail.
+   * Expand / collapse the explanation.
    */
-  detailsButton.addEventListener(
-    "click",
-    function () {
+  detailsButton
+    ?.addEventListener(
+      "click",
+      function () {
 
-      const opening =
-        details.hidden;
-
-
-      details.hidden =
-        !details.hidden;
+        const opening =
+          details.hidden;
 
 
-      detailsButton.textContent =
-        details.hidden
-          ? collapsedButtonText
-          : "Show less";
+        details.hidden =
+          !details.hidden;
 
 
-      detailsButton.setAttribute(
-        "aria-expanded",
-        details.hidden
-          ? "false"
-          : "true"
-      );
+        detailsButton.textContent =
+          details.hidden
+            ? collapsedButtonText
+            : "Show less";
 
 
-      logInterfaceEvent(
-        siteId,
+        detailsButton.setAttribute(
+          "aria-expanded",
+          details.hidden
+            ? "false"
+            : "true"
+        );
 
-        opening
-          ? "privacy_suggestion_opened"
-          : "privacy_suggestion_closed",
 
-        context,
+        logInterfaceEvent(
+          siteId,
 
-        {
+          opening
+            ? "privacy_suggestion_opened"
+            : "privacy_suggestion_closed",
 
-          suggestionTopic
+          context,
 
-        }
-      );
+          {
 
-    }
-  );
+            suggestionTopic
+
+          }
+        );
+
+      }
+    );
 
 
   /*
-   * Allow the privacy tip to be dismissed.
+   * Allow the participant to dismiss the suggestion
+   * without making a cookie choice.
    */
-  document
-    .getElementById(
-      "dismissPrivacySuggestion"
-    )
-    .addEventListener(
+  dismissButton
+    ?.addEventListener(
       "click",
       function () {
 
@@ -1047,9 +1223,14 @@ function showPrivacySuggestion(
 }
 
 
+/* =========================================================
+   MAIN COOKIE INTERFACE
+   ========================================================= */
+
 /**
- * Initialise the correct cookie interface for
- * the current mock website.
+ * Initialise the cookie interface for one mock website.
+ *
+ * @param {string} siteId
  */
 export function initialiseCookieInterface(
   siteId
@@ -1068,6 +1249,9 @@ export function initialiseCookieInterface(
   }
 
 
+  /*
+   * Determine which condition should actually appear.
+   */
   const context =
     getStudyContext(
       siteId,
@@ -1089,7 +1273,7 @@ export function initialiseCookieInterface(
 
 
   /*
-   * Record the condition actually shown on this site.
+   * Record which experimental interface is being shown.
    */
   logInterfaceEvent(
     siteId,
@@ -1098,8 +1282,17 @@ export function initialiseCookieInterface(
   );
 
 
+  /* =======================================================
+     COMPLETE COOKIE DECISION
+     ======================================================= */
+
   /**
-   * Complete and record one cookie decision.
+   * Complete and record a cookie decision.
+   *
+   * @param {string} choice
+   * @param {object} settings
+   * @param {string} source
+   * @returns {object}
    */
   function completeDecision(
     choice,
@@ -1123,6 +1316,9 @@ export function initialiseCookieInterface(
       );
 
 
+    /*
+     * Hide the full cookie banner.
+     */
     elements.banner
       .classList
       .add(
@@ -1130,6 +1326,9 @@ export function initialiseCookieInterface(
       );
 
 
+    /*
+     * Close custom settings.
+     */
     elements
       .settingsPanel
       ?.classList
@@ -1138,13 +1337,27 @@ export function initialiseCookieInterface(
       );
 
 
+    /*
+     * Remove any suggestion contained in the banner.
+     */
     removePrivacySuggestion();
 
 
     /*
-     * A manual choice counts as an automation
-     * override when an automated decision already
-     * existed on this site.
+     * Tell the task controller that the cookie layer
+     * has finished.
+     *
+     * This allows the task to automatically expand
+     * again on split-screen/mobile layouts.
+     */
+    notifyCookieInterfaceClosed(
+      siteId
+    );
+
+
+    /*
+     * A manual decision counts as an automation override
+     * when an automated decision previously existed.
      */
     const automationOverride =
       context.interfaceCondition ===
@@ -1176,8 +1389,9 @@ export function initialiseCookieInterface(
 
 
     /*
-     * If the participant manually changes an
-     * automated decision, show the revised status.
+     * If an automation participant manually changes the
+     * applied setting, display the updated automation
+     * status.
      */
     if (
       context.interfaceCondition ===
@@ -1203,11 +1417,10 @@ export function initialiseCookieInterface(
   }
 
 
-  /*
-   * =====================================================
-   * ACCEPT ALL
-   * =====================================================
-   */
+  /* =======================================================
+     ACCEPT ALL
+     ======================================================= */
+
   elements
     .acceptButton
     ?.addEventListener(
@@ -1241,11 +1454,10 @@ export function initialiseCookieInterface(
     );
 
 
-  /*
-   * =====================================================
-   * REJECT OPTIONAL
-   * =====================================================
-   */
+  /* =======================================================
+     REJECT OPTIONAL
+     ======================================================= */
+
   elements
     .rejectButton
     ?.addEventListener(
@@ -1279,11 +1491,10 @@ export function initialiseCookieInterface(
     );
 
 
-  /*
-   * =====================================================
-   * OPEN CUSTOM SETTINGS
-   * =====================================================
-   */
+  /* =======================================================
+     CUSTOMISE
+     ======================================================= */
+
   elements
     .customiseButton
     ?.addEventListener(
@@ -1308,11 +1519,10 @@ export function initialiseCookieInterface(
     );
 
 
-  /*
-   * =====================================================
-   * SAVE CUSTOM SETTINGS
-   * =====================================================
-   */
+  /* =======================================================
+     SAVE CUSTOM SETTINGS
+     ======================================================= */
+
   elements
     .saveSettingsButton
     ?.addEventListener(
@@ -1355,11 +1565,10 @@ export function initialiseCookieInterface(
     );
 
 
-  /*
-   * =====================================================
-   * RESTORE EXISTING DECISION
-   * =====================================================
-   */
+  /* =======================================================
+     RESTORE AN EXISTING DECISION
+     ======================================================= */
+
   const existingDecision =
     getExistingDecision(
       siteId
@@ -1368,6 +1577,10 @@ export function initialiseCookieInterface(
 
   if (existingDecision) {
 
+    /*
+     * The participant has already made a decision
+     * on this particular site.
+     */
     elements.banner
       .classList
       .add(
@@ -1393,8 +1606,8 @@ export function initialiseCookieInterface(
 
 
     /*
-     * Automation participants receive their
-     * automation status again after refresh.
+     * Restore the automation status card only when the
+     * current site is actually in automation mode.
      */
     if (
       context.interfaceCondition ===
@@ -1416,13 +1629,12 @@ export function initialiseCookieInterface(
   }
 
 
-  /*
-   * =====================================================
-   * AUTOMATION CONDITION
-   * =====================================================
-   *
-   * Only possible on Sites 3 and 4.
-   */
+  /* =======================================================
+     AUTOMATION CONDITION
+     =======================================================
+     Only Sites 3–4 can reach this branch.
+     ======================================================= */
+
   if (
     context.interfaceCondition ===
     "automation"
@@ -1433,8 +1645,9 @@ export function initialiseCookieInterface(
 
 
     /*
-     * If no general preference exists, fall back
-     * to the ordinary cookie banner.
+     * If something went wrong and no automated
+     * preference exists, show the standard cookie
+     * banner rather than silently choosing.
      */
     if (!preference) {
 
@@ -1483,6 +1696,11 @@ export function initialiseCookieInterface(
     };
 
 
+    /*
+     * Apply the saved preference automatically.
+     *
+     * completeDecision() hides the ordinary banner.
+     */
     const decision =
       completeDecision(
         preference.choice,
@@ -1491,6 +1709,9 @@ export function initialiseCookieInterface(
       );
 
 
+    /*
+     * Show only the compact automation status notice.
+     */
     showAutomationNotice(
       siteId,
       elements,
@@ -1521,15 +1742,14 @@ export function initialiseCookieInterface(
   }
 
 
-  /*
-   * =====================================================
-   * CONTROL + SUGGESTIONS
-   * =====================================================
-   *
-   * Both conditions use the normal cookie banner.
-   * Suggestions additionally receive the privacy
-   * learning aid.
-   */
+  /* =======================================================
+     CONTROL + SUGGESTIONS
+     =======================================================
+     Both use the ordinary cookie banner.
+     Suggestions additionally receive the educational
+     component inside that same banner.
+     ======================================================= */
+
   elements.banner
     .classList
     .remove(
@@ -1544,6 +1764,10 @@ export function initialiseCookieInterface(
   );
 
 
+  /*
+   * Suggestions are only shown during the treatment
+   * phase to participants assigned to that condition.
+   */
   if (
     context.interfaceCondition ===
     "suggestions"
@@ -1560,10 +1784,16 @@ export function initialiseCookieInterface(
 }
 
 
+/* =========================================================
+   DEVELOPMENT / TESTING
+   ========================================================= */
+
 /**
- * Clear one site's cookie decision.
+ * Clear one site's locally stored cookie decision.
  *
  * Development/testing utility only.
+ *
+ * @param {string} siteId
  */
 export function resetCookiePreferences(
   siteId

@@ -216,61 +216,126 @@ taskPanel.innerHTML = `
       ".task-submit-button"
     );
 
-    const collapseButton =
+const collapseButton =
   taskPanel.querySelector(
     ".task-collapse-button"
   );
 
 
-const taskContent =
-  taskPanel.querySelector(
-    ".task-panel-content"
+/**
+ * Expand or collapse the task in one place so that
+ * both participant actions and responsive interface
+ * behaviour remain consistent.
+ *
+ * @param {boolean} collapsed
+ */
+function setTaskCollapsed(
+  collapsed
+) {
+
+  taskPanel.dataset.collapsed =
+    collapsed
+      ? "true"
+      : "false";
+
+
+  collapseButton.textContent =
+    collapsed
+      ? "+"
+      : "−";
+
+
+  collapseButton.setAttribute(
+    "aria-expanded",
+    collapsed
+      ? "false"
+      : "true"
   );
 
 
+  collapseButton.setAttribute(
+    "aria-label",
+    collapsed
+      ? "Expand website task"
+      : "Collapse website task"
+  );
+
+}
+
+
+/*
+ * Participant-controlled collapse / expand.
+ */
 collapseButton.addEventListener(
   "click",
   function () {
 
-    const isCollapsed =
+    const currentlyCollapsed =
       taskPanel.dataset.collapsed ===
       "true";
 
 
-    if (isCollapsed) {
+    setTaskCollapsed(
+      !currentlyCollapsed
+    );
 
-      taskPanel.dataset.collapsed =
-        "false";
+  }
+);
 
-      collapseButton.textContent =
-        "−";
 
-      collapseButton.setAttribute(
-        "aria-expanded",
-        "true"
-      );
+/*
+ * On narrower screens, avoid showing the full task
+ * at the same time as an active cookie interface.
+ *
+ * A small "Website task +" tab remains visible.
+ */
+const narrowExperimentLayout =
+  window.matchMedia(
+    "(max-width: 1000px)"
+  );
 
-      collapseButton.setAttribute(
-        "aria-label",
-        "Collapse website task"
-      );
 
-    } else {
+const cookieBanner =
+  document.getElementById(
+    "cookieBanner"
+  );
 
-      taskPanel.dataset.collapsed =
-        "true";
 
-      collapseButton.textContent =
-        "+";
+if (
+  narrowExperimentLayout.matches &&
+  cookieBanner &&
+  !cookieBanner.classList.contains(
+    "hidden"
+  )
+) {
 
-      collapseButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
+  setTaskCollapsed(
+    true
+  );
 
-      collapseButton.setAttribute(
-        "aria-label",
-        "Expand website task"
+} else {
+
+  setTaskCollapsed(
+    false
+  );
+
+}
+
+
+/*
+ * When an existing cookie interface is opened again,
+ * temporarily compact the task on smaller screens.
+ */
+document.addEventListener(
+  "privacyExperiment:cookieInterfaceOpened",
+  function () {
+
+    if (
+      narrowExperimentLayout.matches
+    ) {
+
+      setTaskCollapsed(
+        true
       );
 
     }
@@ -278,6 +343,27 @@ collapseButton.addEventListener(
   }
 );
 
+
+/*
+ * Once the cookie interface is finished, expand the
+ * task again so the participant's next action is clear.
+ */
+document.addEventListener(
+  "privacyExperiment:cookieInterfaceClosed",
+  function () {
+
+    if (
+      narrowExperimentLayout.matches
+    ) {
+
+      setTaskCollapsed(
+        false
+      );
+
+    }
+
+  }
+);
 
   /*
    * Participants cannot continue until they have
