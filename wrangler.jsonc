@@ -1,6 +1,12 @@
 {
   "name": "honours-privacy-experiment",
+  "main": "src/index.js",
   "compatibility_date": "2026-08-29",
+
+  "assets": {
+    "directory": "./frontend",
+    "binding": "ASSETS"
+  },
 
   "d1_databases": [
     {
