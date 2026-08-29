@@ -141,10 +141,25 @@ export function initialiseTaskController(
   /*
    * Display the task.
    */
-  taskPanel.innerHTML = `
+taskPanel.innerHTML = `
+  <div class="task-panel-header">
+
     <h3>
       ${config.heading}
     </h3>
+
+    <button
+      type="button"
+      class="task-collapse-button"
+      aria-expanded="true"
+      aria-label="Collapse website task"
+    >
+      −
+    </button>
+
+  </div>
+
+  <div class="task-panel-content">
 
     <p class="task-instruction">
       ${config.prompt}
@@ -174,7 +189,9 @@ export function initialiseTaskController(
         aria-live="polite"
       ></p>
     </form>
-  `;
+
+  </div>
+`;
 
 
   const taskForm =
@@ -198,6 +215,68 @@ export function initialiseTaskController(
     taskPanel.querySelector(
       ".task-submit-button"
     );
+
+    const collapseButton =
+  taskPanel.querySelector(
+    ".task-collapse-button"
+  );
+
+
+const taskContent =
+  taskPanel.querySelector(
+    ".task-panel-content"
+  );
+
+
+collapseButton.addEventListener(
+  "click",
+  function () {
+
+    const isCollapsed =
+      taskPanel.dataset.collapsed ===
+      "true";
+
+
+    if (isCollapsed) {
+
+      taskPanel.dataset.collapsed =
+        "false";
+
+      collapseButton.textContent =
+        "−";
+
+      collapseButton.setAttribute(
+        "aria-expanded",
+        "true"
+      );
+
+      collapseButton.setAttribute(
+        "aria-label",
+        "Collapse website task"
+      );
+
+    } else {
+
+      taskPanel.dataset.collapsed =
+        "true";
+
+      collapseButton.textContent =
+        "+";
+
+      collapseButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+      collapseButton.setAttribute(
+        "aria-label",
+        "Expand website task"
+      );
+
+    }
+
+  }
+);
 
 
   /*

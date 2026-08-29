@@ -5810,3 +5810,108 @@ body[data-site-id="site4_local_events"] .loop-reveal.is-visible {
   }
 
 }
+
+/* =========================================================
+   TASK COLLAPSE / EXPAND
+   ========================================================= */
+
+.task-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 8px;
+}
+
+
+.task-panel-header h3 {
+  margin: 0;
+}
+
+
+.task-collapse-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 32px;
+  height: 32px;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  background: #f8fafc;
+  color: #334155;
+
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+.task-collapse-button:hover {
+  background: #f1f5f9;
+  border-color: #64748b;
+}
+
+
+/* Hide task content when collapsed */
+
+.task-panel[data-collapsed="true"]
+.task-panel-content {
+  display: none;
+}
+
+
+/* Make the whole fixed card much smaller */
+
+.next-box:has(
+  .task-panel[data-collapsed="true"]
+) {
+  width: auto;
+  min-width: 180px;
+
+  padding: 12px 14px;
+}
+
+
+/* Hide the continue button while manually collapsed */
+
+.next-box:has(
+  .task-panel[data-collapsed="true"]
+)
+> .primary-btn {
+  display: none;
+}
+
+
+/* =========================================================
+   SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .next-box:has(
+    .task-panel[data-collapsed="true"]
+  ) {
+    left: auto;
+    right: 12px;
+
+    width: auto;
+    min-width: 170px;
+
+    max-height: none;
+  }
+
+}
