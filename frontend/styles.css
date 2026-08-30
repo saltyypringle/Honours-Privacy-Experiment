@@ -6168,7 +6168,8 @@ body[data-study-site] .next-box {
   left: auto;
   bottom: auto;
 
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 
   width: min(360px, calc(100vw - 36px));
@@ -6200,6 +6201,11 @@ body[data-study-site] .next-box {
  */
 
 body[data-study-site] .task-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+
   margin: 0;
   padding: 0;
 
@@ -6210,6 +6216,14 @@ body[data-study-site] .task-panel {
   color: #1f2937;
 
   box-shadow: none;
+}
+
+
+body[data-study-site] .task-panel-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 
@@ -6257,6 +6271,8 @@ body[data-study-site] .task-panel-header {
   gap: 10px;
 
   margin-bottom: 8px;
+
+  flex-shrink: 0;
 }
 
 
@@ -6265,6 +6281,8 @@ body[data-study-site] .task-panel-header {
    --------------------------------------------------------- */
 
 body[data-study-site] .task-instruction {
+  flex-shrink: 0;
+
   margin: 0 0 12px;
 
   color: #111827;
@@ -6289,25 +6307,36 @@ body[data-study-site] .task-instruction {
    TASK OPTIONS
    --------------------------------------------------------- */
 
-body[data-study-site] .task-form,
-body[data-study-site] .task-options {
-  display: grid;
+body[data-study-site] .task-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 
   gap: 8px;
 }
 
 
 body[data-study-site] .task-options {
+  display: grid;
   grid-template-columns: 1fr;
+  gap: 8px;
+
+  flex: 1 1 auto;
+  min-height: 0;
 
   margin: 0;
   padding: 0;
+
+  overflow-y: auto;
 
   border: 0;
 }
 
 
 body[data-study-site] .task-answer-label {
+  flex-shrink: 0;
+
   margin-bottom: 3px;
 
   color: #64748b;
@@ -6391,6 +6420,8 @@ body[data-study-site] .task-option-input {
    --------------------------------------------------------- */
 
 body[data-study-site] .task-submit-button {
+  flex-shrink: 0;
+
   width: 100%;
 
   margin-top: 10px;
@@ -6423,6 +6454,8 @@ body[data-study-site]
 
 body[data-study-site]
 .next-box > .primary-btn {
+  flex-shrink: 0;
+
   width: 100%;
 
   margin-top: 4px;
@@ -6455,6 +6488,8 @@ body[data-study-site]
    --------------------------------------------------------- */
 
 body[data-study-site] .task-feedback {
+  flex-shrink: 0;
+
   min-height: 1.2em;
 
   margin: 8px 0 0;
