@@ -9214,6 +9214,213 @@ body[data-study-site]
 }
 
 /* =========================================================
+   SITE 1 + SITE 2 — RESPONSIVE WEBSITE TASK POLISH
+   =========================================================
+   Keeps the task layout readable across desktop, tablet and
+   phone sizes, removes clipped hover states, and avoids showing
+   an unusable Continue button before the answer is submitted.
+   ========================================================= */
+
+body[data-study-site="site1"] .next-box,
+body[data-study-site="site2"] .next-box {
+  width: clamp(360px, 30vw, 430px);
+  max-width: calc(100vw - 36px);
+  max-height: calc(100dvh - 108px);
+  padding: clamp(14px, 1.4vw, 18px);
+  gap: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 16px;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+body[data-study-site="site1"] .task-panel-content,
+body[data-study-site="site2"] .task-panel-content,
+body[data-study-site="site1"] .task-form,
+body[data-study-site="site2"] .task-form {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+
+body[data-study-site="site1"] .task-instruction,
+body[data-study-site="site2"] .task-instruction {
+  margin: 0 0 10px !important;
+  font-size: clamp(0.95rem, 0.35vw + 0.87rem, 1.05rem) !important;
+  line-height: 1.38 !important;
+}
+
+body[data-study-site="site1"] .task-answer-label,
+body[data-study-site="site2"] .task-answer-label {
+  margin: 0 0 4px !important;
+  font-size: 0.78rem !important;
+  line-height: 1.25 !important;
+}
+
+body[data-study-site="site1"] .task-options,
+body[data-study-site="site2"] .task-options {
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 2px !important;
+  overflow: visible !important;
+}
+
+body[data-study-site="site1"] .task-option,
+body[data-study-site="site2"] .task-option {
+  min-height: 42px !important;
+  padding: 9px 11px !important;
+  align-items: center !important;
+  gap: 9px !important;
+  border-radius: 9px !important;
+  transform: none !important;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease !important;
+}
+
+body[data-study-site="site1"] .task-option:hover,
+body[data-study-site="site2"] .task-option:hover {
+  border-color: #64748b !important;
+  background: #f1f5f9 !important;
+  transform: none !important;
+  box-shadow: 0 0 0 1px rgba(100, 116, 139, 0.08) !important;
+}
+
+body[data-study-site="site1"] .task-option:focus-within,
+body[data-study-site="site2"] .task-option:focus-within {
+  outline: 2px solid rgba(51, 65, 85, 0.22);
+  outline-offset: 1px;
+}
+
+body[data-study-site="site1"] .task-option:has(.task-option-input:checked),
+body[data-study-site="site2"] .task-option:has(.task-option-input:checked) {
+  border-color: #334155 !important;
+  background: #e8eef5 !important;
+  transform: none !important;
+  box-shadow: inset 0 0 0 1px rgba(51, 65, 85, 0.08) !important;
+}
+
+body[data-study-site="site1"] .task-option-input,
+body[data-study-site="site2"] .task-option-input {
+  width: 17px !important;
+  height: 17px !important;
+  margin: 0 !important;
+}
+
+body[data-study-site="site1"] .task-option-text,
+body[data-study-site="site2"] .task-option-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.86rem !important;
+  line-height: 1.3 !important;
+}
+
+body[data-study-site="site1"] .task-submit-button,
+body[data-study-site="site2"] .task-submit-button {
+  min-height: 42px !important;
+  margin-top: 4px !important;
+  padding: 9px 12px !important;
+  border-radius: 9px !important;
+  font-size: 0.88rem !important;
+}
+
+body[data-study-site="site1"] .task-feedback,
+body[data-study-site="site2"] .task-feedback {
+  min-height: 0 !important;
+  margin: 0 !important;
+}
+
+body[data-study-site="site1"] .task-feedback:empty,
+body[data-study-site="site2"] .task-feedback:empty {
+  display: none !important;
+}
+
+body[data-study-site="site1"] .task-feedback:not(:empty),
+body[data-study-site="site2"] .task-feedback:not(:empty) {
+  display: block !important;
+  margin-top: 5px !important;
+}
+
+body[data-study-site="site1"] .next-box:not([data-task-complete="true"]) > .primary-btn,
+body[data-study-site="site2"] .next-box:not([data-task-complete="true"]) > .primary-btn {
+  display: none !important;
+}
+
+body[data-study-site="site1"] .next-box[data-task-complete="true"] > .primary-btn,
+body[data-study-site="site2"] .next-box[data-task-complete="true"] > .primary-btn {
+  display: block !important;
+  min-height: 42px !important;
+  margin-top: 4px !important;
+  padding: 9px 12px !important;
+  border-radius: 9px !important;
+  font-size: 0.88rem !important;
+}
+
+@media (max-width: 900px) {
+  body[data-study-site="site1"] .next-box,
+  body[data-study-site="site2"] .next-box {
+    width: min(390px, calc(100vw - 28px));
+    right: 14px;
+    max-height: calc(100dvh - 100px);
+  }
+}
+
+@media (max-width: 700px) {
+  body[data-study-site="site1"] .next-box,
+  body[data-study-site="site2"] .next-box {
+    top: max(8px, env(safe-area-inset-top)) !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: min(52dvh, 460px) !important;
+    padding: 11px !important;
+    gap: 7px !important;
+    border-radius: 12px !important;
+  }
+
+  body[data-study-site="site1"] .task-panel-header,
+  body[data-study-site="site2"] .task-panel-header {
+    margin-bottom: 6px !important;
+  }
+
+  body[data-study-site="site1"] .task-instruction,
+  body[data-study-site="site2"] .task-instruction {
+    margin-bottom: 8px !important;
+    font-size: clamp(0.88rem, 3.6vw, 0.98rem) !important;
+  }
+
+  body[data-study-site="site1"] .task-option,
+  body[data-study-site="site2"] .task-option {
+    min-height: 40px !important;
+    padding: 8px 10px !important;
+  }
+
+  body[data-study-site="site1"] .task-option-text,
+  body[data-study-site="site2"] .task-option-text {
+    font-size: clamp(0.79rem, 3.2vw, 0.86rem) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  body[data-study-site="site1"] .next-box,
+  body[data-study-site="site2"] .next-box {
+    left: 6px !important;
+    right: 6px !important;
+    padding: 9px !important;
+    max-height: min(56dvh, 450px) !important;
+  }
+
+  body[data-study-site="site1"] .task-option,
+  body[data-study-site="site2"] .task-option {
+    min-height: 38px !important;
+    padding: 7px 9px !important;
+  }
+}
+
+/* =========================================================
    FINAL EXPERIMENT VISIBILITY FIXES
    Keep this at the absolute bottom of styles.css.
    ========================================================= */
