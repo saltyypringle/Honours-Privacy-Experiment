@@ -10,21 +10,42 @@
  * index.html?pid=PARTICIPANT_ID&condition=suggestions
  */
 
-const SESSION_STORAGE_KEY = "privacyExperimentSession";
-const EVENT_STORAGE_KEY = "privacyExperimentEvents";
+const SESSION_STORAGE_KEY =
+  "privacyExperimentSession";
 
-const VALID_CONDITIONS = new Set([
-  "control",
-  "automation",
-  "suggestions"
-]);
+const EVENT_STORAGE_KEY =
+  "privacyExperimentEvents";
 
+
+/*
+ * Experimental conditions.
+ */
+const VALID_CONDITIONS =
+  new Set([
+    "control",
+    "automation",
+    "suggestions"
+  ]);
+
+
+/*
+ * Revised experiment structure:
+ *
+ * Site 1 = Travel
+ *          Common baseline for everyone.
+ *
+ * Site 2 = VibeCheck / 7 × 7 = 49
+ *          First experimental website.
+ *
+ * Site 3 = BOXDROP Collectibles
+ *          Final interactive shopping website.
+ */
 const DEFAULT_SITE_ORDER = [
   "site1",
   "site2",
-  "site3",
-  "site4"
+  "site3"
 ];
+
 
 /**
  * Safely retrieve the experiment session.
@@ -32,32 +53,64 @@ const DEFAULT_SITE_ORDER = [
  * @returns {object|null}
  */
 export function getSession() {
-  const rawSession = sessionStorage.getItem(SESSION_STORAGE_KEY);
+
+  const rawSession =
+    sessionStorage.getItem(
+      SESSION_STORAGE_KEY
+    );
+
 
   if (!rawSession) {
+
     return null;
+
   }
 
+
   try {
-    return JSON.parse(rawSession);
+
+    return JSON.parse(
+      rawSession
+    );
+
   } catch (error) {
-    console.error("Stored experiment session is invalid:", error);
-    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+
+    console.error(
+      "Stored experiment session is invalid:",
+      error
+    );
+
+
+    sessionStorage.removeItem(
+      SESSION_STORAGE_KEY
+    );
+
+
     return null;
+
   }
+
 }
+
 
 /**
  * Save the current experiment session.
  *
  * @param {object} session
  */
-export function saveSession(session) {
+export function saveSession(
+  session
+) {
+
   sessionStorage.setItem(
     SESSION_STORAGE_KEY,
-    JSON.stringify(session)
+    JSON.stringify(
+      session
+    )
   );
+
 }
+
 
 /**
  * Validate the participant code received from Qualtrics.
@@ -71,13 +124,24 @@ export function saveSession(session) {
  * @param {string|null} participantId
  * @returns {boolean}
  */
-function isValidParticipantId(participantId) {
+function isValidParticipantId(
+  participantId
+) {
+
   if (!participantId) {
+
     return false;
+
   }
 
-  return /^[A-Za-z0-9_-]{6,64}$/.test(participantId);
+
+  return /^[A-Za-z0-9_-]{6,64}$/
+    .test(
+      participantId
+    );
+
 }
+
 
 /**
  * Create or restore the participant's experiment session.
@@ -86,79 +150,181 @@ function isValidParticipantId(participantId) {
  * @throws {Error} when the URL parameters are missing or invalid
  */
 export function initialiseSessionFromUrl() {
-  const existingSession = getSession();
 
-  const params = new URLSearchParams(window.location.search);
+  const existingSession =
+    getSession();
+
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
 
   const participantIdFromUrl =
-    params.get("pid")?.trim() || null;
+    params
+      .get("pid")
+      ?.trim() ||
+    null;
+
 
   const conditionFromUrl =
-    params.get("condition")?.trim().toLowerCase() || null;
+    params
+      .get("condition")
+      ?.trim()
+      .toLowerCase() ||
+    null;
+
 
   /*
-   * This permits the participant to refresh the page after the query
-   * parameters have been removed from the visible URL.
+   * This permits the participant to refresh the page
+   * after the query parameters have been removed from
+   * the visible URL.
    */
   if (
     !participantIdFromUrl &&
     !conditionFromUrl &&
     existingSession
   ) {
+
     return existingSession;
+
   }
 
-  if (!isValidParticipantId(participantIdFromUrl)) {
+
+  /*
+   * Validate participant identifier.
+   */
+  if (
+    !isValidParticipantId(
+      participantIdFromUrl
+    )
+  ) {
+
     throw new Error(
       "The participant code is missing or invalid."
     );
+
   }
 
-  if (!VALID_CONDITIONS.has(conditionFromUrl)) {
+
+  /*
+   * Validate experimental condition.
+   */
+  if (
+    !VALID_CONDITIONS.has(
+      conditionFromUrl
+    )
+  ) {
+
     throw new Error(
       "The experimental condition is missing or invalid."
     );
+
   }
 
+
   /*
-   * Preserve an existing session when the participant reloads the
-   * original Qualtrics redirect URL.
+   * Preserve an existing session when the participant
+   * reloads the original Qualtrics redirect URL.
    */
   if (
     existingSession &&
-    existingSession.participantId === participantIdFromUrl &&
-    existingSession.condition === conditionFromUrl
+    existingSession.participantId ===
+      participantIdFromUrl &&
+    existingSession.condition ===
+      conditionFromUrl
   ) {
+
     return existingSession;
+
   }
 
-  const newSession = {
-    participantId: participantIdFromUrl,
-    condition: conditionFromUrl,
-
-    startedAt: new Date().toISOString(),
-    startedAtMilliseconds: Date.now(),
-
-    siteOrder: [...DEFAULT_SITE_ORDER],
-    currentSiteIndex: 0,
-
-    automationPreference: null,
-
-    experimentCompleted: false
-  };
-
-  saveSession(newSession);
 
   /*
-   * A new experiment session should begin with an empty event list.
+   * Create a new participant session.
+   */
+  const newSession = {
+
+    participantId:
+      participantIdFromUrl,
+
+    condition:
+      conditionFromUrl,
+
+
+    /*
+     * Overall experiment timing.
+     */
+    startedAt:
+      new Date()
+        .toISOString(),
+
+    startedAtMilliseconds:
+      Date.now(),
+
+
+    /*
+     * Website progression.
+     */
+    siteOrder:
+      [
+        ...DEFAULT_SITE_ORDER
+      ],
+
+    currentSiteIndex:
+      0,
+
+
+    /*
+     * Used only by participants assigned
+     * to the automation condition.
+     *
+     * This is populated after Site 1.
+     */
+    automationPreference:
+      null,
+
+
+    /*
+     * Multiple-choice responses from
+     * Sites 1 and 2 can be stored here.
+     *
+     * Site 3 will later use the same
+     * session together with its
+     * action-based shopping task events.
+     */
+    taskResponses:
+      [],
+
+
+    experimentCompleted:
+      false
+
+  };
+
+
+  saveSession(
+    newSession
+  );
+
+
+  /*
+   * A new experiment session should begin
+   * with an empty event list.
    */
   sessionStorage.setItem(
     EVENT_STORAGE_KEY,
-    JSON.stringify([])
+    JSON.stringify(
+      []
+    )
   );
 
+
   return newSession;
+
 }
+
 
 /**
  * Return all locally recorded events.
@@ -166,26 +332,62 @@ export function initialiseSessionFromUrl() {
  * @returns {Array<object>}
  */
 export function getEvents() {
-  const rawEvents = sessionStorage.getItem(EVENT_STORAGE_KEY);
+
+  const rawEvents =
+    sessionStorage.getItem(
+      EVENT_STORAGE_KEY
+    );
+
 
   if (!rawEvents) {
+
     return [];
+
   }
+
 
   try {
-    const events = JSON.parse(rawEvents);
 
-    return Array.isArray(events) ? events : [];
+    const events =
+      JSON.parse(
+        rawEvents
+      );
+
+
+    return Array.isArray(
+      events
+    )
+      ? events
+      : [];
+
   } catch (error) {
-    console.error("Stored event data are invalid:", error);
+
+    console.error(
+      "Stored event data are invalid:",
+      error
+    );
+
+
     return [];
+
   }
+
 }
+
 
 /**
  * Record a defined experimental event locally.
  *
  * This does not send anything to a server.
+ *
+ * IMPORTANT:
+ * Do not pass participant-entered personal
+ * information to this function.
+ *
+ * For the BOXDROP shopping site, form values
+ * such as names, emails, passwords, addresses,
+ * phone numbers and postcodes must never be
+ * included in eventValue.
  *
  * @param {string} siteId
  * @param {string} eventType
@@ -196,97 +398,177 @@ export function logEvent(
   eventType,
   eventValue = null
 ) {
-  const session = getSession();
+
+  const session =
+    getSession();
+
 
   if (!session) {
+
     console.error(
       "Cannot log an event because no experiment session exists."
     );
+
+
     return;
+
   }
 
-  const events = getEvents();
+
+  const events =
+    getEvents();
+
 
   const event = {
-    sequenceNumber: events.length + 1,
 
-    participantId: session.participantId,
-    condition: session.condition,
+    sequenceNumber:
+      events.length + 1,
+
+
+    participantId:
+      session.participantId,
+
+    condition:
+      session.condition,
+
 
     siteId,
+
     eventType,
+
     eventValue,
 
-    timestamp: new Date().toISOString(),
+
+    timestamp:
+      new Date()
+        .toISOString(),
+
 
     experimentElapsedMilliseconds:
-      Date.now() - session.startedAtMilliseconds
+      Date.now() -
+      session.startedAtMilliseconds
+
   };
 
-  events.push(event);
+
+  events.push(
+    event
+  );
+
 
   sessionStorage.setItem(
     EVENT_STORAGE_KEY,
-    JSON.stringify(events)
+    JSON.stringify(
+      events
+    )
   );
 
+
   /*
-   * Useful during development. Remove or disable this before
-   * production deployment if required.
+   * Useful during development.
+   *
+   * This can be disabled before final
+   * deployment if you do not want
+   * experiment events printed in the
+   * browser console.
    */
-  console.log("Experiment event:", event);
+  console.log(
+    "Experiment event:",
+    event
+  );
+
 }
 
+
 /**
- * Save the cookie preference selected by participants in the
- * automation condition.
+ * Save the cookie preference selected by
+ * participants in the automation condition.
+ *
+ * The preference is selected after Site 1
+ * and can then be applied automatically on
+ * Sites 2 and 3.
  *
  * @param {object} preference
  */
-export function setAutomationPreference(preference) {
-  const session = getSession();
+export function setAutomationPreference(
+  preference
+) {
+
+  const session =
+    getSession();
+
 
   if (!session) {
+
     throw new Error(
       "No experiment session exists."
     );
+
   }
 
-  session.automationPreference = preference;
 
-  saveSession(session);
+  session.automationPreference =
+    preference;
+
+
+  saveSession(
+    session
+  );
+
 
   logEvent(
-    "experiment_start",
+    "experiment_transition",
     "automation_preference_saved",
     preference
   );
+
 }
+
 
 /**
  * Begin the first mock website.
  */
 export function beginExperiment() {
-  const session = getSession();
+
+  const session =
+    getSession();
+
 
   if (!session) {
+
     throw new Error(
       "No experiment session exists."
     );
+
   }
 
+
+  /*
+   * Record the point at which the participant
+   * actually begins the mock websites.
+   */
   logEvent(
     "experiment_start",
     "experiment_started",
     {
-      siteOrder: session.siteOrder
+
+      siteOrder:
+        session.siteOrder
+
     }
   );
 
-  const firstSite = session.siteOrder[0];
 
-  window.location.assign(`${firstSite}.html`);
+  const firstSite =
+    session.siteOrder[0];
+
+
+  window.location.assign(
+    `${firstSite}.html`
+  );
+
 }
+
 
 /**
  * Clear all experiment data from the current browser tab.
@@ -294,6 +576,14 @@ export function beginExperiment() {
  * This is intended only for development and testing.
  */
 export function resetExperiment() {
-  sessionStorage.removeItem(SESSION_STORAGE_KEY);
-  sessionStorage.removeItem(EVENT_STORAGE_KEY);
+
+  sessionStorage.removeItem(
+    SESSION_STORAGE_KEY
+  );
+
+
+  sessionStorage.removeItem(
+    EVENT_STORAGE_KEY
+  );
+
 }

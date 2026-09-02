@@ -9,10 +9,19 @@ import {
 const SITE_IDS = [
   "site1",
   "site2",
-  "site3",
-  "site4"
+  "site3"
 ];
 
+
+const INFORMATION_SITE_IDS = [
+  "site1",
+  "site2"
+];
+
+
+/* =========================================================
+   BASIC HELPERS
+   ========================================================= */
 
 /**
  * Check whether a value is a normal object.
@@ -31,7 +40,7 @@ function isObject(
 
 
 /**
- * Safely retrieve an event's value object.
+ * Safely retrieve the object stored in an event.
  */
 function getEventValue(
   event
@@ -47,7 +56,55 @@ function getEventValue(
 
 
 /**
- * Find the most recent matching event.
+ * Return all events matching a site and event type.
+ */
+function getMatchingEvents(
+  events,
+  siteId,
+  eventType
+) {
+
+  return events.filter(
+    function (
+      event
+    ) {
+
+      return (
+        event.siteId ===
+          siteId &&
+        event.eventType ===
+          eventType
+      );
+
+    }
+  );
+
+}
+
+
+/**
+ * Return the first matching event.
+ */
+function getFirstEvent(
+  events,
+  siteId,
+  eventType
+) {
+
+  return (
+    getMatchingEvents(
+      events,
+      siteId,
+      eventType
+    )[0] ??
+    null
+  );
+
+}
+
+
+/**
+ * Return the most recent matching event.
  */
 function getLastEvent(
   events,
@@ -55,32 +112,22 @@ function getLastEvent(
   eventType
 ) {
 
-  for (
-    let index =
-      events.length - 1;
-
-    index >= 0;
-
-    index -= 1
-  ) {
-
-    const event =
-      events[index];
+  const matches =
+    getMatchingEvents(
+      events,
+      siteId,
+      eventType
+    );
 
 
-    if (
-      event.siteId === siteId &&
-      event.eventType === eventType
-    ) {
+  return matches.length >
+    0
 
-      return event;
+    ? matches[
+        matches.length - 1
+      ]
 
-    }
-
-  }
-
-
-  return null;
+    : null;
 
 }
 
@@ -94,23 +141,55 @@ function countEvents(
   eventType
 ) {
 
-  return events.filter(
-    function (event) {
-
-      return (
-        event.siteId === siteId &&
-        event.eventType === eventType
-      );
-
-    }
+  return getMatchingEvents(
+    events,
+    siteId,
+    eventType
   ).length;
 
 }
 
 
 /**
- * Retrieve the stored task response
- * for one website.
+ * Return a finite numeric value or null.
+ */
+function finiteOrNull(
+  value
+) {
+
+  return Number.isFinite(
+    value
+  )
+    ? value
+    : null;
+
+}
+
+
+/**
+ * Return a boolean or null.
+ */
+function booleanOrNull(
+  value
+) {
+
+  return typeof value ===
+    "boolean"
+
+    ? value
+
+    : null;
+
+}
+
+
+/* =========================================================
+   STANDARD TASK RESPONSES
+   Sites 1 and 2
+   ========================================================= */
+
+/**
+ * Retrieve the stored task response for one website.
  */
 function getTaskResponse(
   session,
@@ -129,17 +208,22 @@ function getTaskResponse(
     let index =
       responses.length - 1;
 
-    index >= 0;
+    index >=
+      0;
 
-    index -= 1
+    index -=
+      1
   ) {
 
     if (
-      responses[index].siteId ===
+      responses[index]
+        .siteId ===
       siteId
     ) {
 
-      return responses[index];
+      return responses[
+        index
+      ];
 
     }
 
@@ -151,9 +235,732 @@ function getTaskResponse(
 }
 
 
+/* =========================================================
+   SITE 3 — SHOPPING SUMMARY
+   ========================================================= */
+
 /**
- * Build a summary for one website.
+ * Build the behavioural summary for BOXDROP.
+ *
+ * Importantly, this reads only experiment events and
+ * safe shopping state. No form contents are used.
  */
+function buildShoppingSummary(
+  session,
+  events
+) {
+
+  const siteId =
+    "site3";
+
+
+  const completedEvents =
+    getMatchingEvents(
+      events,
+      siteId,
+      "shopping_task_completed"
+    );
+
+
+  /**
+   * Find one successfully completed shopping task.
+   */
+  function getCompletedTask(
+    taskNumber
+  ) {
+
+    return (
+      completedEvents.find(
+        function (
+          event
+        ) {
+
+          const value =
+            getEventValue(
+              event
+            );
+
+
+          return (
+            value.taskNumber ===
+              taskNumber &&
+            value.success ===
+              true
+          );
+
+        }
+      ) ??
+      null
+    );
+
+  }
+
+
+  const task1 =
+    getCompletedTask(
+      1
+    );
+
+
+  const task2 =
+    getCompletedTask(
+      2
+    );
+
+
+  const task3 =
+    getCompletedTask(
+      3
+    );
+
+
+  const loginAttempts =
+    getMatchingEvents(
+      events,
+      siteId,
+      "demo_login_attempt"
+    );
+
+
+  const deliverySelections =
+    getMatchingEvents(
+      events,
+      siteId,
+      "delivery_option_selected"
+    );
+
+
+  const finalDeliverySelection =
+
+    deliverySelections.length >
+      0
+
+      ? deliverySelections[
+          deliverySelections.length -
+          1
+        ]
+
+      : null;
+
+
+  const finalDeliveryValue =
+    getEventValue(
+      finalDeliverySelection
+    );
+
+
+  /*
+   * Only safe shopping state is stored
+   * in session.shoppingState.
+   */
+  const storedState =
+
+    isObject(
+      session.shoppingState
+    )
+
+      ? session.shoppingState
+
+      : {};
+
+
+  const completedTaskCount =
+
+    [
+      task1,
+      task2,
+      task3
+    ]
+      .filter(
+        Boolean
+      )
+      .length;
+
+
+  const finalTaskProgress =
+
+    Number.isFinite(
+      storedState.taskProgress
+    )
+
+      ? Math.max(
+          0,
+
+          Math.min(
+            3,
+
+            Math.trunc(
+              storedState.taskProgress
+            )
+          )
+        )
+
+      : completedTaskCount;
+
+
+  return {
+
+    /*
+     * Final stage reached:
+     *
+     * 0 = none
+     * 1 = product task
+     * 2 = product + login
+     * 3 = all shopping tasks
+     */
+    task_progress:
+      finalTaskProgress,
+
+
+    completed_task_count:
+      completedTaskCount,
+
+
+    /* -------------------------
+       SHOPPING TASK 1
+       ------------------------- */
+
+    task_1_completed:
+      Boolean(
+        task1
+      ),
+
+
+    task_1_completed_at:
+      task1?.timestamp ??
+      null,
+
+
+    task_1_product_id:
+      getEventValue(
+        task1
+      ).productId ??
+      null,
+
+
+    /* -------------------------
+       SHOPPING TASK 2
+       ------------------------- */
+
+    task_2_completed:
+      Boolean(
+        task2
+      ),
+
+
+    task_2_completed_at:
+      task2?.timestamp ??
+      null,
+
+
+    /* -------------------------
+       SHOPPING TASK 3
+       ------------------------- */
+
+    task_3_completed:
+      Boolean(
+        task3
+      ),
+
+
+    task_3_completed_at:
+      task3?.timestamp ??
+      null,
+
+
+    all_tasks_completed:
+      Boolean(
+        task1 &&
+        task2 &&
+        task3
+      ),
+
+
+    /* -------------------------
+       PRODUCT BROWSING
+       ------------------------- */
+
+    product_view_count:
+      countEvents(
+        events,
+        siteId,
+        "product_viewed"
+      ),
+
+
+    product_add_count:
+      countEvents(
+        events,
+        siteId,
+        "product_added_to_cart"
+      ),
+
+
+    /* -------------------------
+       DEMO LOGIN
+       ------------------------- */
+
+    demo_login_attempt_count:
+      loginAttempts.length,
+
+
+    demo_login_failed_attempt_count:
+
+      loginAttempts.filter(
+        function (
+          event
+        ) {
+
+          return (
+            getEventValue(
+              event
+            ).success ===
+            false
+          );
+
+        }
+      ).length,
+
+
+    /* -------------------------
+       CHECKOUT
+       ------------------------- */
+
+    checkout_started:
+
+      countEvents(
+        events,
+        siteId,
+        "checkout_started"
+      ) >
+      0,
+
+
+    checkout_start_count:
+
+      countEvents(
+        events,
+        siteId,
+        "checkout_started"
+      ),
+
+
+    delivery_details_submitted:
+
+      countEvents(
+        events,
+        siteId,
+        "delivery_details_submitted"
+      ) >
+      0,
+
+
+    delivery_option_attempt_count:
+      deliverySelections.length,
+
+
+    final_delivery_option:
+      finalDeliveryValue
+        .option ??
+      null,
+
+
+    final_delivery_correct:
+      booleanOrNull(
+        finalDeliveryValue
+          .correct
+      ),
+
+
+    shopping_site_finished:
+
+      countEvents(
+        events,
+        siteId,
+        "shopping_site_finished"
+      ) >
+      0
+
+  };
+
+}
+
+
+/* =========================================================
+   COOKIE / PRIVACY SUMMARY
+   ========================================================= */
+
+/**
+ * Build the cookie-decision summary for one website.
+ *
+ * We retain both:
+ *
+ * - initial decision; and
+ * - final decision.
+ *
+ * This matters for Automation because an automatic
+ * preference can later be reviewed or changed.
+ */
+function buildCookieSummary(
+  siteId,
+  events
+) {
+
+  const cookieEvents =
+    getMatchingEvents(
+      events,
+      siteId,
+      "cookie_choice"
+    );
+
+
+  const firstCookieEvent =
+    cookieEvents[0] ??
+    null;
+
+
+  const finalCookieEvent =
+
+    cookieEvents.length >
+      0
+
+      ? cookieEvents[
+          cookieEvents.length -
+          1
+        ]
+
+      : null;
+
+
+  const firstCookieValue =
+    getEventValue(
+      firstCookieEvent
+    );
+
+
+  const finalCookieValue =
+    getEventValue(
+      finalCookieEvent
+    );
+
+
+  const cookieSettings =
+
+    isObject(
+      finalCookieValue.settings
+    )
+
+      ? finalCookieValue.settings
+
+      : {};
+
+
+  /* =======================================================
+     CUSTOMISE
+     ======================================================= */
+
+  const settingsOpenCount =
+
+    countEvents(
+      events,
+      siteId,
+      "cookie_settings_opened"
+    );
+
+
+  /* =======================================================
+     SUGGESTIONS
+     ======================================================= */
+
+  const suggestionShownEvent =
+
+    getFirstEvent(
+      events,
+      siteId,
+      "privacy_suggestion_shown"
+    );
+
+
+  const suggestionValue =
+
+    getEventValue(
+      suggestionShownEvent
+    );
+
+
+  const suggestionOpenCount =
+
+    countEvents(
+      events,
+      siteId,
+      "privacy_suggestion_opened"
+    );
+
+
+  const suggestionDismissCount =
+
+    countEvents(
+      events,
+      siteId,
+      "privacy_suggestion_dismissed"
+    );
+
+
+  /* =======================================================
+     AUTOMATION
+     ======================================================= */
+
+  const automationReviewCount =
+
+    countEvents(
+      events,
+      siteId,
+      "automation_choice_reviewed"
+    );
+
+
+  /*
+   * If the participant changed an automated preference
+   * at least once, this remains true even if they later
+   * open the interface again.
+   */
+  const automationOverride =
+
+    cookieEvents.some(
+      function (
+        event
+      ) {
+
+        return (
+          getEventValue(
+            event
+          )
+            .automationOverride ===
+          true
+        );
+
+      }
+    );
+
+
+  const automationAppliedEvent =
+
+    getFirstEvent(
+      events,
+      siteId,
+      "automation_preference_applied"
+    );
+
+
+  const automationAppliedValue =
+
+    getEventValue(
+      automationAppliedEvent
+    );
+
+
+  return {
+
+    /* =====================================================
+       CORE COOKIE VARIABLES
+       ===================================================== */
+
+    /*
+     * 1. Did a cookie decision occur?
+     */
+    cookie_decision_made:
+      Boolean(
+        firstCookieEvent
+      ),
+
+
+    /*
+     * Initial choice.
+     *
+     * Particularly useful for Automation.
+     */
+    cookie_initial_choice:
+      firstCookieValue
+        .choice ??
+      null,
+
+
+    cookie_initial_source:
+      firstCookieValue
+        .source ??
+      null,
+
+
+    /*
+     * Final recorded choice.
+     *
+     * For Control/Suggestions this will normally
+     * be identical to the initial choice.
+     *
+     * For Automation it may differ if overridden.
+     */
+    cookie_choice:
+      finalCookieValue
+        .choice ??
+      null,
+
+
+    cookie_source:
+      finalCookieValue
+        .source ??
+      null,
+
+
+    cookie_functional:
+      booleanOrNull(
+        cookieSettings
+          .functional
+      ),
+
+
+    cookie_analytics:
+      booleanOrNull(
+        cookieSettings
+          .analytics
+      ),
+
+
+    cookie_advertising:
+      booleanOrNull(
+        cookieSettings
+          .advertising
+      ),
+
+
+    /* =====================================================
+       CUSTOMISE
+       ===================================================== */
+
+    customise_opened:
+
+      settingsOpenCount >
+      0,
+
+
+    cookie_settings_open_count:
+      settingsOpenCount,
+
+
+    /* =====================================================
+       COOKIE TIMING
+       ===================================================== */
+
+    /*
+     * Site load → INITIAL cookie decision.
+     *
+     * This is the main decision-time variable.
+     */
+    cookie_decision_time_ms:
+      finiteOrNull(
+        firstCookieValue
+          .timeFromSiteLoadToDecisionMilliseconds
+      ),
+
+
+    /*
+     * How much of the website task had already
+     * been completed at the initial decision.
+     *
+     * Site 3:
+     * 0, 1, 2 or 3.
+     */
+    task_progress_at_cookie_decision:
+      finiteOrNull(
+        firstCookieValue
+          .taskProgressAtDecision
+      ),
+
+
+    /* =====================================================
+       SUGGESTIONS CONDITION
+       ===================================================== */
+
+    suggestion_topic:
+      suggestionValue
+        .suggestionTopic ??
+      null,
+
+
+    suggestion_shown:
+      Boolean(
+        suggestionShownEvent
+      ),
+
+
+    suggestion_opened:
+
+      suggestionOpenCount >
+      0,
+
+
+    suggestion_open_count:
+      suggestionOpenCount,
+
+
+    suggestion_dismissed:
+
+      suggestionDismissCount >
+      0,
+
+
+    suggestion_dismiss_count:
+      suggestionDismissCount,
+
+
+    /*
+     * Suggestion exposure → cookie decision.
+     */
+    suggestion_to_cookie_decision_ms:
+      finiteOrNull(
+        firstCookieValue
+          .timeFromSuggestionShownToDecisionMilliseconds
+      ),
+
+
+    /* =====================================================
+       AUTOMATION CONDITION
+       ===================================================== */
+
+    automation_reviewed:
+
+      automationReviewCount >
+      0,
+
+
+    automation_review_count:
+      automationReviewCount,
+
+
+    automation_override:
+      automationOverride,
+
+
+    automation_applied:
+      Boolean(
+        automationAppliedEvent
+      ),
+
+
+    automation_application_time_ms:
+      finiteOrNull(
+        automationAppliedValue
+          .timeFromSiteLoadToApplicationMilliseconds
+      )
+
+  };
+
+}
+
+
+/* =========================================================
+   SITE SUMMARY
+   ========================================================= */
+
 function buildSiteSummary(
   siteId,
   session,
@@ -161,35 +968,15 @@ function buildSiteSummary(
 ) {
 
   const taskResponse =
+
     getTaskResponse(
       session,
       siteId
     );
 
 
-  const cookieEvent =
-    getLastEvent(
-      events,
-      siteId,
-      "cookie_choice"
-    );
-
-
-  const cookieValue =
-    getEventValue(
-      cookieEvent
-    );
-
-
-  const cookieSettings =
-    isObject(
-      cookieValue.settings
-    )
-      ? cookieValue.settings
-      : {};
-
-
   const completionEvent =
+
     getLastEvent(
       events,
       siteId,
@@ -198,102 +985,114 @@ function buildSiteSummary(
 
 
   const completionValue =
+
     getEventValue(
       completionEvent
     );
 
 
-  /*
-   * Retrieve the privacy learning aid shown
-   * to suggestions participants.
-   */
-  const suggestionEvent =
-    getLastEvent(
-      events,
+  const cookie =
+
+    buildCookieSummary(
       siteId,
-      "privacy_suggestion_shown"
+      events
     );
 
 
-  const suggestionValue =
-    getEventValue(
-      suggestionEvent
-    );
+  const shopping =
+
+    siteId ===
+      "site3"
+
+      ? buildShoppingSummary(
+          session,
+          events
+        )
+
+      : null;
 
 
   return {
 
+    /*
+     * Sites 1 and 2 use normal multiple-choice tasks.
+     *
+     * Site 3 is represented as one shopping sequence
+     * containing three behavioural tasks.
+     */
     task_id:
-      taskResponse?.taskId ??
-      null,
+
+      siteId ===
+        "site3"
+
+        ? "site3_shopping_sequence"
+
+        : taskResponse
+            ?.taskId ??
+          null,
 
 
+    /*
+     * Site 3 is considered successful at the site level
+     * only if all three shopping tasks were completed.
+     */
     task_correct:
-      typeof taskResponse?.isCorrect ===
-      "boolean"
-        ? taskResponse.isCorrect
-        : null,
+
+      siteId ===
+        "site3"
+
+        ? shopping
+            .all_tasks_completed
+
+        : typeof taskResponse
+            ?.isCorrect ===
+            "boolean"
+
+          ? taskResponse
+              .isCorrect
+
+          : null,
 
 
     task_submitted_at:
-      taskResponse?.submittedAt ??
-      null,
+
+      siteId ===
+        "site3"
+
+        ? shopping
+            .task_3_completed_at
+
+        : taskResponse
+            ?.submittedAt ??
+          null,
 
 
-    cookie_choice:
-      cookieValue.choice ??
-      null,
+    /*
+     * Cookie/intervention variables.
+     */
+    ...cookie,
 
 
-    cookie_source:
-      cookieValue.source ??
-      null,
-
-
-    cookie_functional:
-      typeof cookieSettings.functional ===
-      "boolean"
-        ? cookieSettings.functional
-        : null,
-
-
-    cookie_analytics:
-      typeof cookieSettings.analytics ===
-      "boolean"
-        ? cookieSettings.analytics
-        : null,
-
-
-    cookie_advertising:
-      typeof cookieSettings.advertising ===
-      "boolean"
-        ? cookieSettings.advertising
-        : null,
-
-
-    automation_override:
-      Boolean(
-        cookieValue.automationOverride
+    /*
+     * General site behaviour.
+     */
+    time_on_site_ms:
+      finiteOrNull(
+        completionValue
+          .timeOnSiteMilliseconds
       ),
 
 
-    time_on_site_ms:
-      Number.isFinite(
-        completionValue
-          .timeOnSiteMilliseconds
-      )
-        ? completionValue
-            .timeOnSiteMilliseconds
-        : null,
-
-
     interaction_count:
+
       Number.isFinite(
         completionValue
           .relevantInteractionCount
       )
+
         ? completionValue
             .relevantInteractionCount
+
         : countEvents(
             events,
             siteId,
@@ -301,70 +1100,20 @@ function buildSiteSummary(
           ),
 
 
-    cookie_settings_open_count:
-      countEvents(
-        events,
-        siteId,
-        "cookie_settings_opened"
-      ),
-
-
     /*
-     * Examples:
-     *
-     * site3:
-     *   data_collection
-     *
-     * site4:
-     *   cookie_purposes
+     * Only Site 3 has this object.
      */
-    suggestion_topic:
-      suggestionValue
-        .suggestionTopic ??
-      null,
-
-
-    /*
-     * Useful for verifying that the treatment
-     * was actually displayed.
-     */
-    suggestion_shown:
-      Boolean(
-        suggestionEvent
-      ),
-
-
-    suggestion_open_count:
-      countEvents(
-        events,
-        siteId,
-        "privacy_suggestion_opened"
-      ),
-
-
-    suggestion_dismiss_count:
-      countEvents(
-        events,
-        siteId,
-        "privacy_suggestion_dismissed"
-      ),
-
-
-    automation_review_count:
-      countEvents(
-        events,
-        siteId,
-        "automation_choice_reviewed"
-      )
+    shopping
 
   };
 
 }
 
 
-/**
- * Build one participant-level experiment record.
- */
+/* =========================================================
+   PARTICIPANT SUMMARY
+   ========================================================= */
+
 export function buildResultsSummary() {
 
   const session =
@@ -385,6 +1134,7 @@ export function buildResultsSummary() {
 
 
   const completionEvent =
+
     getLastEvent(
       events,
       "experiment_end",
@@ -393,6 +1143,7 @@ export function buildResultsSummary() {
 
 
   const completionValue =
+
     getEventValue(
       completionEvent
     );
@@ -402,9 +1153,13 @@ export function buildResultsSummary() {
 
 
   SITE_IDS.forEach(
-    function (siteId) {
+    function (
+      siteId
+    ) {
 
-      sites[siteId] =
+      sites[
+        siteId
+      ] =
         buildSiteSummary(
           siteId,
           session,
@@ -416,20 +1171,82 @@ export function buildResultsSummary() {
 
 
   const totalDuration =
+
     Number.isFinite(
       completionValue
         .totalExperimentTimeMilliseconds
     )
+
       ? completionValue
           .totalExperimentTimeMilliseconds
+
       : Date.now() -
-        session.startedAtMilliseconds;
+        session
+          .startedAtMilliseconds;
+
+
+  /* =======================================================
+     INFORMATION-TASK TOTAL
+     ======================================================= */
+
+  const informationCorrectCount =
+
+    INFORMATION_SITE_IDS.reduce(
+      function (
+        total,
+        siteId
+      ) {
+
+        return (
+
+          total +
+
+          (
+            sites[
+              siteId
+            ]
+              .task_correct ===
+            true
+
+              ? 1
+
+              : 0
+          )
+
+        );
+
+      },
+      0
+    );
+
+
+  /* =======================================================
+     SHOPPING-TASK TOTAL
+     ======================================================= */
+
+  const shoppingCompletedCount =
+
+    sites
+      .site3
+      .shopping
+      .completed_task_count;
 
 
   return {
 
+    /*
+     * Kept as 1.0 for compatibility with the
+     * existing backend.
+     */
     schema_version:
       "1.0",
+
+
+    /*
+     * Identifies the revised experimental design.
+     */
+    experiment_version:
+      "three_site_v2",
 
 
     participant_id:
@@ -441,11 +1258,16 @@ export function buildResultsSummary() {
 
 
     site_order:
+
       Array.isArray(
         session.siteOrder
       )
+
         ? session.siteOrder
-        : [...SITE_IDS],
+
+        : [
+            ...SITE_IDS
+          ],
 
 
     started_at:
@@ -453,8 +1275,12 @@ export function buildResultsSummary() {
 
 
     completed_at:
-      completionEvent?.timestamp ??
-      new Date().toISOString(),
+
+      completionEvent
+        ?.timestamp ??
+
+      new Date()
+        .toISOString(),
 
 
     total_duration_ms:
@@ -470,7 +1296,40 @@ export function buildResultsSummary() {
 
     totals: {
 
+      /*
+       * There are now five actual behavioural tasks:
+       *
+       * Site 1 = 1
+       * Site 2 = 1
+       * Site 3 = 3
+       */
+      expected_task_count:
+        5,
+
+
+      correct_information_task_count:
+        informationCorrectCount,
+
+
+      shopping_task_completed_count:
+        shoppingCompletedCount,
+
+
+      /*
+       * Overall successful task count out of 5.
+       */
       correct_task_count:
+
+        informationCorrectCount +
+        shoppingCompletedCount,
+
+
+      /*
+       * Number of websites on which a cookie
+       * decision was made.
+       */
+      cookie_decision_count:
+
         SITE_IDS.reduce(
           function (
             total,
@@ -478,14 +1337,20 @@ export function buildResultsSummary() {
           ) {
 
             return (
+
               total +
+
               (
-                sites[siteId]
-                  .task_correct ===
-                true
+                sites[
+                  siteId
+                ]
+                  .cookie_decision_made
+
                   ? 1
+
                   : 0
               )
+
             );
 
           },
@@ -493,7 +1358,11 @@ export function buildResultsSummary() {
         ),
 
 
+      /*
+       * General interface interactions.
+       */
       interaction_count:
+
         SITE_IDS.reduce(
           function (
             total,
@@ -501,12 +1370,17 @@ export function buildResultsSummary() {
           ) {
 
             return (
+
               total +
+
               (
-                sites[siteId]
+                sites[
+                  siteId
+                ]
                   .interaction_count ??
                 0
               )
+
             );
 
           },
@@ -514,7 +1388,11 @@ export function buildResultsSummary() {
         ),
 
 
-      suggestion_open_count:
+      /*
+       * Custom cookie-settings openings.
+       */
+      customise_open_count:
+
         SITE_IDS.reduce(
           function (
             total,
@@ -522,9 +1400,92 @@ export function buildResultsSummary() {
           ) {
 
             return (
+
               total +
-              sites[siteId]
+
+              sites[
+                siteId
+              ]
+                .cookie_settings_open_count
+
+            );
+
+          },
+          0
+        ),
+
+
+      /*
+       * Suggestions engagement.
+       */
+      suggestion_open_count:
+
+        SITE_IDS.reduce(
+          function (
+            total,
+            siteId
+          ) {
+
+            return (
+
+              total +
+
+              sites[
+                siteId
+              ]
                 .suggestion_open_count
+
+            );
+
+          },
+          0
+        ),
+
+
+      suggestion_dismiss_count:
+
+        SITE_IDS.reduce(
+          function (
+            total,
+            siteId
+          ) {
+
+            return (
+
+              total +
+
+              sites[
+                siteId
+              ]
+                .suggestion_dismiss_count
+
+            );
+
+          },
+          0
+        ),
+
+
+      /*
+       * Automation engagement.
+       */
+      automation_review_count:
+
+        SITE_IDS.reduce(
+          function (
+            total,
+            siteId
+          ) {
+
+            return (
+
+              total +
+
+              sites[
+                siteId
+              ]
+                .automation_review_count
+
             );
 
           },
@@ -533,6 +1494,7 @@ export function buildResultsSummary() {
 
 
       automation_override_count:
+
         SITE_IDS.reduce(
           function (
             total,
@@ -540,13 +1502,20 @@ export function buildResultsSummary() {
           ) {
 
             return (
+
               total +
+
               (
-                sites[siteId]
+                sites[
+                  siteId
+                ]
                   .automation_override
+
                   ? 1
+
                   : 0
               )
+
             );
 
           },
@@ -560,16 +1529,21 @@ export function buildResultsSummary() {
 }
 
 
+/* =========================================================
+   QUALTRICS FLATTENING
+   ========================================================= */
+
 /**
- * Convert booleans to values suitable
- * for URL/Qualtrics parameters.
+ * Convert booleans to simple values suitable
+ * for Qualtrics Embedded Data.
  */
 function encodeBoolean(
   value
 ) {
 
   if (
-    value === true
+    value ===
+    true
   ) {
 
     return "1";
@@ -578,7 +1552,8 @@ function encodeBoolean(
 
 
   if (
-    value === false
+    value ===
+    false
   ) {
 
     return "0";
@@ -594,8 +1569,8 @@ function encodeBoolean(
 /**
  * Flatten the participant summary.
  *
- * This remains available for compatibility with
- * the earlier Qualtrics-transfer design.
+ * This remains available for the eventual
+ * Qualtrics return-data integration.
  */
 export function flattenResultsSummary(
   summary
@@ -624,27 +1599,77 @@ export function flattenResultsSummary(
       summary.total_event_count,
 
 
+    expected_task_count:
+      summary
+        .totals
+        .expected_task_count,
+
+
     correct_task_count:
-      summary.totals
+      summary
+        .totals
         .correct_task_count,
 
 
+    correct_information_task_count:
+      summary
+        .totals
+        .correct_information_task_count,
+
+
+    shopping_task_completed_count:
+      summary
+        .totals
+        .shopping_task_completed_count,
+
+
+    cookie_decision_count:
+      summary
+        .totals
+        .cookie_decision_count,
+
+
     total_interaction_count:
-      summary.totals
+      summary
+        .totals
         .interaction_count,
 
 
+    customise_open_count:
+      summary
+        .totals
+        .customise_open_count,
+
+
     suggestion_open_count:
-      summary.totals
+      summary
+        .totals
         .suggestion_open_count,
 
 
+    suggestion_dismiss_count:
+      summary
+        .totals
+        .suggestion_dismiss_count,
+
+
+    automation_review_count:
+      summary
+        .totals
+        .automation_review_count,
+
+
     automation_override_count:
-      summary.totals
+      summary
+        .totals
         .automation_override_count
 
   };
 
+
+  /* =======================================================
+     SITE-LEVEL VARIABLES
+     ======================================================= */
 
   SITE_IDS.forEach(
     function (
@@ -652,10 +1677,15 @@ export function flattenResultsSummary(
     ) {
 
       const site =
-        summary.sites[
-          siteId
-        ];
+        summary
+          .sites[
+            siteId
+          ];
 
+
+      /* -------------------------
+         TASK
+         ------------------------- */
 
       flattened[
         `${siteId}_task_correct`
@@ -665,17 +1695,47 @@ export function flattenResultsSummary(
         );
 
 
+      /* -------------------------
+         COOKIE DECISION
+         ------------------------- */
+
+      flattened[
+        `${siteId}_cookie_decision_made`
+      ] =
+        encodeBoolean(
+          site.cookie_decision_made
+        );
+
+
+      flattened[
+        `${siteId}_cookie_initial_choice`
+      ] =
+        site
+          .cookie_initial_choice ??
+        "";
+
+
+      flattened[
+        `${siteId}_cookie_initial_source`
+      ] =
+        site
+          .cookie_initial_source ??
+        "";
+
+
       flattened[
         `${siteId}_cookie_choice`
       ] =
-        site.cookie_choice ??
+        site
+          .cookie_choice ??
         "";
 
 
       flattened[
         `${siteId}_cookie_source`
       ] =
-        site.cookie_source ??
+        site
+          .cookie_source ??
         "";
 
 
@@ -703,6 +1763,93 @@ export function flattenResultsSummary(
         );
 
 
+      /* -------------------------
+         CUSTOMISE
+         ------------------------- */
+
+      flattened[
+        `${siteId}_customise_opened`
+      ] =
+        encodeBoolean(
+          site.customise_opened
+        );
+
+
+      flattened[
+        `${siteId}_customise_open_count`
+      ] =
+        site
+          .cookie_settings_open_count;
+
+
+      /* -------------------------
+         COOKIE TIMING
+         ------------------------- */
+
+      flattened[
+        `${siteId}_cookie_decision_time_ms`
+      ] =
+        site
+          .cookie_decision_time_ms ??
+        "";
+
+
+      flattened[
+        `${siteId}_task_progress_at_cookie_decision`
+      ] =
+        site
+          .task_progress_at_cookie_decision ??
+        "";
+
+
+      /* -------------------------
+         SUGGESTIONS
+         ------------------------- */
+
+      flattened[
+        `${siteId}_suggestion_shown`
+      ] =
+        encodeBoolean(
+          site.suggestion_shown
+        );
+
+
+      flattened[
+        `${siteId}_suggestion_opened`
+      ] =
+        encodeBoolean(
+          site.suggestion_opened
+        );
+
+
+      flattened[
+        `${siteId}_suggestion_dismissed`
+      ] =
+        encodeBoolean(
+          site.suggestion_dismissed
+        );
+
+
+      flattened[
+        `${siteId}_suggestion_to_cookie_decision_ms`
+      ] =
+        site
+          .suggestion_to_cookie_decision_ms ??
+        "";
+
+
+      /* -------------------------
+         AUTOMATION
+         ------------------------- */
+
+      flattened[
+        `${siteId}_automation_reviewed`
+      ] =
+        encodeBoolean(
+          site.automation_reviewed
+        );
+
+
       flattened[
         `${siteId}_automation_override`
       ] =
@@ -711,27 +1858,136 @@ export function flattenResultsSummary(
         );
 
 
+      /* -------------------------
+         GENERAL SITE BEHAVIOUR
+         ------------------------- */
+
       flattened[
         `${siteId}_time_ms`
       ] =
-        site.time_on_site_ms ??
+        site
+          .time_on_site_ms ??
         "";
 
 
       flattened[
         `${siteId}_interaction_count`
       ] =
-        site.interaction_count ??
+        site
+          .interaction_count ??
         "";
-
-
-      flattened[
-        `${siteId}_suggestion_open_count`
-      ] =
-        site.suggestion_open_count;
 
     }
   );
+
+
+  /* =======================================================
+     SITE 3 — SHOPPING VARIABLES
+     ======================================================= */
+
+  const shopping =
+    summary
+      .sites
+      .site3
+      .shopping;
+
+
+  flattened
+    .site3_shopping_task_progress =
+      shopping.task_progress;
+
+
+  flattened
+    .site3_shopping_task_1_completed =
+      encodeBoolean(
+        shopping
+          .task_1_completed
+      );
+
+
+  flattened
+    .site3_shopping_task_2_completed =
+      encodeBoolean(
+        shopping
+          .task_2_completed
+      );
+
+
+  flattened
+    .site3_shopping_task_3_completed =
+      encodeBoolean(
+        shopping
+          .task_3_completed
+      );
+
+
+  flattened
+    .site3_shopping_all_tasks_completed =
+      encodeBoolean(
+        shopping
+          .all_tasks_completed
+      );
+
+
+  flattened
+    .site3_product_view_count =
+      shopping
+        .product_view_count;
+
+
+  flattened
+    .site3_product_add_count =
+      shopping
+        .product_add_count;
+
+
+  flattened
+    .site3_demo_login_attempt_count =
+      shopping
+        .demo_login_attempt_count;
+
+
+  flattened
+    .site3_demo_login_failed_attempt_count =
+      shopping
+        .demo_login_failed_attempt_count;
+
+
+  flattened
+    .site3_checkout_started =
+      encodeBoolean(
+        shopping
+          .checkout_started
+      );
+
+
+  flattened
+    .site3_delivery_details_submitted =
+      encodeBoolean(
+        shopping
+          .delivery_details_submitted
+      );
+
+
+  flattened
+    .site3_delivery_option_attempt_count =
+      shopping
+        .delivery_option_attempt_count;
+
+
+  flattened
+    .site3_final_delivery_option =
+      shopping
+        .final_delivery_option ??
+      "";
+
+
+  flattened
+    .site3_final_delivery_correct =
+      encodeBoolean(
+        shopping
+          .final_delivery_correct
+      );
 
 
   return flattened;
@@ -739,9 +1995,16 @@ export function flattenResultsSummary(
 }
 
 
+/* =========================================================
+   LEGACY QUALTRICS URL HELPER
+   ========================================================= */
+
 /**
- * Legacy helper for converting a summary into
- * a Qualtrics URL.
+ * Convert the flattened result into URL parameters.
+ *
+ * We may ultimately use postMessage rather than a long
+ * URL, but retaining this function does no harm and
+ * preserves compatibility with the earlier design.
  */
 export function buildQualtricsUrl(
   baseUrl,

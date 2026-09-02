@@ -7,7 +7,7 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Website 2 - PlainPath Travel</title>
+  <title>VibeCheck</title>
 
   <link
     rel="stylesheet"
@@ -16,89 +16,104 @@
 </head>
 
 <body
-  data-site-id="site2_neutral_banner"
+  data-site-id="site3_no_banner_tracking"
   data-study-site="site2"
 >
   <!-- =====================================================
-       SITE 2 NAVIGATION
+       SITE 3 NAVIGATION
        ===================================================== -->
-  <header class="travel-header">
-    <div class="travel-brand-row">
+  <header class="vibe-header">
+    <div class="vibe-brand-row">
       <button
-        class="travel-menu-toggle"
-        id="travelMenuToggle"
+        class="vibe-menu-toggle"
+        id="vibeMenuToggle"
         type="button"
         aria-label="Open navigation"
         aria-expanded="false"
-        aria-controls="travelNavLinks"
+        aria-controls="vibeNavLinks"
       >
         <span></span>
         <span></span>
         <span></span>
       </button>
 
-      <a class="travel-logo" href="#top" aria-label="PlainPath Travel home">
-        <span>PLAIN</span>PATH
+      <a class="vibe-logo" href="#top" aria-label="VibeCheck home">
+        <span class="vibe-logo-mark">49</span>
+        <span class="vibe-logo-word">VibeCheck</span>
       </a>
 
-      <span class="travel-header-spacer" aria-hidden="true"></span>
+      <span class="vibe-header-spacer" aria-hidden="true"></span>
     </div>
 
     <nav
-      class="travel-nav-links"
-      id="travelNavLinks"
+      class="vibe-nav-links"
+      id="vibeNavLinks"
       aria-label="Primary navigation"
     >
-      <a href="#discover">Discover</a>
-      <a href="#amsterdam">Amsterdam</a>
-      <a href="#guides">Guides</a>
+      <a href="#story">The trend</a>
+      <a href="#why">Why 49?</a>
+      <a href="#objects">Object crushes</a>
       <a href="#gallery">Gallery</a>
-      <a href="#plan">Plan your stay</a>
+      <a href="#contact">Send a vibe</a>
     </nav>
   </header>
 
   <!-- =====================================================
-       MINIMAL TEXT-ONLY HERO
+       INTERACTIVE CANVAS HERO
        ===================================================== -->
-  <section class="travel-hero" id="top">
+  <section class="vibe-hero" id="top">
+    <canvas
+      id="vibeParticleCanvas"
+      class="vibe-particle-canvas"
+      aria-hidden="true"
+    ></canvas>
+
     <div
-      class="travel-parallax-orb travel-parallax-orb--one"
-      data-parallax-speed="0.10"
+      class="vibe-deco-frame vibe-parallax"
+      data-parallax-speed="0.05"
       aria-hidden="true"
     ></div>
 
     <div
-      class="travel-parallax-orb travel-parallax-orb--two"
-      data-parallax-speed="-0.06"
+      class="vibe-deco-diamond vibe-deco-diamond--one vibe-parallax"
+      data-parallax-speed="-0.04"
       aria-hidden="true"
     ></div>
 
-    <div class="travel-hero-inner">
-      <p class="travel-kicker">CURATED EUROPEAN ESCAPES · 2026</p>
+    <div
+      class="vibe-deco-diamond vibe-deco-diamond--two vibe-parallax"
+      data-parallax-speed="0.08"
+      aria-hidden="true"
+    ></div>
 
-      <h1>
-        Travel slowly.<br />
-        Notice <em>more.</em>
-      </h1>
-
-      <p class="travel-hero-copy">
-        Elegant city guides for travellers who prefer thoughtful itineraries,
-        beautiful neighbourhoods and enough breathing room to enjoy the journey.
+    <div class="vibe-hero-inner">
+      <p class="vibe-kicker">
+        INTERNET CULTURE · PURE VIBES · ISSUE 49
       </p>
 
-      <a class="travel-hero-link" href="#discover">
-        Explore Amsterdam
+      <h1>
+        <span>7 × 7</span>
+        <strong>= 49</strong>
+      </h1>
+
+      <p class="vibe-hero-copy">
+        Somehow mathematical. Somehow attractive. Completely obvious
+        once the internet decides it is.
+      </p>
+
+      <a class="vibe-hero-button" href="#story">
+        Enter the vibe
         <span aria-hidden="true">↓</span>
       </a>
     </div>
   </section>
 
-  <main class="container travel-container">
+  <main class="container vibe-container">
 
     <!-- =====================================================
          WEBSITE TASK
          Do not alter: task-controller.js inserts the experiment
-         question and answer options into this element.
+         question and answers into this element.
          ===================================================== -->
     <div class="next-box">
 
@@ -118,428 +133,353 @@
     </div>
 
     <!-- =====================================================
-         TRAVEL CONTENT
+         SITE CONTENT
          ===================================================== -->
-    <section class="fake-site-content travel-content" id="discover">
-
-      <section
-        class="site-pulse travel-snapshot reveal-on-scroll"
-        aria-label="Amsterdam trip snapshot"
-      >
-        <div class="site-pulse__item">
-          <span class="site-pulse__label">Best season</span>
-          <strong class="site-pulse__value">March to May</strong>
-        </div>
-
-        <div class="site-pulse__item">
-          <span class="site-pulse__label">Getting around</span>
-          <strong class="site-pulse__value">Walk, tram or cycle</strong>
-        </div>
-
-        <div class="site-pulse__item">
-          <span class="site-pulse__label">Trip mood</span>
-          <strong class="site-pulse__value">
-            Museums, markets and canal-side pauses
-          </strong>
-        </div>
-      </section>
+    <section class="fake-site-content vibe-content">
 
       <!-- ===================================================
-           AMSTERDAM FEATURE
+           FEATURE STORY
            =================================================== -->
       <section
-        class="travel-feature reveal-on-scroll"
-        id="amsterdam"
-        aria-labelledby="amsterdamTitle"
+        class="vibe-section vibe-story reveal-on-scroll"
+        id="story"
+        aria-labelledby="vibeStoryTitle"
       >
-        <div class="travel-feature-copy">
-          <p class="travel-section-label">DESTINATION SPOTLIGHT</p>
-
-          <h2 id="amsterdamTitle">
-            Amsterdam in spring:
-            a city made for wandering
-          </h2>
-
-          <p class="destination-meta">
-            Updated April 2026 · Best time to visit: March to May
+        <div class="vibe-copy vibe-copy--left">
+          <p class="vibe-section-label">
+            TRENDING · INTERNET CULTURE
           </p>
 
-          <p class="travel-lead">
-            Spring softens Amsterdam. Canal-side terraces reopen, tulips colour
-            the parks and the longer evenings make it easy to move between
-            galleries, neighbourhood cafés and quiet waterside streets without
-            rushing.
+          <h2 id="vibeStoryTitle">
+            Why does everyone suddenly think
+            <em>7 × 7 = 49</em> is attractive?
+          </h2>
+
+          <p class="vibe-meta">
+            Meme explainer · 5 min read
+          </p>
+
+          <p class="vibe-lead">
+            The latest TikTok shorthand is based almost entirely on vibes.
+            “7 × 7 = 49” describes something that feels obviously attractive,
+            satisfying or simply <strong>right</strong>.
           </p>
 
           <p>
-            The city rewards a loose itinerary. Begin with one museum or landmark,
-            then leave space to follow a canal, stop at a market or take a tram
-            into a neighbourhood you had not planned to see.
+            No, people are not literally attracted to multiplication. The
+            equation has become a way of describing a person, object or tiny
+            design detail that looks appealing even when nobody can quite
+            explain why.
           </p>
-
-          <a class="travel-text-link" href="#guides">
-            See our city-planning notes
-            <span aria-hidden="true">→</span>
-          </a>
         </div>
 
         <button
-          class="travel-feature-image lightbox-trigger"
+          class="vibe-image-panel vibe-image-panel--right lightbox-trigger"
           type="button"
-          data-lightbox-src="https://picsum.photos/seed/plainpath-amsterdam/1600/1000"
-          aria-label="Open larger Amsterdam image"
+          data-lightbox-src="https://picsum.photos/seed/vibecheck-49/1600/1100"
+          aria-label="Open larger image of numbers and symbols"
         >
           <img
-            src="https://picsum.photos/seed/plainpath-amsterdam/1000/760"
-            alt="Canal houses and bridges in Amsterdam on a bright spring day"
+            src="https://picsum.photos/seed/vibecheck-49/900/720"
+            alt="Colourful numbers and symbols arranged on a desk"
           />
 
-          <span class="travel-image-caption">
-            Canal light, late afternoon
+          <span class="vibe-image-tag">
+            mathematically hot?
           </span>
         </button>
       </section>
 
       <!-- ===================================================
-           DESTINATION DETAIL CARDS
+           WHY IT WORKS
            =================================================== -->
-      <section class="travel-section reveal-on-scroll">
-        <div class="travel-heading-row">
-          <div>
-            <p class="travel-section-label">THE ESSENTIALS</p>
-            <h2>A considered city break</h2>
-          </div>
+      <section
+        class="vibe-section vibe-story vibe-story--reverse reveal-on-scroll"
+        id="why"
+        aria-labelledby="whyTitle"
+      >
+        <div class="vibe-copy vibe-copy--right">
+          <p class="vibe-section-label">
+            THE EXPLAINER
+          </p>
+
+          <h2 id="whyTitle">
+            It just feels correct.
+          </h2>
+
+          <p class="vibe-lead">
+            Some equations have a strangely satisfying quality.
+            <strong>7 × 7 = 49</strong> feels neat, balanced and intuitive.
+          </p>
 
           <p>
-            A few practical choices make Amsterdam substantially easier:
-            stay central enough to walk, use trams for longer hops and reserve
-            the city's most popular museums before you arrive.
+            Compare it with <strong>51 ÷ 3 = 17</strong>. That equation is
+            mathematically just as valid, but it does not necessarily carry
+            the same visual or emotional “vibe”.
+          </p>
+
+          <p>
+            Online, that tiny feeling of aesthetic certainty has been turned
+            into a metaphor for attraction. Calling something “7 × 7 = 49”
+            basically means:
+          </p>
+
+          <blockquote class="vibe-pullquote">
+            “I cannot fully explain it, but this is attractive.”
+          </blockquote>
+        </div>
+
+        <div class="vibe-equation-card vibe-parallax" data-parallax-speed="-0.02">
+          <span class="vibe-equation-label">THE VIBE TEST</span>
+
+          <div class="vibe-equation vibe-equation--yes">
+            <strong>7 × 7 = 49</strong>
+            <span>Clean. Balanced. Correct.</span>
+          </div>
+
+          <div class="vibe-equation-divider"></div>
+
+          <div class="vibe-equation">
+            <strong>51 ÷ 3 = 17</strong>
+            <span>Also correct. Somehow different.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           OBJECTS
+           =================================================== -->
+      <section
+        class="vibe-section vibe-story reveal-on-scroll"
+        id="objects"
+        aria-labelledby="objectsTitle"
+      >
+        <div class="vibe-copy vibe-copy--left">
+          <p class="vibe-section-label">
+            THE MEME EVOLVES
+          </p>
+
+          <h2 id="objectsTitle">
+            Then people started rating objects.
+          </h2>
+
+          <p class="vibe-lead">
+            The trend quickly escaped the world of people and landed on
+            chairs, typefaces, dashboards, taps, buildings and basically
+            anything with unexpectedly excellent proportions.
+          </p>
+
+          <p>
+            “Attractive” is being used broadly here: visually satisfying,
+            aesthetically appealing or pleasing in a way that feels easier
+            to recognise than explain.
+          </p>
+
+          <ul class="vibe-object-list">
+            <li>perfectly symmetrical architecture</li>
+            <li>a really clean handwritten number 7</li>
+            <li>an unusually well-designed kitchen tap</li>
+            <li>a satisfying car dashboard</li>
+            <li>perfectly aligned books on a shelf</li>
+            <li>a strangely good-looking font</li>
+          </ul>
+        </div>
+
+        <button
+          class="vibe-image-panel vibe-image-panel--right lightbox-trigger"
+          type="button"
+          data-lightbox-src="https://picsum.photos/seed/vibecheck-chair/1600/1100"
+          aria-label="Open larger image of a minimalist chair"
+        >
+          <img
+            src="https://picsum.photos/seed/vibecheck-chair/900/720"
+            alt="Minimalist chair in a modern room"
+          />
+
+          <span class="vibe-image-tag">
+            chair = 49
+          </span>
+        </button>
+      </section>
+
+      <!-- ===================================================
+           WHY INANIMATE THINGS
+           =================================================== -->
+      <section
+        class="vibe-section vibe-story vibe-story--reverse reveal-on-scroll"
+        aria-labelledby="logicTitle"
+      >
+        <div class="vibe-copy vibe-copy--right">
+          <p class="vibe-section-label">
+            VIBES &gt; LOGIC
+          </p>
+
+          <h2 id="logicTitle">
+            Why are inanimate things suddenly “attractive”?
+          </h2>
+
+          <p>
+            Internet slang has always been good at stretching familiar words
+            until they do new jobs. Here, “attractive” is less about romance
+            and more about instinctive aesthetic approval.
+          </p>
+
+          <p>
+            A lamp, number, staircase, building or equation can qualify.
+            The joke works because everyone behaves as though the judgement
+            is self-evident.
+          </p>
+
+          <p>
+            People also naturally attach moods, personalities and aesthetic
+            qualities to numbers, letters, colours and shapes. Some
+            commentators compare this with ordinal-linguistic
+            personification, although participating in the meme does not mean
+            somebody experiences that psychological phenomenon.
+          </p>
+
+          <p class="vibe-signoff">
+            Sometimes 7 × 7 just looks like 49.
           </p>
         </div>
 
-        <div class="travel-card-grid">
-          <article class="travel-glass-card">
-            <span class="travel-card-number">01</span>
-            <h3>Getting around</h3>
-            <p>
-              Central Amsterdam is compact enough to explore on foot. Trams are
-              useful when the weather turns or you want to cross the city
-              quickly, while cycling suits confident riders who understand local
-              bike-lane etiquette.
-            </p>
+        <button
+          class="vibe-image-panel vibe-image-panel--left lightbox-trigger"
+          type="button"
+          data-lightbox-src="https://picsum.photos/seed/vibecheck-architecture/1600/1100"
+          aria-label="Open larger symmetrical architecture image"
+        >
+          <img
+            src="https://picsum.photos/seed/vibecheck-architecture/900/720"
+            alt="Symmetrical modern building exterior"
+          />
+
+          <span class="vibe-image-tag">
+            suspiciously satisfying
+          </span>
+        </button>
+      </section>
+
+      <!-- ===================================================
+           TREND RECAP
+           =================================================== -->
+      <section
+        class="vibe-recap reveal-on-scroll"
+        aria-labelledby="recapTitle"
+      >
+        <p class="vibe-section-label">
+          THE TREND IN 15 SECONDS
+        </p>
+
+        <h2 id="recapTitle">
+          You either get it immediately,
+          or the explanation makes it worse.
+        </h2>
+
+        <div class="vibe-recap-grid">
+          <article>
+            <span>01</span>
+            <p>7 × 7 = 49 feels satisfying.</p>
           </article>
 
-          <article class="travel-glass-card travel-glass-card--navy">
-            <span class="travel-card-number">02</span>
-            <h3>Where to stay</h3>
-            <p>
-              Choose the canal belt for atmosphere, De Pijp for food and a
-              neighbourhood feel, or Jordaan for narrow streets, independent
-              shops and easy access to the historic centre.
-            </p>
+          <article>
+            <span>02</span>
+            <p>TikTok turns that feeling into slang.</p>
           </article>
 
-          <article class="travel-glass-card">
-            <span class="travel-card-number">03</span>
-            <h3>What to prioritise</h3>
-            <p>
-              Pair one major museum with a slower experience: a canal walk,
-              Noord ferry ride, neighbourhood market or an unhurried evening
-              beside the water.
-            </p>
+          <article>
+            <span>03</span>
+            <p>“49” becomes shorthand for attractive.</p>
+          </article>
+
+          <article>
+            <span>04</span>
+            <p>People apply it to humans and objects.</p>
+          </article>
+
+          <article>
+            <span>05</span>
+            <p>Nobody really needs to explain why.</p>
           </article>
         </div>
       </section>
 
       <!-- ===================================================
-           GUIDE CARD GRID
+           TESTIMONIAL / REACTION CAROUSEL
            =================================================== -->
       <section
-        class="travel-section reveal-on-scroll"
-        id="guides"
-        aria-labelledby="guidesTitle"
+        class="vibe-carousel-section reveal-on-scroll"
+        aria-labelledby="reactionTitle"
       >
-        <div class="travel-heading-row travel-heading-row--compact">
-          <div>
-            <p class="travel-section-label">TRAVEL NOTEBOOK</p>
-            <h2 id="guidesTitle">Popular travel guides</h2>
-          </div>
+        <p class="vibe-section-label">
+          INTERNET REACTIONS
+        </p>
 
-          <p>
-            Short, practical reads for building a European trip without
-            overloading every day.
-          </p>
-        </div>
+        <h2 id="reactionTitle">
+          The comments section has thoughts.
+        </h2>
 
-        <div class="travel-guide-grid">
+        <div class="vibe-carousel" aria-live="polite">
+          <div class="vibe-carousel-track">
 
-          <article class="travel-guide-card">
-            <button
-              class="travel-guide-image lightbox-trigger"
-              type="button"
-              data-lightbox-src="https://picsum.photos/seed/plainpath-zurich/1400/1000"
-              aria-label="Open larger Zurich image"
-            >
-              <img
-                src="https://picsum.photos/seed/plainpath-zurich/720/520"
-                alt="Zurich lakefront with mountains in the distance"
-              />
-            </button>
-
-            <div class="travel-guide-body">
-              <p class="guide-category">SWITZERLAND</p>
-              <h3>48 Hours in Zurich</h3>
+            <blockquote class="vibe-slide is-active">
               <p>
-                Lakeside walks, an old-town morning, excellent public transport
-                and enough time for a café stop between each part of the city.
+                “I understood ‘7 × 7 = 49’ instantly and I am annoyed that
+                I cannot explain why.”
               </p>
-              <a
-                href="https://www.myswitzerland.com/en-ch/destinations/zurich/"
-                class="guide-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View guide →
-              </a>
-            </div>
-          </article>
-
-          <article class="travel-guide-card">
-            <button
-              class="travel-guide-image lightbox-trigger"
-              type="button"
-              data-lightbox-src="https://picsum.photos/seed/plainpath-barcelona/1400/1000"
-              aria-label="Open larger Barcelona image"
-            >
-              <img
-                src="https://picsum.photos/seed/plainpath-barcelona/720/520"
-                alt="Colourful street market scene in Barcelona"
-              />
-            </button>
-
-            <div class="travel-guide-body">
-              <p class="guide-category">SPAIN</p>
-              <h3>Barcelona, one bite at a time</h3>
-              <p>
-                A relaxed route through covered markets, neighbourhood bakeries,
-                tapas counters and late dinners that are worth keeping the
-                evening free for.
-              </p>
-              <a
-                href="https://www.barcelona.com/barcelona_city_guide"
-                class="guide-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View guide →
-              </a>
-            </div>
-          </article>
-
-          <article class="travel-guide-card">
-            <button
-              class="travel-guide-image lightbox-trigger"
-              type="button"
-              data-lightbox-src="https://picsum.photos/seed/plainpath-prague/1400/1000"
-              aria-label="Open larger Prague image"
-            >
-              <img
-                src="https://picsum.photos/seed/plainpath-prague/720/520"
-                alt="Historic street view in Prague"
-              />
-            </button>
-
-            <div class="travel-guide-body">
-              <p class="guide-category">CZECH REPUBLIC</p>
-              <h3>Prague without overspending</h3>
-              <p>
-                Free viewpoints, efficient trams and neighbourhood meals make it
-                easy to enjoy the city while keeping the expensive tourist
-                extras optional.
-              </p>
-              <a
-                href="https://www.prague.eu/en"
-                class="guide-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View guide →
-              </a>
-            </div>
-          </article>
-
-          <article class="travel-guide-card">
-            <button
-              class="travel-guide-image lightbox-trigger"
-              type="button"
-              data-lightbox-src="https://picsum.photos/seed/plainpath-train/1400/1000"
-              aria-label="Open larger European train image"
-            >
-              <img
-                src="https://picsum.photos/seed/plainpath-train/720/520"
-                alt="Passenger train crossing the European countryside"
-              />
-            </button>
-
-            <div class="travel-guide-body">
-              <p class="guide-category">TRAVEL LOGISTICS</p>
-              <h3>Europe by rail, made simpler</h3>
-              <p>
-                When to reserve a seat, when a rail pass makes sense and how to
-                leave enough transfer time to make the journey feel like part of
-                the holiday.
-              </p>
-              <a
-                href="https://www.seat61.com/"
-                class="guide-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View guide →
-              </a>
-            </div>
-          </article>
-
-          <article class="travel-guide-card">
-            <button
-              class="travel-guide-image lightbox-trigger"
-              type="button"
-              data-lightbox-src="https://picsum.photos/seed/plainpath-airport/1400/1000"
-              aria-label="Open larger airport transfer image"
-            >
-              <img
-                src="https://picsum.photos/seed/plainpath-airport/720/520"
-                alt="Airport transfer buses lined up outside a terminal"
-              />
-            </button>
-
-            <div class="travel-guide-body">
-              <p class="guide-category">TRAVEL LOGISTICS</p>
-              <h3>The airport transfer decision</h3>
-              <p>
-                Compare rail, shuttle, taxi and rideshare options by total travel
-                time rather than headline price, especially after a long-haul
-                flight.
-              </p>
-              <a
-                href="https://www.rome2rio.com/"
-                class="guide-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View guide →
-              </a>
-            </div>
-          </article>
-
-          <article class="travel-guide-card">
-            <button
-              class="travel-guide-image lightbox-trigger"
-              type="button"
-              data-lightbox-src="https://picsum.photos/seed/plainpath-pack/1400/1000"
-              aria-label="Open larger packing image"
-            >
-              <img
-                src="https://picsum.photos/seed/plainpath-pack/720/520"
-                alt="Neatly packed travel bag and clothing on a table"
-              />
-            </button>
-
-            <div class="travel-guide-body">
-              <p class="guide-category">PREPARATION</p>
-              <h3>Pack lighter than you think</h3>
-              <p>
-                Build around repeatable layers, one dependable pair of walking
-                shoes and a small number of pieces that work across changing
-                weather and dinner plans.
-              </p>
-              <a
-                href="https://www.nytimes.com/wirecutter/travel/"
-                class="guide-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View guide →
-              </a>
-            </div>
-          </article>
-
-        </div>
-      </section>
-
-      <!-- ===================================================
-           TESTIMONIAL CAROUSEL
-           =================================================== -->
-      <section
-        class="travel-section travel-carousel-section reveal-on-scroll"
-        aria-labelledby="travellerNotesTitle"
-      >
-        <p class="travel-section-label">TRAVELLER NOTES</p>
-        <h2 id="travellerNotesTitle">A slower way to see Europe</h2>
-
-        <div class="travel-carousel" aria-live="polite">
-          <div class="travel-carousel-track" id="travelCarouselTrack">
-
-            <blockquote class="travel-slide is-active">
-              <p>
-                “The best advice was leaving one afternoon almost completely
-                open. We ended up walking through Jordaan and it became the part
-                of Amsterdam we talked about most.”
-              </p>
-              <footer>— Mara, Melbourne</footer>
+              <footer>— @softlaunchenergy</footer>
             </blockquote>
 
-            <blockquote class="travel-slide">
+            <blockquote class="vibe-slide">
               <p>
-                “The rail notes made our city-to-city days feel much less
-                complicated. We stopped treating travel days as lost days.”
+                “A beautifully weighted sans-serif font is absolutely 49.
+                I will not be taking questions.”
               </p>
-              <footer>— Daniel, Singapore</footer>
+              <footer>— @kerningcrimes</footer>
             </blockquote>
 
-            <blockquote class="travel-slide">
+            <blockquote class="vibe-slide">
               <p>
-                “I packed less, booked fewer attractions and enjoyed the trip
-                more. The guides feel useful without trying to schedule every
-                hour.”
+                “The weirdest part is that 51 ÷ 3 = 17 really does feel
+                less attractive.”
               </p>
-              <footer>— Elise, Perth</footer>
+              <footer>— @mathbutmakeitvibes</footer>
             </blockquote>
 
           </div>
 
-          <div class="travel-carousel-controls">
+          <div class="vibe-carousel-controls">
             <button
               type="button"
-              id="carouselPrevious"
-              aria-label="Previous traveller note"
+              id="vibePrevious"
+              aria-label="Previous reaction"
             >
               ←
             </button>
 
-            <div class="travel-carousel-dots" id="travelCarouselDots">
+            <div class="vibe-carousel-dots" id="vibeCarouselDots">
               <button
                 class="is-active"
                 type="button"
                 data-slide="0"
-                aria-label="Show traveller note 1"
+                aria-label="Show reaction 1"
               ></button>
               <button
                 type="button"
                 data-slide="1"
-                aria-label="Show traveller note 2"
+                aria-label="Show reaction 2"
               ></button>
               <button
                 type="button"
                 data-slide="2"
-                aria-label="Show traveller note 3"
+                aria-label="Show reaction 3"
               ></button>
             </div>
 
             <button
               type="button"
-              id="carouselNext"
-              aria-label="Next traveller note"
+              id="vibeNext"
+              aria-label="Next reaction"
             >
               →
             </button>
@@ -551,200 +491,191 @@
            LIGHTBOX GALLERY
            =================================================== -->
       <section
-        class="travel-section reveal-on-scroll"
+        class="vibe-gallery-section reveal-on-scroll"
         id="gallery"
         aria-labelledby="galleryTitle"
       >
-        <div class="travel-heading-row travel-heading-row--compact">
+        <div class="vibe-gallery-heading">
           <div>
-            <p class="travel-section-label">POSTCARDS</p>
-            <h2 id="galleryTitle">Scenes worth slowing down for</h2>
+            <p class="vibe-section-label">
+              OBJECT CRUSHES
+            </p>
+
+            <h2 id="galleryTitle">
+              Things that are very 49.
+            </h2>
           </div>
 
           <p>
-            Click any image to open it in the gallery.
+            Click an image. Judge entirely on vibes.
           </p>
         </div>
 
-        <div class="travel-gallery">
+        <div class="vibe-gallery">
           <button
-            class="travel-gallery-item travel-gallery-item--wide lightbox-trigger"
+            class="vibe-gallery-item lightbox-trigger"
             type="button"
-            data-lightbox-src="https://picsum.photos/seed/plainpath-canal-evening/1600/1100"
-            aria-label="Open canal evening image"
+            data-lightbox-src="https://picsum.photos/seed/vibe-neon-chair/1500/1200"
+            aria-label="Open chair image"
           >
             <img
-              src="https://picsum.photos/seed/plainpath-canal-evening/900/620"
-              alt="Amsterdam canal in the evening"
+              src="https://picsum.photos/seed/vibe-neon-chair/700/620"
+              alt="Sculptural chair in a dramatic room"
             />
+            <span>chair energy</span>
           </button>
 
           <button
-            class="travel-gallery-item lightbox-trigger"
+            class="vibe-gallery-item lightbox-trigger"
             type="button"
-            data-lightbox-src="https://picsum.photos/seed/plainpath-cafe/1400/1200"
-            aria-label="Open European café image"
+            data-lightbox-src="https://picsum.photos/seed/vibe-dashboard/1500/1200"
+            aria-label="Open dashboard image"
           >
             <img
-              src="https://picsum.photos/seed/plainpath-cafe/650/650"
-              alt="Quiet European café terrace"
+              src="https://picsum.photos/seed/vibe-dashboard/700/620"
+              alt="Clean modern dashboard interface"
             />
+            <span>dashboard energy</span>
           </button>
 
           <button
-            class="travel-gallery-item lightbox-trigger"
+            class="vibe-gallery-item lightbox-trigger"
             type="button"
-            data-lightbox-src="https://picsum.photos/seed/plainpath-bikes/1400/1200"
-            aria-label="Open Amsterdam bicycles image"
+            data-lightbox-src="https://picsum.photos/seed/vibe-stairs/1500/1200"
+            aria-label="Open staircase image"
           >
             <img
-              src="https://picsum.photos/seed/plainpath-bikes/650/650"
-              alt="Bicycles parked beside an Amsterdam canal"
+              src="https://picsum.photos/seed/vibe-stairs/700/620"
+              alt="Geometric modern staircase"
             />
+            <span>staircase energy</span>
           </button>
 
           <button
-            class="travel-gallery-item travel-gallery-item--wide lightbox-trigger"
+            class="vibe-gallery-item lightbox-trigger"
             type="button"
-            data-lightbox-src="https://picsum.photos/seed/plainpath-spring-city/1600/1100"
-            aria-label="Open spring city image"
+            data-lightbox-src="https://picsum.photos/seed/vibe-type/1500/1200"
+            aria-label="Open typography image"
           >
             <img
-              src="https://picsum.photos/seed/plainpath-spring-city/900/620"
-              alt="European city street during spring"
+              src="https://picsum.photos/seed/vibe-type/700/620"
+              alt="Bold graphic typography"
             />
+            <span>typeface energy</span>
           </button>
         </div>
       </section>
 
       <!-- ===================================================
-           MAP / PLANNING
+           CONTACT FORM
            =================================================== -->
       <section
-        class="travel-section travel-plan reveal-on-scroll"
-        id="plan"
-        aria-labelledby="planTitle"
+        class="vibe-contact reveal-on-scroll"
+        id="contact"
+        aria-labelledby="contactTitle"
       >
-        <div class="travel-plan-copy">
-          <p class="travel-section-label">PLAN YOUR STAY</p>
+        <div class="vibe-contact-copy">
+          <p class="vibe-section-label">
+            SEND A VIBE
+          </p>
 
-          <h2 id="planTitle">
-            Start with the neighbourhood,
-            not the checklist.
+          <h2 id="contactTitle">
+            Found something inexplicably 49?
           </h2>
 
           <p>
-            Amsterdam's centre is compact, but where you stay changes the rhythm
-            of the trip. Use the map to orient yourself around the canal belt,
-            then choose accommodation based on how you want your mornings and
-            evenings to feel.
+            Tell us what it is. A person, lamp, number, tap, font or
+            suspiciously perfect piece of architecture all count.
           </p>
+        </div>
 
-          <div class="travel-plan-list">
-            <span>Jordaan · atmospheric</span>
-            <span>De Pijp · lively</span>
-            <span>Museum Quarter · convenient</span>
+        <form
+          class="vibe-contact-form"
+          id="vibeContactForm"
+          novalidate
+        >
+          <div class="vibe-form-field">
+            <label for="vibeName">Your name</label>
+            <input
+              id="vibeName"
+              name="name"
+              type="text"
+              autocomplete="name"
+              required
+              minlength="2"
+              placeholder="Alex"
+            />
+            <span class="vibe-field-error" data-error-for="vibeName"></span>
           </div>
-        </div>
 
-        <div class="travel-map-wrap">
-          <iframe
-            title="Map of Amsterdam"
-            src="https://www.google.com/maps?q=Amsterdam%2C%20Netherlands&output=embed"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          ></iframe>
-        </div>
+          <div class="vibe-form-field">
+            <label for="vibeEmail">Email</label>
+            <input
+              id="vibeEmail"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="alex@example.com"
+            />
+            <span class="vibe-field-error" data-error-for="vibeEmail"></span>
+          </div>
+
+          <div class="vibe-form-field vibe-form-field--full">
+            <label for="vibeMessage">What is giving 49?</label>
+            <textarea
+              id="vibeMessage"
+              name="message"
+              required
+              minlength="10"
+              rows="5"
+              placeholder="This very specific chrome coffee machine..."
+            ></textarea>
+            <span class="vibe-field-error" data-error-for="vibeMessage"></span>
+          </div>
+
+          <button type="submit">
+            Submit the vibe
+          </button>
+
+          <p
+            class="vibe-form-status"
+            id="vibeFormStatus"
+            aria-live="polite"
+          ></p>
+        </form>
       </section>
 
     </section>
   </main>
 
   <!-- =====================================================
-       FAT FOOTER
+       MINIMAL FOOTER
        ===================================================== -->
-  <footer class="travel-footer">
-    <div class="travel-footer-inner">
-      <div class="travel-footer-brand">
-        <a class="travel-logo travel-logo--footer" href="#top">
-          <span>PLAIN</span>PATH
-        </a>
+  <footer class="vibe-footer">
+    <span>© 2026 VibeCheck · Issue 49</span>
 
-        <p>
-          Refined travel notes for unhurried European journeys.
-        </p>
-
-        <div class="travel-socials" aria-label="Social links">
-          <a href="#" aria-label="Instagram">IG</a>
-          <a href="#" aria-label="Pinterest">PI</a>
-          <a href="#" aria-label="YouTube">YT</a>
-        </div>
-      </div>
-
-      <div class="travel-footer-links">
-        <div>
-          <h3>Explore</h3>
-          <a href="#amsterdam">Amsterdam</a>
-          <a href="#guides">Guides</a>
-          <a href="#gallery">Gallery</a>
-        </div>
-
-        <div>
-          <h3>Plan</h3>
-          <a href="#plan">Neighbourhoods</a>
-          <a href="#guides">Rail travel</a>
-          <a href="#guides">Packing</a>
-        </div>
-      </div>
-
-      <div class="travel-footer-newsletter">
-        <p class="travel-section-label">THE SUNDAY NOTE</p>
-        <h3>One thoughtful travel idea each week.</h3>
-
-        <form id="travelNewsletterForm">
-          <label class="sr-only" for="travelNewsletterEmail">
-            Email address
-          </label>
-
-          <input
-            id="travelNewsletterEmail"
-            type="email"
-            placeholder="you@example.com"
-            required
-          />
-
-          <button type="submit">Join</button>
-
-          <p
-            class="travel-newsletter-status"
-            id="travelNewsletterStatus"
-            aria-live="polite"
-          ></p>
-        </form>
-      </div>
-    </div>
-
-    <div class="travel-footer-bottom">
-      <span>© 2026 PlainPath Travel</span>
-      <span>Travel lightly. Stay curious.</span>
+    <div class="vibe-socials" aria-label="Social links">
+      <a href="#">TikTok</a>
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
     </div>
   </footer>
 
   <!-- =====================================================
-       IMAGE LIGHTBOX
+       LIGHTBOX
        ===================================================== -->
   <div
-    class="travel-lightbox"
-    id="travelLightbox"
-    aria-hidden="true"
+    class="vibe-lightbox"
+    id="vibeLightbox"
     role="dialog"
     aria-modal="true"
+    aria-hidden="true"
     aria-label="Image preview"
   >
     <button
-      class="travel-lightbox-close"
-      id="travelLightboxClose"
+      class="vibe-lightbox-close"
+      id="vibeLightboxClose"
       type="button"
       aria-label="Close image preview"
     >
@@ -752,15 +683,15 @@
     </button>
 
     <img
-      id="travelLightboxImage"
+      id="vibeLightboxImage"
       src=""
       alt=""
     />
   </div>
 
   <button
-    class="travel-back-to-top"
-    id="travelBackToTop"
+    class="vibe-back-to-top"
+    id="vibeBackToTop"
     type="button"
     aria-label="Back to top"
   >
@@ -769,20 +700,24 @@
 
   <!-- =====================================================
        COOKIE BANNER
-       Experiment IDs and data-choice values retained.
+       Existing experiment IDs and data-choice values retained.
        ===================================================== -->
   <section
     id="cookieBanner"
     class="cookie-banner"
     aria-label="Cookie choices"
   >
-    <h2>We value your privacy</h2>
+    <h2>
+      We value your privacy
+    </h2>
 
     <p>
-      We use necessary cookies to operate this website. With your
-      permission, we also use functional cookies to remember your
-      preferences, analytics cookies to understand site usage and
-      advertising cookies to provide personalised content.
+      We use necessary cookies to operate this website.
+
+      With your permission, we also use functional cookies
+      to remember your preferences, analytics cookies to
+      understand site usage and advertising cookies to
+      provide personalised content.
     </p>
 
     <div class="cookie-actions">
@@ -817,7 +752,9 @@
       id="settingsPanel"
       class="settings-panel"
     >
-      <h3>Cookie preferences</h3>
+      <h3>
+        Cookie preferences
+      </h3>
 
       <label>
         <input
@@ -825,6 +762,7 @@
           checked
           disabled
         />
+
         Necessary cookies, always active
       </label>
 
@@ -833,6 +771,7 @@
           id="functionalCookies"
           type="checkbox"
         />
+
         Functional cookies, remember your preferences
       </label>
 
@@ -841,6 +780,7 @@
           id="analyticsCookies"
           type="checkbox"
         />
+
         Analytics cookies, help us understand website use
       </label>
 
@@ -849,6 +789,7 @@
           id="advertisingCookies"
           type="checkbox"
         />
+
         Advertising cookies, provide personalised content
       </label>
 
@@ -869,11 +810,12 @@
 
   <script>
     (() => {
-      const menuButton = document.getElementById("travelMenuToggle");
-      const navLinks = document.getElementById("travelNavLinks");
-      const backToTop = document.getElementById("travelBackToTop");
+      /* ---------------------------------------------------
+         Responsive navigation
+         --------------------------------------------------- */
+      const menuButton = document.getElementById("vibeMenuToggle");
+      const navLinks = document.getElementById("vibeNavLinks");
 
-      /* Responsive mobile navigation */
       if (menuButton && navLinks) {
         menuButton.addEventListener("click", () => {
           const open = navLinks.classList.toggle("is-open");
@@ -888,80 +830,211 @@
         });
       }
 
-      /* Scroll reveal */
+      /* ---------------------------------------------------
+         Particle canvas
+         --------------------------------------------------- */
+      const canvas = document.getElementById("vibeParticleCanvas");
+      const context = canvas?.getContext("2d");
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      let particles = [];
+      let canvasWidth = 0;
+      let canvasHeight = 0;
+      let animationFrame = null;
+
+      const resizeCanvas = () => {
+        if (!canvas || !context) return;
+
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        const bounds = canvas.getBoundingClientRect();
+
+        canvasWidth = bounds.width;
+        canvasHeight = bounds.height;
+
+        canvas.width = Math.round(canvasWidth * ratio);
+        canvas.height = Math.round(canvasHeight * ratio);
+
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        const particleCount = Math.max(
+          24,
+          Math.min(70, Math.round(canvasWidth / 20))
+        );
+
+        particles = Array.from({ length: particleCount }, (_, index) => ({
+          x: Math.random() * canvasWidth,
+          y: Math.random() * canvasHeight,
+          radius: Math.random() * 1.7 + 0.6,
+          speedX: (Math.random() - 0.5) * 0.2,
+          speedY: Math.random() * 0.22 + 0.06,
+          phase: Math.random() * Math.PI * 2,
+          accent: index % 4 === 0
+        }));
+      };
+
+      const drawParticles = (time = 0) => {
+        if (!canvas || !context) return;
+
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        particles.forEach((particle) => {
+          if (!reduceMotion) {
+            particle.x += particle.speedX;
+            particle.y -= particle.speedY;
+
+            if (particle.y < -8) {
+              particle.y = canvasHeight + 8;
+              particle.x = Math.random() * canvasWidth;
+            }
+
+            if (particle.x < -8) particle.x = canvasWidth + 8;
+            if (particle.x > canvasWidth + 8) particle.x = -8;
+          }
+
+          const pulse =
+            reduceMotion
+              ? 1
+              : 0.72 + Math.sin(time * 0.0015 + particle.phase) * 0.2;
+
+          context.beginPath();
+          context.arc(
+            particle.x,
+            particle.y,
+            particle.radius * pulse,
+            0,
+            Math.PI * 2
+          );
+
+          context.fillStyle = particle.accent
+            ? "rgba(255, 0, 170, 0.8)"
+            : "rgba(0, 217, 255, 0.75)";
+
+          context.fill();
+        });
+
+        if (!reduceMotion) {
+          animationFrame = requestAnimationFrame(drawParticles);
+        }
+      };
+
+      if (canvas && context) {
+        resizeCanvas();
+        drawParticles();
+
+        window.addEventListener("resize", () => {
+          resizeCanvas();
+
+          if (reduceMotion) {
+            drawParticles();
+          }
+        });
+      }
+
+      /* ---------------------------------------------------
+         Scroll reveal and parallax
+         --------------------------------------------------- */
       const revealItems = document.querySelectorAll(".reveal-on-scroll");
 
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
+      if ("IntersectionObserver" in window && !reduceMotion) {
+        const revealObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 entry.target.classList.add("is-visible");
-                observer.unobserve(entry.target);
+                revealObserver.unobserve(entry.target);
               }
             });
           },
           { threshold: 0.12 }
         );
 
-        revealItems.forEach((item) => observer.observe(item));
+        revealItems.forEach((item) => revealObserver.observe(item));
       } else {
         revealItems.forEach((item) => item.classList.add("is-visible"));
       }
 
-      /* Parallax decorative layers */
-      const parallaxItems = document.querySelectorAll("[data-parallax-speed]");
+      const parallaxItems = document.querySelectorAll(
+        ".vibe-parallax[data-parallax-speed]"
+      );
 
-      const updateParallax = () => {
+      const backToTop = document.getElementById("vibeBackToTop");
+
+      const updateScrollEffects = () => {
         const scrollY = window.scrollY;
 
-        parallaxItems.forEach((item) => {
-          const speed = Number(item.dataset.parallaxSpeed || 0);
-          item.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
-        });
-      };
-
-      /* Back to top */
-      const updateScrollControls = () => {
-        if (backToTop) {
-          backToTop.classList.toggle("is-visible", window.scrollY > 600);
+        if (!reduceMotion) {
+          parallaxItems.forEach((item) => {
+            const speed = Number(item.dataset.parallaxSpeed || 0);
+            item.style.transform =
+              `translate3d(0, ${scrollY * speed}px, 0)`;
+          });
         }
 
-        updateParallax();
+        backToTop?.classList.toggle(
+          "is-visible",
+          scrollY > 650
+        );
       };
 
-      window.addEventListener("scroll", updateScrollControls, { passive: true });
-      updateScrollControls();
+      window.addEventListener(
+        "scroll",
+        updateScrollEffects,
+        { passive: true }
+      );
 
-      if (backToTop) {
-        backToTop.addEventListener("click", () => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+      updateScrollEffects();
+
+      backToTop?.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: reduceMotion ? "auto" : "smooth"
         });
-      }
+      });
 
-      /* Traveller-note carousel */
-      const slides = [...document.querySelectorAll(".travel-slide")];
-      const dots = [...document.querySelectorAll("#travelCarouselDots button")];
-      const previous = document.getElementById("carouselPrevious");
-      const next = document.getElementById("carouselNext");
+      /* ---------------------------------------------------
+         Reaction carousel
+         --------------------------------------------------- */
+      const slides = [...document.querySelectorAll(".vibe-slide")];
+      const dots = [...document.querySelectorAll(
+        "#vibeCarouselDots button"
+      )];
+
+      const previous = document.getElementById("vibePrevious");
+      const next = document.getElementById("vibeNext");
       let currentSlide = 0;
 
       const showSlide = (index) => {
         if (!slides.length) return;
 
-        currentSlide = (index + slides.length) % slides.length;
+        currentSlide =
+          (index + slides.length) % slides.length;
 
         slides.forEach((slide, slideIndex) => {
-          slide.classList.toggle("is-active", slideIndex === currentSlide);
+          slide.classList.toggle(
+            "is-active",
+            slideIndex === currentSlide
+          );
         });
 
         dots.forEach((dot, dotIndex) => {
-          dot.classList.toggle("is-active", dotIndex === currentSlide);
+          dot.classList.toggle(
+            "is-active",
+            dotIndex === currentSlide
+          );
         });
       };
 
-      previous?.addEventListener("click", () => showSlide(currentSlide - 1));
-      next?.addEventListener("click", () => showSlide(currentSlide + 1));
+      previous?.addEventListener(
+        "click",
+        () => showSlide(currentSlide - 1)
+      );
+
+      next?.addEventListener(
+        "click",
+        () => showSlide(currentSlide + 1)
+      );
 
       dots.forEach((dot) => {
         dot.addEventListener("click", () => {
@@ -969,10 +1042,12 @@
         });
       });
 
-      /* Image lightbox */
-      const lightbox = document.getElementById("travelLightbox");
-      const lightboxImage = document.getElementById("travelLightboxImage");
-      const lightboxClose = document.getElementById("travelLightboxClose");
+      /* ---------------------------------------------------
+         Lightbox
+         --------------------------------------------------- */
+      const lightbox = document.getElementById("vibeLightbox");
+      const lightboxImage = document.getElementById("vibeLightboxImage");
+      const lightboxClose = document.getElementById("vibeLightboxClose");
 
       const closeLightbox = () => {
         if (!lightbox || !lightboxImage) return;
@@ -980,21 +1055,24 @@
         lightbox.classList.remove("is-open");
         lightbox.setAttribute("aria-hidden", "true");
         lightboxImage.src = "";
-        document.body.classList.remove("travel-lightbox-open");
+        document.body.classList.remove("vibe-lightbox-open");
       };
 
       document.querySelectorAll(".lightbox-trigger").forEach((trigger) => {
         trigger.addEventListener("click", () => {
           if (!lightbox || !lightboxImage) return;
 
-          const source = trigger.dataset.lightboxSrc;
-          const thumbnail = trigger.querySelector("img");
+          const image = trigger.querySelector("img");
 
-          lightboxImage.src = source || thumbnail?.src || "";
-          lightboxImage.alt = thumbnail?.alt || "Travel image";
+          lightboxImage.src =
+            trigger.dataset.lightboxSrc || image?.src || "";
+          lightboxImage.alt =
+            image?.alt || "VibeCheck image";
+
           lightbox.classList.add("is-open");
           lightbox.setAttribute("aria-hidden", "false");
-          document.body.classList.add("travel-lightbox-open");
+          document.body.classList.add("vibe-lightbox-open");
+
           lightboxClose?.focus();
         });
       });
@@ -1013,19 +1091,100 @@
         }
       });
 
-      /* Newsletter demo */
-      const newsletterForm = document.getElementById("travelNewsletterForm");
-      const newsletterStatus = document.getElementById("travelNewsletterStatus");
+      /* ---------------------------------------------------
+         Contact form validation
+         --------------------------------------------------- */
+      const contactForm = document.getElementById("vibeContactForm");
+      const formStatus = document.getElementById("vibeFormStatus");
 
-      newsletterForm?.addEventListener("submit", (event) => {
-        event.preventDefault();
+      const showFieldError = (field, message) => {
+        const errorElement = document.querySelector(
+          `[data-error-for="${field.id}"]`
+        );
 
-        if (newsletterStatus) {
-          newsletterStatus.textContent =
-            "You're on the list — watch your inbox for the next Sunday Note.";
+        field.classList.toggle("has-error", Boolean(message));
+
+        if (errorElement) {
+          errorElement.textContent = message;
+        }
+      };
+
+      const validateField = (field) => {
+        const value = field.value.trim();
+
+        if (field.required && !value) {
+          showFieldError(field, "This field is required.");
+          return false;
         }
 
-        newsletterForm.reset();
+        if (
+          field.type === "email" &&
+          value &&
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        ) {
+          showFieldError(field, "Enter a valid email address.");
+          return false;
+        }
+
+        if (
+          field.minLength > 0 &&
+          value.length < field.minLength
+        ) {
+          showFieldError(
+            field,
+            `Please enter at least ${field.minLength} characters.`
+          );
+          return false;
+        }
+
+        showFieldError(field, "");
+        return true;
+      };
+
+      contactForm?.querySelectorAll(
+        "input, textarea"
+      ).forEach((field) => {
+        field.addEventListener(
+          "blur",
+          () => validateField(field)
+        );
+      });
+
+      contactForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const fields = [
+          ...contactForm.querySelectorAll("input, textarea")
+        ];
+
+        const valid = fields
+          .map(validateField)
+          .every(Boolean);
+
+        if (!valid) {
+          if (formStatus) {
+            formStatus.textContent =
+              "Check the highlighted fields and try again.";
+          }
+          return;
+        }
+
+        if (formStatus) {
+          formStatus.textContent =
+            "Vibe received. Extremely 49 of you.";
+        }
+
+        contactForm.reset();
+
+        fields.forEach((field) => {
+          showFieldError(field, "");
+        });
+      });
+
+      window.addEventListener("beforeunload", () => {
+        if (animationFrame) {
+          cancelAnimationFrame(animationFrame);
+        }
       });
     })();
   </script>

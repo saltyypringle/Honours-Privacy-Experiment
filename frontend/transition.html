@@ -1,6 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
 
   <meta
@@ -8,21 +11,57 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Continue Website Tasks</title>
+  <title>
+    Continue Website Tasks
+  </title>
 
   <link
     rel="stylesheet"
     href="css/start.css"
   />
+
+
+  <style>
+
+    .demo-warning {
+
+      margin-top: 18px;
+
+      padding: 14px 16px;
+
+      border: 1px solid #e3d5aa;
+
+      border-radius: 8px;
+
+      background: #fffaf0;
+
+      line-height: 1.55;
+
+    }
+
+
+    .demo-warning strong {
+
+      display: block;
+
+      margin-bottom: 4px;
+
+    }
+
+  </style>
+
 </head>
+
 
 <body>
 
+
   <main class="study-container">
 
+
     <!-- =====================================================
-         STANDARD TRANSITION
-         Control + Suggestions
+         TRANSITION AFTER SITE 1
+         CONTROL + SUGGESTIONS
          ===================================================== -->
 
     <section
@@ -30,18 +69,28 @@
       class="study-card hidden"
     >
 
-      <p class="study-step">02 / 03 &nbsp; Midpoint</p>
-
-      <h1>Continue website tasks</h1>
-
-      <p>
-        You have completed the first two website tasks.
+      <p class="study-step">
+        Website 1 complete
       </p>
 
+
+      <h1>
+        Continue website tasks
+      </h1>
+
+
       <p>
-        You will now continue with two more short website tasks.
-        Please interact with the websites as you normally would.
+        You have completed the first website task.
       </p>
+
+
+      <p>
+        You will now visit another website and
+        complete another short task.
+        Please continue to interact with the
+        website as you normally would.
+      </p>
+
 
       <button
         id="standardContinueButton"
@@ -54,8 +103,10 @@
     </section>
 
 
+
     <!-- =====================================================
-         AUTOMATION TRANSITION
+         TRANSITION AFTER SITE 1
+         AUTOMATION CONDITION
          ===================================================== -->
 
     <section
@@ -63,29 +114,41 @@
       class="study-card hidden"
     >
 
-      <p class="study-step">02 / 03 &nbsp; Preference</p>
-
-      <h1>Set your general cookie preference</h1>
-
-      <p>
-        Before continuing, select how you would generally prefer
-        optional cookies to be handled.
+      <p class="study-step">
+        Website 1 complete
       </p>
 
+
+      <h1>
+        Set your general cookie preference
+      </h1>
+
+
       <p>
-        Your preference will be applied automatically on the
-        remaining websites. You will still be able to review or
-        change the applied choice.
+        Before continuing, select how you would
+        generally prefer optional cookies to be handled.
       </p>
+
+
+      <p>
+        Your preference will be applied automatically
+        on the remaining websites.
+        You will still be able to review or change
+        the applied choice.
+      </p>
+
 
 
       <form id="automationForm">
 
+
         <fieldset>
+
 
           <legend>
             Choose a general preference
           </legend>
+
 
 
           <label class="choice-card">
@@ -97,20 +160,23 @@
               required
             />
 
+
             <span>
 
               <strong>
                 Accept all cookies
               </strong>
 
+
               <small>
-                Allow necessary, functional, analytics and
-                advertising cookies.
+                Allow necessary, functional,
+                analytics and advertising cookies.
               </small>
 
             </span>
 
           </label>
+
 
 
           <label class="choice-card">
@@ -122,11 +188,13 @@
               required
             />
 
+
             <span>
 
               <strong>
                 Reject optional cookies
               </strong>
+
 
               <small>
                 Allow necessary cookies only.
@@ -135,6 +203,7 @@
             </span>
 
           </label>
+
 
 
           <label class="choice-card">
@@ -146,31 +215,33 @@
               required
             />
 
+
             <span>
 
               <strong>
                 Customise my preference
               </strong>
 
+
               <small>
-                Choose which optional cookie categories are allowed.
+                Choose which optional cookie
+                categories are allowed.
               </small>
 
             </span>
 
           </label>
 
+
         </fieldset>
 
 
-        <!-- =================================================
-             CUSTOM COOKIE SETTINGS
-             ================================================= -->
 
         <div
           id="customSettings"
           class="custom-settings hidden"
         >
+
 
           <label>
 
@@ -185,6 +256,7 @@
           </label>
 
 
+
           <label>
 
             <input
@@ -195,6 +267,7 @@
             Functional cookies
 
           </label>
+
 
 
           <label>
@@ -209,6 +282,7 @@
           </label>
 
 
+
           <label>
 
             <input
@@ -220,7 +294,9 @@
 
           </label>
 
+
         </div>
+
 
 
         <p
@@ -228,8 +304,10 @@
           class="validation-message hidden"
           role="alert"
         >
-          Please select a cookie preference before continuing.
+          Please select a cookie preference
+          before continuing.
         </p>
+
 
 
         <button
@@ -239,13 +317,86 @@
           Save preference and continue
         </button>
 
+
       </form>
 
     </section>
 
 
+
     <!-- =====================================================
-         ERROR PANEL
+         TRANSITION AFTER SITE 2
+         SAME FOR ALL CONDITIONS
+         ===================================================== -->
+
+    <section
+      id="shoppingTransitionPanel"
+      class="study-card hidden"
+    >
+
+
+      <p class="study-step">
+        Final website
+      </p>
+
+
+      <h1>
+        Final website task
+      </h1>
+
+
+      <p>
+        Imagine you are shopping online for a collector toy.
+        You will complete three tasks on a mock shopping
+        website, including selecting a product, signing in
+        to a demo account and checking delivery options.
+      </p>
+
+
+
+      <div class="demo-warning">
+
+        <strong>
+          Use fictional details only
+        </strong>
+
+        Do not enter your real name, email address,
+        phone number, address, password or payment
+        information.
+
+      </div>
+
+
+
+      <p>
+        No real purchase will be made.
+        Information entered into the mock forms
+        will not be collected or stored.
+      </p>
+
+
+      <p>
+        The fictional details you need will be
+        shown during the tasks.
+      </p>
+
+
+
+      <button
+        id="shoppingContinueButton"
+        class="primary-button"
+        type="button"
+      >
+        Continue to shopping website
+      </button>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ERROR
          ===================================================== -->
 
     <section
@@ -254,28 +405,40 @@
       role="alert"
     >
 
-      <h1>Unable to continue the study</h1>
+
+      <h1>
+        Unable to continue
+      </h1>
+
 
       <p id="errorMessage">
         The study session could not be found.
       </p>
 
+
     </section>
+
 
   </main>
 
 
+
   <script type="module">
 
+
     import {
+
       getSession,
       setAutomationPreference,
       logEvent
+
     } from "./js/experiment-core.js";
+
 
 
     const session =
       getSession();
+
 
 
     const standardTransitionPanel =
@@ -287,6 +450,12 @@
     const automationPanel =
       document.getElementById(
         "automationPanel"
+      );
+
+
+    const shoppingTransitionPanel =
+      document.getElementById(
+        "shoppingTransitionPanel"
       );
 
 
@@ -308,6 +477,12 @@
       );
 
 
+    const shoppingContinueButton =
+      document.getElementById(
+        "shoppingContinueButton"
+      );
+
+
     const automationForm =
       document.getElementById(
         "automationForm"
@@ -326,88 +501,141 @@
       );
 
 
-    /**
-     * Hide all panels and display one.
-     */
-    function showPanel(panel) {
 
-      standardTransitionPanel
-        .classList
-        .add("hidden");
-
-      automationPanel
-        .classList
-        .add("hidden");
-
-      errorPanel
-        .classList
-        .add("hidden");
-
+    function showPanel(
       panel
-        .classList
-        .remove("hidden");
+    ) {
+
+      [
+        standardTransitionPanel,
+        automationPanel,
+        shoppingTransitionPanel,
+        errorPanel
+      ].forEach(
+        function (
+          item
+        ) {
+
+          item.classList.add(
+            "hidden"
+          );
+
+        }
+      );
+
+
+      panel.classList.remove(
+        "hidden"
+      );
 
     }
 
 
-    /**
-     * Move into the experimental phase.
-     */
-    function continueToSite3() {
+
+    function goToSite(
+      siteId
+    ) {
+
+      window.location.assign(
+        `${siteId}.html`
+      );
+
+    }
+
+
+
+    function continueToSite2() {
 
       logEvent(
         "experiment_transition",
         "experimental_phase_started",
         {
+
           assignedCondition:
             session.condition,
 
-          phase:
-            "experimental"
+          destinationSite:
+            "site2"
+
         }
       );
 
 
-      window.location.assign(
-        "site3.html"
+      goToSite(
+        "site2"
       );
 
     }
 
 
+
+    function continueToSite3() {
+
+      logEvent(
+        "experiment_transition",
+        "shopping_phase_started",
+        {
+
+          assignedCondition:
+            session.condition,
+
+          destinationSite:
+            "site3"
+
+        }
+      );
+
+
+      goToSite(
+        "site3"
+      );
+
+    }
+
+
+
     /*
-     * Check that the participant has a study session.
+     * No active study session.
      */
     if (!session) {
 
       errorMessage.textContent =
         "The study session could not be found. Please return to the original survey.";
 
+
       showPanel(
         errorPanel
       );
 
-    } else {
+    }
 
-      /*
-       * Record arrival after the common baseline.
-       */
+
+    /*
+     * currentSiteIndex === 1
+     *
+     * Site 1 has just been completed.
+     */
+    else if (
+      session.currentSiteIndex ===
+      1
+    ) {
+
+
       logEvent(
         "experiment_transition",
-        "transition_page_loaded",
+        "transition_after_site1_loaded",
         {
-          assignedCondition:
-            session.condition,
 
-          completedPhase:
-            "baseline"
+          assignedCondition:
+            session.condition
+
         }
       );
 
 
       /*
-       * Only automation participants need an additional
-       * preference-setting step.
+       * Only automation participants
+       * set a saved preference.
        */
       if (
         session.condition ===
@@ -418,7 +646,9 @@
           automationPanel
         );
 
-      } else {
+      }
+
+      else {
 
         showPanel(
           standardTransitionPanel
@@ -430,10 +660,71 @@
 
 
     /*
-     * Control and suggestions:
-     * simply continue to Site 3.
+     * currentSiteIndex === 2
+     *
+     * Site 2 has just been completed.
+     *
+     * All three conditions see exactly
+     * the same shopping instructions.
+     */
+    else if (
+      session.currentSiteIndex ===
+      2
+    ) {
+
+
+      logEvent(
+        "experiment_transition",
+        "shopping_transition_loaded",
+        {
+
+          assignedCondition:
+            session.condition
+
+        }
+      );
+
+
+      showPanel(
+        shoppingTransitionPanel
+      );
+
+    }
+
+
+    else {
+
+      errorMessage.textContent =
+        "The study is not at a valid transition point. Please return to the original survey and restart the website tasks.";
+
+
+      showPanel(
+        errorPanel
+      );
+
+    }
+
+
+
+    /*
+     * Control + Suggestions after Site 1.
      */
     standardContinueButton
+      .addEventListener(
+        "click",
+        function () {
+
+          continueToSite2();
+
+        }
+      );
+
+
+
+    /*
+     * Everyone after Site 2.
+     */
+    shoppingContinueButton
       .addEventListener(
         "click",
         function () {
@@ -444,32 +735,33 @@
       );
 
 
+
     /*
-     * Show custom settings only when the custom
-     * automation option is selected.
+     * Show the detailed cookie categories
+     * only when Custom is selected.
      */
     document
       .querySelectorAll(
         'input[name="automationChoice"]'
       )
       .forEach(
-        function (radioButton) {
+        function (
+          radioButton
+        ) {
 
           radioButton
             .addEventListener(
               "change",
               function () {
 
-                const customSelected =
-                  radioButton.value ===
-                  "custom";
-
 
                 customSettings
                   .classList
                   .toggle(
                     "hidden",
-                    !customSelected
+
+                    radioButton.value !==
+                      "custom"
                   );
 
 
@@ -486,13 +778,17 @@
       );
 
 
+
     /*
-     * Save the automation preference.
+     * Save automation preference.
      */
     automationForm
       .addEventListener(
         "submit",
-        function (event) {
+        function (
+          event
+        ) {
+
 
           event.preventDefault();
 
@@ -516,7 +812,9 @@
           }
 
 
+
           let preference;
+
 
 
           if (
@@ -543,7 +841,10 @@
 
             };
 
-          } else if (
+          }
+
+
+          else if (
             selectedChoice.value ===
             "reject_optional"
           ) {
@@ -567,7 +868,10 @@
 
             };
 
-          } else {
+          }
+
+
+          else {
 
             preference = {
 
@@ -577,7 +881,6 @@
               necessary:
                 true,
 
-
               functional:
                 document
                   .getElementById(
@@ -585,14 +888,12 @@
                   )
                   .checked,
 
-
               analytics:
                 document
                   .getElementById(
                     "analyticsPreference"
                   )
                   .checked,
-
 
               advertising:
                 document
@@ -606,17 +907,21 @@
           }
 
 
+
           setAutomationPreference(
             preference
           );
 
 
-          continueToSite3();
+          continueToSite2();
 
         }
       );
 
+
   </script>
 
+
 </body>
+
 </html>

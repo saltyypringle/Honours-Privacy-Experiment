@@ -1,724 +1,1454 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Website 3 - VibeCheck</title>
+  <title>BOXDROP Collectibles</title>
 
+  <!-- Shared experiment interface -->
   <link
     rel="stylesheet"
     href="styles.css"
   />
+
+  <!-- Site 3 presentation only -->
+  <link
+    rel="stylesheet"
+    href="css/boxdrop.css"
+  />
+
 </head>
 
+
 <body
-  data-site-id="site3_no_banner_tracking"
+  data-site-id="site3_boxdrop_collectibles"
   data-study-site="site3"
 >
-  <!-- =====================================================
-       SITE 3 NAVIGATION
-       ===================================================== -->
-  <header class="vibe-header">
-    <div class="vibe-brand-row">
-      <button
-        class="vibe-menu-toggle"
-        id="vibeMenuToggle"
-        type="button"
-        aria-label="Open navigation"
-        aria-expanded="false"
-        aria-controls="vibeNavLinks"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
 
-      <a class="vibe-logo" href="#top" aria-label="VibeCheck home">
-        <span class="vibe-logo-mark">49</span>
-        <span class="vibe-logo-word">VibeCheck</span>
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="boxdrop-header">
+
+    <div class="boxdrop-header-inner">
+
+      <a
+        class="boxdrop-logo"
+        href="#top"
+        aria-label="BOXDROP home"
+      >
+
+        <span class="boxdrop-logo-mark">
+          B
+        </span>
+
+        <span class="boxdrop-logo-word">
+          BOXDROP
+        </span>
+
       </a>
 
-      <span class="vibe-header-spacer" aria-hidden="true"></span>
+
+      <nav
+        class="boxdrop-nav"
+        aria-label="Store navigation"
+      >
+
+        <a href="#shop">
+          Shop
+        </a>
+
+        <a href="#cartSection">
+          Cart
+        </a>
+
+        <a href="#accountSection">
+          Account
+        </a>
+
+        <a href="#about">
+          About
+        </a>
+
+      </nav>
+
+
+      <div class="boxdrop-header-actions">
+
+        <button
+          id="boxdropAccountButton"
+          class="boxdrop-header-button"
+          type="button"
+          data-action="open_account"
+        >
+          Account
+        </button>
+
+
+        <button
+          id="boxdropCartButton"
+          class="boxdrop-header-button"
+          type="button"
+          data-action="open_cart"
+        >
+          Cart
+
+          <span
+            id="boxdropCartCount"
+            class="boxdrop-cart-count"
+          >
+            0
+          </span>
+
+        </button>
+
+      </div>
+
     </div>
 
-    <nav
-      class="vibe-nav-links"
-      id="vibeNavLinks"
-      aria-label="Primary navigation"
-    >
-      <a href="#story">The trend</a>
-      <a href="#why">Why 49?</a>
-      <a href="#objects">Object crushes</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#contact">Send a vibe</a>
-    </nav>
   </header>
 
+
+
   <!-- =====================================================
-       INTERACTIVE CANVAS HERO
+       HERO
        ===================================================== -->
-  <section class="vibe-hero" id="top">
-    <canvas
-      id="vibeParticleCanvas"
-      class="vibe-particle-canvas"
-      aria-hidden="true"
-    ></canvas>
 
-    <div
-      class="vibe-deco-frame vibe-parallax"
-      data-parallax-speed="0.05"
-      aria-hidden="true"
-    ></div>
+  <section
+    id="top"
+    class="boxdrop-hero"
+  >
 
-    <div
-      class="vibe-deco-diamond vibe-deco-diamond--one vibe-parallax"
-      data-parallax-speed="-0.04"
-      aria-hidden="true"
-    ></div>
+    <div class="boxdrop-hero-inner">
 
-    <div
-      class="vibe-deco-diamond vibe-deco-diamond--two vibe-parallax"
-      data-parallax-speed="0.08"
-      aria-hidden="true"
-    ></div>
+      <div class="boxdrop-hero-copy">
 
-    <div class="vibe-hero-inner">
-      <p class="vibe-kicker">
-        INTERNET CULTURE · PURE VIBES · ISSUE 49
-      </p>
+        <p class="boxdrop-eyebrow">
+          NEW DROPS · BLIND BOXES · COLLECTIBLES
+        </p>
 
-      <h1>
-        <span>7 × 7</span>
-        <strong>= 49</strong>
-      </h1>
+        <h1>
+          Small boxes.
+          <span>Big personalities.</span>
+        </h1>
 
-      <p class="vibe-hero-copy">
-        Somehow mathematical. Somehow attractive. Completely obvious
-        once the internet decides it is.
-      </p>
+        <p>
 
-      <a class="vibe-hero-button" href="#story">
-        Enter the vibe
-        <span aria-hidden="true">↓</span>
-      </a>
+          Discover miniature characters, secret designs
+          and collectible series for your shelf,
+          desk or next tiny obsession.
+
+        </p>
+
+        <a
+          class="boxdrop-hero-button"
+          href="#shop"
+        >
+          Shop new releases ↓
+        </a>
+
+      </div>
+
+
+      <div
+        class="boxdrop-hero-art"
+        aria-hidden="true"
+      >
+
+        <div class="boxdrop-hero-box boxdrop-hero-box-one">
+          ?
+        </div>
+
+        <div class="boxdrop-hero-box boxdrop-hero-box-two">
+          ★
+        </div>
+
+        <div class="boxdrop-hero-box boxdrop-hero-box-three">
+          ☕
+        </div>
+
+      </div>
+
     </div>
+
   </section>
 
-  <main class="container vibe-container">
 
-    <!-- =====================================================
-         WEBSITE TASK
-         Do not alter: task-controller.js inserts the experiment
-         question and answers into this element.
-         ===================================================== -->
-    <div class="next-box">
 
-      <!--
-        task-controller.js automatically inserts
-        the multiple-choice task here.
-      -->
+  <!-- =====================================================
+       MAIN STORE
+       ===================================================== -->
 
-      <button
-        type="button"
-        class="primary-btn"
-        id="completeTaskButton"
-      >
-        Continue to next website
-      </button>
+  <main class="boxdrop-main">
 
-    </div>
 
-    <!-- =====================================================
-         SITE CONTENT
-         ===================================================== -->
-    <section class="fake-site-content vibe-content">
+    <!-- ===================================================
+         STORE INTRO
+         =================================================== -->
 
-      <!-- ===================================================
-           FEATURE STORY
-           =================================================== -->
-      <section
-        class="vibe-section vibe-story reveal-on-scroll"
-        id="story"
-        aria-labelledby="vibeStoryTitle"
-      >
-        <div class="vibe-copy vibe-copy--left">
-          <p class="vibe-section-label">
-            TRENDING · INTERNET CULTURE
-          </p>
+    <section class="boxdrop-feature-strip">
 
-          <h2 id="vibeStoryTitle">
-            Why does everyone suddenly think
-            <em>7 × 7 = 49</em> is attractive?
-          </h2>
+      <div>
 
-          <p class="vibe-meta">
-            Meme explainer · 5 min read
-          </p>
+        <strong>
+          Blind-box surprises
+        </strong>
 
-          <p class="vibe-lead">
-            The latest TikTok shorthand is based almost entirely on vibes.
-            “7 × 7 = 49” describes something that feels obviously attractive,
-            satisfying or simply <strong>right</strong>.
-          </p>
+        <span>
+          One randomly selected figure per box
+        </span>
 
-          <p>
-            No, people are not literally attracted to multiplication. The
-            equation has become a way of describing a person, object or tiny
-            design detail that looks appealing even when nobody can quite
-            explain why.
-          </p>
-        </div>
+      </div>
 
-        <button
-          class="vibe-image-panel vibe-image-panel--right lightbox-trigger"
-          type="button"
-          data-lightbox-src="https://picsum.photos/seed/vibecheck-49/1600/1100"
-          aria-label="Open larger image of numbers and symbols"
-        >
-          <img
-            src="https://picsum.photos/seed/vibecheck-49/900/720"
-            alt="Colourful numbers and symbols arranged on a desk"
-          />
 
-          <span class="vibe-image-tag">
-            mathematically hot?
-          </span>
-        </button>
-      </section>
+      <div>
 
-      <!-- ===================================================
-           WHY IT WORKS
-           =================================================== -->
-      <section
-        class="vibe-section vibe-story vibe-story--reverse reveal-on-scroll"
-        id="why"
-        aria-labelledby="whyTitle"
-      >
-        <div class="vibe-copy vibe-copy--right">
-          <p class="vibe-section-label">
-            THE EXPLAINER
-          </p>
+        <strong>
+          Secret designs
+        </strong>
 
-          <h2 id="whyTitle">
-            It just feels correct.
-          </h2>
+        <span>
+          Selected series contain rare figures
+        </span>
 
-          <p class="vibe-lead">
-            Some equations have a strangely satisfying quality.
-            <strong>7 × 7 = 49</strong> feels neat, balanced and intuitive.
-          </p>
+      </div>
 
-          <p>
-            Compare it with <strong>51 ÷ 3 = 17</strong>. That equation is
-            mathematically just as valid, but it does not necessarily carry
-            the same visual or emotional “vibe”.
-          </p>
 
-          <p>
-            Online, that tiny feeling of aesthetic certainty has been turned
-            into a metaphor for attraction. Calling something “7 × 7 = 49”
-            basically means:
-          </p>
+      <div>
 
-          <blockquote class="vibe-pullquote">
-            “I cannot fully explain it, but this is attractive.”
-          </blockquote>
-        </div>
+        <strong>
+          New releases
+        </strong>
 
-        <div class="vibe-equation-card vibe-parallax" data-parallax-speed="-0.02">
-          <span class="vibe-equation-label">THE VIBE TEST</span>
+        <span>
+          Fresh collectible series throughout the year
+        </span>
 
-          <div class="vibe-equation vibe-equation--yes">
-            <strong>7 × 7 = 49</strong>
-            <span>Clean. Balanced. Correct.</span>
-          </div>
-
-          <div class="vibe-equation-divider"></div>
-
-          <div class="vibe-equation">
-            <strong>51 ÷ 3 = 17</strong>
-            <span>Also correct. Somehow different.</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================
-           OBJECTS
-           =================================================== -->
-      <section
-        class="vibe-section vibe-story reveal-on-scroll"
-        id="objects"
-        aria-labelledby="objectsTitle"
-      >
-        <div class="vibe-copy vibe-copy--left">
-          <p class="vibe-section-label">
-            THE MEME EVOLVES
-          </p>
-
-          <h2 id="objectsTitle">
-            Then people started rating objects.
-          </h2>
-
-          <p class="vibe-lead">
-            The trend quickly escaped the world of people and landed on
-            chairs, typefaces, dashboards, taps, buildings and basically
-            anything with unexpectedly excellent proportions.
-          </p>
-
-          <p>
-            “Attractive” is being used broadly here: visually satisfying,
-            aesthetically appealing or pleasing in a way that feels easier
-            to recognise than explain.
-          </p>
-
-          <ul class="vibe-object-list">
-            <li>perfectly symmetrical architecture</li>
-            <li>a really clean handwritten number 7</li>
-            <li>an unusually well-designed kitchen tap</li>
-            <li>a satisfying car dashboard</li>
-            <li>perfectly aligned books on a shelf</li>
-            <li>a strangely good-looking font</li>
-          </ul>
-        </div>
-
-        <button
-          class="vibe-image-panel vibe-image-panel--right lightbox-trigger"
-          type="button"
-          data-lightbox-src="https://picsum.photos/seed/vibecheck-chair/1600/1100"
-          aria-label="Open larger image of a minimalist chair"
-        >
-          <img
-            src="https://picsum.photos/seed/vibecheck-chair/900/720"
-            alt="Minimalist chair in a modern room"
-          />
-
-          <span class="vibe-image-tag">
-            chair = 49
-          </span>
-        </button>
-      </section>
-
-      <!-- ===================================================
-           WHY INANIMATE THINGS
-           =================================================== -->
-      <section
-        class="vibe-section vibe-story vibe-story--reverse reveal-on-scroll"
-        aria-labelledby="logicTitle"
-      >
-        <div class="vibe-copy vibe-copy--right">
-          <p class="vibe-section-label">
-            VIBES &gt; LOGIC
-          </p>
-
-          <h2 id="logicTitle">
-            Why are inanimate things suddenly “attractive”?
-          </h2>
-
-          <p>
-            Internet slang has always been good at stretching familiar words
-            until they do new jobs. Here, “attractive” is less about romance
-            and more about instinctive aesthetic approval.
-          </p>
-
-          <p>
-            A lamp, number, staircase, building or equation can qualify.
-            The joke works because everyone behaves as though the judgement
-            is self-evident.
-          </p>
-
-          <p>
-            People also naturally attach moods, personalities and aesthetic
-            qualities to numbers, letters, colours and shapes. Some
-            commentators compare this with ordinal-linguistic
-            personification, although participating in the meme does not mean
-            somebody experiences that psychological phenomenon.
-          </p>
-
-          <p class="vibe-signoff">
-            Sometimes 7 × 7 just looks like 49.
-          </p>
-        </div>
-
-        <button
-          class="vibe-image-panel vibe-image-panel--left lightbox-trigger"
-          type="button"
-          data-lightbox-src="https://picsum.photos/seed/vibecheck-architecture/1600/1100"
-          aria-label="Open larger symmetrical architecture image"
-        >
-          <img
-            src="https://picsum.photos/seed/vibecheck-architecture/900/720"
-            alt="Symmetrical modern building exterior"
-          />
-
-          <span class="vibe-image-tag">
-            suspiciously satisfying
-          </span>
-        </button>
-      </section>
-
-      <!-- ===================================================
-           TREND RECAP
-           =================================================== -->
-      <section
-        class="vibe-recap reveal-on-scroll"
-        aria-labelledby="recapTitle"
-      >
-        <p class="vibe-section-label">
-          THE TREND IN 15 SECONDS
-        </p>
-
-        <h2 id="recapTitle">
-          You either get it immediately,
-          or the explanation makes it worse.
-        </h2>
-
-        <div class="vibe-recap-grid">
-          <article>
-            <span>01</span>
-            <p>7 × 7 = 49 feels satisfying.</p>
-          </article>
-
-          <article>
-            <span>02</span>
-            <p>TikTok turns that feeling into slang.</p>
-          </article>
-
-          <article>
-            <span>03</span>
-            <p>“49” becomes shorthand for attractive.</p>
-          </article>
-
-          <article>
-            <span>04</span>
-            <p>People apply it to humans and objects.</p>
-          </article>
-
-          <article>
-            <span>05</span>
-            <p>Nobody really needs to explain why.</p>
-          </article>
-        </div>
-      </section>
-
-      <!-- ===================================================
-           TESTIMONIAL / REACTION CAROUSEL
-           =================================================== -->
-      <section
-        class="vibe-carousel-section reveal-on-scroll"
-        aria-labelledby="reactionTitle"
-      >
-        <p class="vibe-section-label">
-          INTERNET REACTIONS
-        </p>
-
-        <h2 id="reactionTitle">
-          The comments section has thoughts.
-        </h2>
-
-        <div class="vibe-carousel" aria-live="polite">
-          <div class="vibe-carousel-track">
-
-            <blockquote class="vibe-slide is-active">
-              <p>
-                “I understood ‘7 × 7 = 49’ instantly and I am annoyed that
-                I cannot explain why.”
-              </p>
-              <footer>— @softlaunchenergy</footer>
-            </blockquote>
-
-            <blockquote class="vibe-slide">
-              <p>
-                “A beautifully weighted sans-serif font is absolutely 49.
-                I will not be taking questions.”
-              </p>
-              <footer>— @kerningcrimes</footer>
-            </blockquote>
-
-            <blockquote class="vibe-slide">
-              <p>
-                “The weirdest part is that 51 ÷ 3 = 17 really does feel
-                less attractive.”
-              </p>
-              <footer>— @mathbutmakeitvibes</footer>
-            </blockquote>
-
-          </div>
-
-          <div class="vibe-carousel-controls">
-            <button
-              type="button"
-              id="vibePrevious"
-              aria-label="Previous reaction"
-            >
-              ←
-            </button>
-
-            <div class="vibe-carousel-dots" id="vibeCarouselDots">
-              <button
-                class="is-active"
-                type="button"
-                data-slide="0"
-                aria-label="Show reaction 1"
-              ></button>
-              <button
-                type="button"
-                data-slide="1"
-                aria-label="Show reaction 2"
-              ></button>
-              <button
-                type="button"
-                data-slide="2"
-                aria-label="Show reaction 3"
-              ></button>
-            </div>
-
-            <button
-              type="button"
-              id="vibeNext"
-              aria-label="Next reaction"
-            >
-              →
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================================================
-           LIGHTBOX GALLERY
-           =================================================== -->
-      <section
-        class="vibe-gallery-section reveal-on-scroll"
-        id="gallery"
-        aria-labelledby="galleryTitle"
-      >
-        <div class="vibe-gallery-heading">
-          <div>
-            <p class="vibe-section-label">
-              OBJECT CRUSHES
-            </p>
-
-            <h2 id="galleryTitle">
-              Things that are very 49.
-            </h2>
-          </div>
-
-          <p>
-            Click an image. Judge entirely on vibes.
-          </p>
-        </div>
-
-        <div class="vibe-gallery">
-          <button
-            class="vibe-gallery-item lightbox-trigger"
-            type="button"
-            data-lightbox-src="https://picsum.photos/seed/vibe-neon-chair/1500/1200"
-            aria-label="Open chair image"
-          >
-            <img
-              src="https://picsum.photos/seed/vibe-neon-chair/700/620"
-              alt="Sculptural chair in a dramatic room"
-            />
-            <span>chair energy</span>
-          </button>
-
-          <button
-            class="vibe-gallery-item lightbox-trigger"
-            type="button"
-            data-lightbox-src="https://picsum.photos/seed/vibe-dashboard/1500/1200"
-            aria-label="Open dashboard image"
-          >
-            <img
-              src="https://picsum.photos/seed/vibe-dashboard/700/620"
-              alt="Clean modern dashboard interface"
-            />
-            <span>dashboard energy</span>
-          </button>
-
-          <button
-            class="vibe-gallery-item lightbox-trigger"
-            type="button"
-            data-lightbox-src="https://picsum.photos/seed/vibe-stairs/1500/1200"
-            aria-label="Open staircase image"
-          >
-            <img
-              src="https://picsum.photos/seed/vibe-stairs/700/620"
-              alt="Geometric modern staircase"
-            />
-            <span>staircase energy</span>
-          </button>
-
-          <button
-            class="vibe-gallery-item lightbox-trigger"
-            type="button"
-            data-lightbox-src="https://picsum.photos/seed/vibe-type/1500/1200"
-            aria-label="Open typography image"
-          >
-            <img
-              src="https://picsum.photos/seed/vibe-type/700/620"
-              alt="Bold graphic typography"
-            />
-            <span>typeface energy</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- ===================================================
-           CONTACT FORM
-           =================================================== -->
-      <section
-        class="vibe-contact reveal-on-scroll"
-        id="contact"
-        aria-labelledby="contactTitle"
-      >
-        <div class="vibe-contact-copy">
-          <p class="vibe-section-label">
-            SEND A VIBE
-          </p>
-
-          <h2 id="contactTitle">
-            Found something inexplicably 49?
-          </h2>
-
-          <p>
-            Tell us what it is. A person, lamp, number, tap, font or
-            suspiciously perfect piece of architecture all count.
-          </p>
-        </div>
-
-        <form
-          class="vibe-contact-form"
-          id="vibeContactForm"
-          novalidate
-        >
-          <div class="vibe-form-field">
-            <label for="vibeName">Your name</label>
-            <input
-              id="vibeName"
-              name="name"
-              type="text"
-              autocomplete="name"
-              required
-              minlength="2"
-              placeholder="Alex"
-            />
-            <span class="vibe-field-error" data-error-for="vibeName"></span>
-          </div>
-
-          <div class="vibe-form-field">
-            <label for="vibeEmail">Email</label>
-            <input
-              id="vibeEmail"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              placeholder="alex@example.com"
-            />
-            <span class="vibe-field-error" data-error-for="vibeEmail"></span>
-          </div>
-
-          <div class="vibe-form-field vibe-form-field--full">
-            <label for="vibeMessage">What is giving 49?</label>
-            <textarea
-              id="vibeMessage"
-              name="message"
-              required
-              minlength="10"
-              rows="5"
-              placeholder="This very specific chrome coffee machine..."
-            ></textarea>
-            <span class="vibe-field-error" data-error-for="vibeMessage"></span>
-          </div>
-
-          <button type="submit">
-            Submit the vibe
-          </button>
-
-          <p
-            class="vibe-form-status"
-            id="vibeFormStatus"
-            aria-live="polite"
-          ></p>
-        </form>
-      </section>
+      </div>
 
     </section>
+
+
+
+    <!-- ===================================================
+         PRODUCTS
+         =================================================== -->
+
+    <section
+      id="shop"
+      class="boxdrop-shop-section"
+    >
+
+      <div class="boxdrop-section-heading">
+
+        <div>
+
+          <p class="boxdrop-section-label">
+            SHOP BLIND BOXES
+          </p>
+
+          <h2>
+            Find your next tiny favourite
+          </h2>
+
+        </div>
+
+
+        <p>
+
+          Compare the series below. Select
+          <strong>View details</strong>
+          if you want to check whether a collection
+          includes a secret figure.
+
+        </p>
+
+      </div>
+
+
+
+      <div class="boxdrop-product-grid">
+
+
+        <!-- =================================================
+             CLOUD CAFÉ
+             ================================================= -->
+
+        <article
+          class="boxdrop-product-card"
+          data-product-id="cloud-cafe"
+        >
+
+          <div class="boxdrop-product-art art-cloud">
+
+            <span class="boxdrop-badge">
+              NEW
+            </span>
+
+            <div class="boxdrop-character">
+              ☕
+            </div>
+
+          </div>
+
+
+          <div class="boxdrop-product-copy">
+
+            <p class="boxdrop-product-type">
+              Blind Box
+            </p>
+
+            <h3>
+              Cloud Café Series
+            </h3>
+
+            <div class="boxdrop-product-summary">
+
+              <strong>
+                $24.90
+              </strong>
+
+              <span>
+                12 regular designs
+              </span>
+
+            </div>
+
+
+            <button
+              class="boxdrop-detail-toggle"
+              type="button"
+              data-action="toggle_product_details"
+              data-product-id="cloud-cafe"
+              aria-expanded="false"
+            >
+              View details
+            </button>
+
+
+            <div
+              class="boxdrop-inline-details"
+              data-details-for="cloud-cafe"
+              hidden
+            >
+
+              <p>
+                A collection of miniature café regulars,
+                sleepy baristas and pastry-loving characters.
+              </p>
+
+              <dl>
+
+                <div>
+                  <dt>Regular designs</dt>
+                  <dd>12</dd>
+                </div>
+
+                <div>
+                  <dt>Secret figure</dt>
+                  <dd>Yes</dd>
+                </div>
+
+                <div>
+                  <dt>Availability</dt>
+                  <dd>In stock</dd>
+                </div>
+
+              </dl>
+
+              <p class="boxdrop-secret-note">
+                One secret design may replace a regular figure.
+              </p>
+
+              <button
+                class="boxdrop-add-button"
+                type="button"
+                data-action="add_to_cart"
+                data-product-id="cloud-cafe"
+              >
+                Add one box to cart
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             MOON BUNNY
+             ================================================= -->
+
+        <article
+          class="boxdrop-product-card"
+          data-product-id="moon-bunny"
+        >
+
+          <div class="boxdrop-product-art art-moon">
+
+            <span class="boxdrop-badge">
+              POPULAR
+            </span>
+
+            <div class="boxdrop-character">
+              ☾
+            </div>
+
+          </div>
+
+
+          <div class="boxdrop-product-copy">
+
+            <p class="boxdrop-product-type">
+              Blind Box
+            </p>
+
+            <h3>
+              Moon Bunny Series
+            </h3>
+
+            <div class="boxdrop-product-summary">
+
+              <strong>
+                $27.90
+              </strong>
+
+              <span>
+                12 regular designs
+              </span>
+
+            </div>
+
+
+            <button
+              class="boxdrop-detail-toggle"
+              type="button"
+              data-action="toggle_product_details"
+              data-product-id="moon-bunny"
+              aria-expanded="false"
+            >
+              View details
+            </button>
+
+
+            <div
+              class="boxdrop-inline-details"
+              data-details-for="moon-bunny"
+              hidden
+            >
+
+              <p>
+                Dreamy rabbit characters inspired by
+                moonlight, clouds and late-night adventures.
+              </p>
+
+              <dl>
+
+                <div>
+                  <dt>Regular designs</dt>
+                  <dd>12</dd>
+                </div>
+
+                <div>
+                  <dt>Secret figure</dt>
+                  <dd>Yes</dd>
+                </div>
+
+                <div>
+                  <dt>Availability</dt>
+                  <dd>In stock</dd>
+                </div>
+
+              </dl>
+
+              <button
+                class="boxdrop-add-button"
+                type="button"
+                data-action="add_to_cart"
+                data-product-id="moon-bunny"
+              >
+                Add one box to cart
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             POCKET GARDEN
+             ================================================= -->
+
+        <article
+          class="boxdrop-product-card"
+          data-product-id="pocket-garden"
+        >
+
+          <div class="boxdrop-product-art art-garden">
+
+            <span class="boxdrop-badge">
+              FRESH
+            </span>
+
+            <div class="boxdrop-character">
+              ✿
+            </div>
+
+          </div>
+
+
+          <div class="boxdrop-product-copy">
+
+            <p class="boxdrop-product-type">
+              Blind Box
+            </p>
+
+            <h3>
+              Pocket Garden Series
+            </h3>
+
+            <div class="boxdrop-product-summary">
+
+              <strong>
+                $22.90
+              </strong>
+
+              <span>
+                8 regular designs
+              </span>
+
+            </div>
+
+
+            <button
+              class="boxdrop-detail-toggle"
+              type="button"
+              data-action="toggle_product_details"
+              data-product-id="pocket-garden"
+              aria-expanded="false"
+            >
+              View details
+            </button>
+
+
+            <div
+              class="boxdrop-inline-details"
+              data-details-for="pocket-garden"
+              hidden
+            >
+
+              <p>
+                Tiny garden characters inspired by
+                flowers, seedlings and greenhouses.
+              </p>
+
+              <dl>
+
+                <div>
+                  <dt>Regular designs</dt>
+                  <dd>8</dd>
+                </div>
+
+                <div>
+                  <dt>Secret figure</dt>
+                  <dd>Yes</dd>
+                </div>
+
+                <div>
+                  <dt>Availability</dt>
+                  <dd>In stock</dd>
+                </div>
+
+              </dl>
+
+              <button
+                class="boxdrop-add-button"
+                type="button"
+                data-action="add_to_cart"
+                data-product-id="pocket-garden"
+              >
+                Add one box to cart
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             SLEEPY MONSTERS
+             ================================================= -->
+
+        <article
+          class="boxdrop-product-card"
+          data-product-id="sleepy-monsters"
+        >
+
+          <div class="boxdrop-product-art art-sleepy">
+
+            <span class="boxdrop-badge">
+              COSY
+            </span>
+
+            <div class="boxdrop-character">
+              zZ
+            </div>
+
+          </div>
+
+
+          <div class="boxdrop-product-copy">
+
+            <p class="boxdrop-product-type">
+              Blind Box
+            </p>
+
+            <h3>
+              Sleepy Monsters Series
+            </h3>
+
+            <div class="boxdrop-product-summary">
+
+              <strong>
+                $21.90
+              </strong>
+
+              <span>
+                12 regular designs
+              </span>
+
+            </div>
+
+
+            <button
+              class="boxdrop-detail-toggle"
+              type="button"
+              data-action="toggle_product_details"
+              data-product-id="sleepy-monsters"
+              aria-expanded="false"
+            >
+              View details
+            </button>
+
+
+            <div
+              class="boxdrop-inline-details"
+              data-details-for="sleepy-monsters"
+              hidden
+            >
+
+              <p>
+                Twelve very tired little monsters
+                somewhere between bedtime and one more snack.
+              </p>
+
+              <dl>
+
+                <div>
+                  <dt>Regular designs</dt>
+                  <dd>12</dd>
+                </div>
+
+                <div>
+                  <dt>Secret figure</dt>
+                  <dd>No</dd>
+                </div>
+
+                <div>
+                  <dt>Availability</dt>
+                  <dd>In stock</dd>
+                </div>
+
+              </dl>
+
+              <button
+                class="boxdrop-add-button"
+                type="button"
+                data-action="add_to_cart"
+                data-product-id="sleepy-monsters"
+              >
+                Add one box to cart
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             STARRY FRIENDS
+             ================================================= -->
+
+        <article
+          class="boxdrop-product-card"
+          data-product-id="starry-friends"
+        >
+
+          <div class="boxdrop-product-art art-starry">
+
+            <span class="boxdrop-badge">
+              LIMITED
+            </span>
+
+            <div class="boxdrop-character">
+              ★
+            </div>
+
+          </div>
+
+
+          <div class="boxdrop-product-copy">
+
+            <p class="boxdrop-product-type">
+              Blind Box
+            </p>
+
+            <h3>
+              Starry Friends Series
+            </h3>
+
+            <div class="boxdrop-product-summary">
+
+              <strong>
+                $29.90
+              </strong>
+
+              <span>
+                10 regular designs
+              </span>
+
+            </div>
+
+
+            <button
+              class="boxdrop-detail-toggle"
+              type="button"
+              data-action="toggle_product_details"
+              data-product-id="starry-friends"
+              aria-expanded="false"
+            >
+              View details
+            </button>
+
+
+            <div
+              class="boxdrop-inline-details"
+              data-details-for="starry-friends"
+              hidden
+            >
+
+              <p>
+                A limited collection inspired by
+                constellations and night-sky colours.
+              </p>
+
+              <dl>
+
+                <div>
+                  <dt>Regular designs</dt>
+                  <dd>10</dd>
+                </div>
+
+                <div>
+                  <dt>Secret figure</dt>
+                  <dd>Yes</dd>
+                </div>
+
+                <div>
+                  <dt>Availability</dt>
+                  <dd>In stock</dd>
+                </div>
+
+              </dl>
+
+              <button
+                class="boxdrop-add-button"
+                type="button"
+                data-action="add_to_cart"
+                data-product-id="starry-friends"
+              >
+                Add one box to cart
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             MINI BAKERY
+             ================================================= -->
+
+        <article
+          class="boxdrop-product-card is-sold-out"
+          data-product-id="mini-bakery"
+        >
+
+          <div class="boxdrop-product-art art-bakery">
+
+            <span class="boxdrop-badge boxdrop-badge-dark">
+              SOLD OUT
+            </span>
+
+            <div class="boxdrop-character">
+              ♡
+            </div>
+
+          </div>
+
+
+          <div class="boxdrop-product-copy">
+
+            <p class="boxdrop-product-type">
+              Blind Box
+            </p>
+
+            <h3>
+              Mini Bakery Series
+            </h3>
+
+            <div class="boxdrop-product-summary">
+
+              <strong>
+                $23.90
+              </strong>
+
+              <span>
+                10 regular designs
+              </span>
+
+            </div>
+
+
+            <button
+              class="boxdrop-detail-toggle"
+              type="button"
+              data-action="toggle_product_details"
+              data-product-id="mini-bakery"
+              aria-expanded="false"
+            >
+              View details
+            </button>
+
+
+            <div
+              class="boxdrop-inline-details"
+              data-details-for="mini-bakery"
+              hidden
+            >
+
+              <p>
+                Tiny bakers, bread lovers and pastry
+                characters from a miniature bakery.
+              </p>
+
+              <dl>
+
+                <div>
+                  <dt>Regular designs</dt>
+                  <dd>10</dd>
+                </div>
+
+                <div>
+                  <dt>Secret figure</dt>
+                  <dd>Yes</dd>
+                </div>
+
+                <div>
+                  <dt>Availability</dt>
+                  <dd>Sold out</dd>
+                </div>
+
+              </dl>
+
+              <button
+                class="boxdrop-add-button"
+                type="button"
+                disabled
+              >
+                Sold out
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         CART
+         =================================================== -->
+
+    <section
+      id="cartSection"
+      class="boxdrop-flow-section"
+    >
+
+      <p class="boxdrop-section-label">
+        YOUR CART
+      </p>
+
+      <h2>
+        Shopping cart
+      </h2>
+
+
+      <div
+        id="boxdropEmptyCart"
+        class="boxdrop-empty-state"
+      >
+
+        <strong>
+          Your cart is empty.
+        </strong>
+
+        <p>
+          Choose a blind box above to continue.
+        </p>
+
+      </div>
+
+
+      <div
+        id="boxdropCartContents"
+        class="boxdrop-cart-row"
+        hidden
+      >
+
+        <div>
+
+          <span class="boxdrop-cart-label">
+            Blind Box · Quantity 1
+          </span>
+
+          <strong id="boxdropCartProductName">
+            —
+          </strong>
+
+        </div>
+
+
+        <strong id="boxdropCartProductPrice">
+          —
+        </strong>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         ACCOUNT
+         =================================================== -->
+
+    <section
+      id="accountSection"
+      class="boxdrop-flow-section"
+      hidden
+    >
+
+      <p class="boxdrop-section-label">
+        DEMO ACCOUNT
+      </p>
+
+      <h2>
+        Sign in before checkout
+      </h2>
+
+
+      <div class="boxdrop-account-layout">
+
+
+        <div class="boxdrop-demo-details">
+
+          <p>
+            Use this fictional demo account:
+          </p>
+
+
+          <div class="boxdrop-demo-value">
+
+            <span>
+              Email
+            </span>
+
+            <strong>
+              jamie.taylor@example.test
+            </strong>
+
+          </div>
+
+
+          <div class="boxdrop-demo-value">
+
+            <span>
+              Password
+            </span>
+
+            <strong>
+              Demo1234
+            </strong>
+
+          </div>
+
+
+          <p class="boxdrop-demo-warning">
+            Do not enter your own email address or password.
+          </p>
+
+        </div>
+
+
+
+        <form
+          id="demoLoginForm"
+          class="boxdrop-form"
+          autocomplete="off"
+          novalidate
+        >
+
+
+          <label for="demoEmail">
+
+            Email
+
+            <input
+              id="demoEmail"
+              type="email"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              data-lpignore="true"
+            />
+
+          </label>
+
+
+          <label for="demoPassword">
+
+            Password
+
+            <input
+              id="demoPassword"
+              type="password"
+              autocomplete="new-password"
+              data-lpignore="true"
+            />
+
+          </label>
+
+
+          <p
+            id="demoLoginFeedback"
+            class="boxdrop-form-feedback"
+            aria-live="polite"
+          ></p>
+
+
+          <button
+            class="boxdrop-primary-action"
+            type="submit"
+            data-action="demo_login_submit"
+          >
+            Sign in
+          </button>
+
+
+        </form>
+
+
+        <div
+          id="demoSignedInState"
+          class="boxdrop-success-state"
+          hidden
+        >
+
+          <span>
+            ✓
+          </span>
+
+          <strong>
+            Signed in as Jamie
+          </strong>
+
+          <p>
+            Demo account ready for checkout.
+          </p>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         DELIVERY
+         =================================================== -->
+
+    <section
+      id="deliverySection"
+      class="boxdrop-flow-section"
+      hidden
+    >
+
+      <p class="boxdrop-section-label">
+        DELIVERY
+      </p>
+
+      <h2>
+        Choose a delivery option
+      </h2>
+
+
+      <div class="boxdrop-delivery-destination">
+
+        <span>
+          Delivering to
+        </span>
+
+        <strong>
+          Perth WA 6000
+        </strong>
+
+      </div>
+
+
+      <fieldset class="boxdrop-delivery-options">
+
+        <legend class="sr-only">
+          Delivery options
+        </legend>
+
+
+        <label class="boxdrop-delivery-option">
+
+          <input
+            type="radio"
+            name="deliveryOption"
+            value="standard"
+          />
+
+          <span>
+
+            <strong>
+              Standard
+            </strong>
+
+            <small>
+              5–7 business days
+            </small>
+
+          </span>
+
+          <strong>
+            FREE
+          </strong>
+
+        </label>
+
+
+        <label class="boxdrop-delivery-option">
+
+          <input
+            type="radio"
+            name="deliveryOption"
+            value="express"
+          />
+
+          <span>
+
+            <strong>
+              Express
+            </strong>
+
+            <small>
+              1–2 business days
+            </small>
+
+          </span>
+
+          <strong>
+            $12.95
+          </strong>
+
+        </label>
+
+
+        <label class="boxdrop-delivery-option">
+
+          <input
+            type="radio"
+            name="deliveryOption"
+            value="priority"
+          />
+
+          <span>
+
+            <strong>
+              Priority
+            </strong>
+
+            <small>
+              Next business day
+            </small>
+
+          </span>
+
+          <strong>
+            $19.95
+          </strong>
+
+        </label>
+
+      </fieldset>
+
+
+      <p
+        id="deliveryOptionFeedback"
+        class="boxdrop-form-feedback"
+        aria-live="polite"
+      ></p>
+
+
+      <button
+        id="confirmDeliveryButton"
+        class="boxdrop-primary-action"
+        type="button"
+        data-action="confirm_delivery"
+      >
+        Confirm delivery option
+      </button>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         COMPLETED
+         =================================================== -->
+
+    <section
+      id="shoppingCompleteSection"
+      class="boxdrop-flow-section boxdrop-complete-section"
+      hidden
+    >
+
+      <div class="boxdrop-success-icon">
+        ✓
+      </div>
+
+      <p class="boxdrop-section-label">
+        TASK COMPLETE
+      </p>
+
+      <h2>
+        Your mock order is ready
+      </h2>
+
+      <p>
+
+        You have completed all three shopping tasks.
+        No purchase has been made.
+
+      </p>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         ABOUT
+         =================================================== -->
+
+    <section
+      id="about"
+      class="boxdrop-about"
+    >
+
+      <p class="boxdrop-section-label">
+        ABOUT BOXDROP
+      </p>
+
+      <h2>
+        Tiny characters. Very serious collecting.
+      </h2>
+
+      <p>
+
+        BOXDROP is a fictional collector store created
+        for this website interaction study. All products,
+        accounts, prices and checkout options are simulated.
+
+      </p>
+
+    </section>
+
+
   </main>
 
-  <!-- =====================================================
-       MINIMAL FOOTER
-       ===================================================== -->
-  <footer class="vibe-footer">
-    <span>© 2026 VibeCheck · Issue 49</span>
 
-    <div class="vibe-socials" aria-label="Social links">
-      <a href="#">TikTok</a>
-      <a href="#">Instagram</a>
-      <a href="#">YouTube</a>
-    </div>
-  </footer>
 
   <!-- =====================================================
-       LIGHTBOX
+       WEBSITE TASK
+
+       IMPORTANT:
+       Same task structure/classes as Sites 1 and 2.
+       Shared styles.css controls its presentation.
        ===================================================== -->
+
   <div
-    class="vibe-lightbox"
-    id="vibeLightbox"
-    role="dialog"
-    aria-modal="true"
-    aria-hidden="true"
-    aria-label="Image preview"
+    id="shoppingTaskBox"
+    class="next-box"
   >
-    <button
-      class="vibe-lightbox-close"
-      id="vibeLightboxClose"
-      type="button"
-      aria-label="Close image preview"
+
+    <section
+      id="shoppingTaskPanel"
+      class="task-panel"
+      data-collapsed="false"
     >
-      ×
+
+      <div class="task-panel-header">
+
+        <h3 id="shoppingTaskHeading">
+          Website task
+        </h3>
+
+        <button
+          id="shoppingTaskCollapseButton"
+          class="task-collapse-button"
+          type="button"
+          aria-expanded="true"
+          aria-label="Collapse website task"
+        >
+          −
+        </button>
+
+      </div>
+
+
+      <div class="task-panel-content">
+
+        <p
+          id="shoppingTaskInstruction"
+          class="task-instruction"
+        >
+          Find a blind-box series under $25 with at least
+          10 regular designs and a possible secret figure.
+          Add one suitable box to your cart.
+        </p>
+
+
+        <div
+          id="shoppingTaskDetails"
+          class="shopping-task-details"
+        >
+
+          <span>
+            Shopping task 1 of 3
+          </span>
+
+        </div>
+
+
+        <p
+          id="shoppingTaskFeedback"
+          class="task-feedback"
+          aria-live="polite"
+        ></p>
+
+      </div>
+
+    </section>
+
+
+    <button
+      id="shoppingFinishButton"
+      class="primary-btn"
+      type="button"
+      data-action="finish_shopping_site"
+      hidden
+    >
+      Finish website task
     </button>
 
-    <img
-      id="vibeLightboxImage"
-      src=""
-      alt=""
-    />
   </div>
 
-  <button
-    class="vibe-back-to-top"
-    id="vibeBackToTop"
-    type="button"
-    aria-label="Back to top"
-  >
-    ↑
-  </button>
+
+
+  <!-- =====================================================
+       TOAST
+       ===================================================== -->
+
+  <div
+    id="shoppingToast"
+    class="boxdrop-toast"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></div>
+
+
 
   <!-- =====================================================
        COOKIE BANNER
-       Existing experiment IDs and data-choice values retained.
+       Same structure as Sites 1 and 2.
        ===================================================== -->
+
   <section
     id="cookieBanner"
     class="cookie-banner"
     aria-label="Cookie choices"
   >
+
     <h2>
       We value your privacy
     </h2>
 
     <p>
-      We use necessary cookies to operate this website.
 
+      We use necessary cookies to operate this website.
       With your permission, we also use functional cookies
       to remember your preferences, analytics cookies to
       understand site usage and advertising cookies to
       provide personalised content.
+
     </p>
+
 
     <div class="cookie-actions">
 
@@ -748,15 +1478,19 @@
 
     </div>
 
+
     <div
       id="settingsPanel"
       class="settings-panel"
     >
+
       <h3>
         Cookie preferences
       </h3>
 
+
       <label>
+
         <input
           type="checkbox"
           checked
@@ -764,34 +1498,45 @@
         />
 
         Necessary cookies, always active
+
       </label>
 
+
       <label>
+
         <input
           id="functionalCookies"
           type="checkbox"
         />
 
         Functional cookies, remember your preferences
+
       </label>
 
+
       <label>
+
         <input
           id="analyticsCookies"
           type="checkbox"
         />
 
         Analytics cookies, help us understand website use
+
       </label>
 
+
       <label>
+
         <input
           id="advertisingCookies"
           type="checkbox"
         />
 
         Advertising cookies, provide personalised content
+
       </label>
+
 
       <button
         type="button"
@@ -800,393 +1545,23 @@
       >
         Save Settings
       </button>
+
     </div>
+
   </section>
+
+
+
+  <!-- =====================================================
+       EXPERIMENT CONTROLLER
+       ===================================================== -->
 
   <script
     type="module"
     src="js/site-controller.js"
   ></script>
 
-  <script>
-    (() => {
-      /* ---------------------------------------------------
-         Responsive navigation
-         --------------------------------------------------- */
-      const menuButton = document.getElementById("vibeMenuToggle");
-      const navLinks = document.getElementById("vibeNavLinks");
 
-      if (menuButton && navLinks) {
-        menuButton.addEventListener("click", () => {
-          const open = navLinks.classList.toggle("is-open");
-          menuButton.setAttribute("aria-expanded", String(open));
-        });
-
-        navLinks.querySelectorAll("a").forEach((link) => {
-          link.addEventListener("click", () => {
-            navLinks.classList.remove("is-open");
-            menuButton.setAttribute("aria-expanded", "false");
-          });
-        });
-      }
-
-      /* ---------------------------------------------------
-         Particle canvas
-         --------------------------------------------------- */
-      const canvas = document.getElementById("vibeParticleCanvas");
-      const context = canvas?.getContext("2d");
-      const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-      let particles = [];
-      let canvasWidth = 0;
-      let canvasHeight = 0;
-      let animationFrame = null;
-
-      const resizeCanvas = () => {
-        if (!canvas || !context) return;
-
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        const bounds = canvas.getBoundingClientRect();
-
-        canvasWidth = bounds.width;
-        canvasHeight = bounds.height;
-
-        canvas.width = Math.round(canvasWidth * ratio);
-        canvas.height = Math.round(canvasHeight * ratio);
-
-        context.setTransform(ratio, 0, 0, ratio, 0, 0);
-
-        const particleCount = Math.max(
-          24,
-          Math.min(70, Math.round(canvasWidth / 20))
-        );
-
-        particles = Array.from({ length: particleCount }, (_, index) => ({
-          x: Math.random() * canvasWidth,
-          y: Math.random() * canvasHeight,
-          radius: Math.random() * 1.7 + 0.6,
-          speedX: (Math.random() - 0.5) * 0.2,
-          speedY: Math.random() * 0.22 + 0.06,
-          phase: Math.random() * Math.PI * 2,
-          accent: index % 4 === 0
-        }));
-      };
-
-      const drawParticles = (time = 0) => {
-        if (!canvas || !context) return;
-
-        context.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        particles.forEach((particle) => {
-          if (!reduceMotion) {
-            particle.x += particle.speedX;
-            particle.y -= particle.speedY;
-
-            if (particle.y < -8) {
-              particle.y = canvasHeight + 8;
-              particle.x = Math.random() * canvasWidth;
-            }
-
-            if (particle.x < -8) particle.x = canvasWidth + 8;
-            if (particle.x > canvasWidth + 8) particle.x = -8;
-          }
-
-          const pulse =
-            reduceMotion
-              ? 1
-              : 0.72 + Math.sin(time * 0.0015 + particle.phase) * 0.2;
-
-          context.beginPath();
-          context.arc(
-            particle.x,
-            particle.y,
-            particle.radius * pulse,
-            0,
-            Math.PI * 2
-          );
-
-          context.fillStyle = particle.accent
-            ? "rgba(255, 0, 170, 0.8)"
-            : "rgba(0, 217, 255, 0.75)";
-
-          context.fill();
-        });
-
-        if (!reduceMotion) {
-          animationFrame = requestAnimationFrame(drawParticles);
-        }
-      };
-
-      if (canvas && context) {
-        resizeCanvas();
-        drawParticles();
-
-        window.addEventListener("resize", () => {
-          resizeCanvas();
-
-          if (reduceMotion) {
-            drawParticles();
-          }
-        });
-      }
-
-      /* ---------------------------------------------------
-         Scroll reveal and parallax
-         --------------------------------------------------- */
-      const revealItems = document.querySelectorAll(".reveal-on-scroll");
-
-      if ("IntersectionObserver" in window && !reduceMotion) {
-        const revealObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("is-visible");
-                revealObserver.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.12 }
-        );
-
-        revealItems.forEach((item) => revealObserver.observe(item));
-      } else {
-        revealItems.forEach((item) => item.classList.add("is-visible"));
-      }
-
-      const parallaxItems = document.querySelectorAll(
-        ".vibe-parallax[data-parallax-speed]"
-      );
-
-      const backToTop = document.getElementById("vibeBackToTop");
-
-      const updateScrollEffects = () => {
-        const scrollY = window.scrollY;
-
-        if (!reduceMotion) {
-          parallaxItems.forEach((item) => {
-            const speed = Number(item.dataset.parallaxSpeed || 0);
-            item.style.transform =
-              `translate3d(0, ${scrollY * speed}px, 0)`;
-          });
-        }
-
-        backToTop?.classList.toggle(
-          "is-visible",
-          scrollY > 650
-        );
-      };
-
-      window.addEventListener(
-        "scroll",
-        updateScrollEffects,
-        { passive: true }
-      );
-
-      updateScrollEffects();
-
-      backToTop?.addEventListener("click", () => {
-        window.scrollTo({
-          top: 0,
-          behavior: reduceMotion ? "auto" : "smooth"
-        });
-      });
-
-      /* ---------------------------------------------------
-         Reaction carousel
-         --------------------------------------------------- */
-      const slides = [...document.querySelectorAll(".vibe-slide")];
-      const dots = [...document.querySelectorAll(
-        "#vibeCarouselDots button"
-      )];
-
-      const previous = document.getElementById("vibePrevious");
-      const next = document.getElementById("vibeNext");
-      let currentSlide = 0;
-
-      const showSlide = (index) => {
-        if (!slides.length) return;
-
-        currentSlide =
-          (index + slides.length) % slides.length;
-
-        slides.forEach((slide, slideIndex) => {
-          slide.classList.toggle(
-            "is-active",
-            slideIndex === currentSlide
-          );
-        });
-
-        dots.forEach((dot, dotIndex) => {
-          dot.classList.toggle(
-            "is-active",
-            dotIndex === currentSlide
-          );
-        });
-      };
-
-      previous?.addEventListener(
-        "click",
-        () => showSlide(currentSlide - 1)
-      );
-
-      next?.addEventListener(
-        "click",
-        () => showSlide(currentSlide + 1)
-      );
-
-      dots.forEach((dot) => {
-        dot.addEventListener("click", () => {
-          showSlide(Number(dot.dataset.slide || 0));
-        });
-      });
-
-      /* ---------------------------------------------------
-         Lightbox
-         --------------------------------------------------- */
-      const lightbox = document.getElementById("vibeLightbox");
-      const lightboxImage = document.getElementById("vibeLightboxImage");
-      const lightboxClose = document.getElementById("vibeLightboxClose");
-
-      const closeLightbox = () => {
-        if (!lightbox || !lightboxImage) return;
-
-        lightbox.classList.remove("is-open");
-        lightbox.setAttribute("aria-hidden", "true");
-        lightboxImage.src = "";
-        document.body.classList.remove("vibe-lightbox-open");
-      };
-
-      document.querySelectorAll(".lightbox-trigger").forEach((trigger) => {
-        trigger.addEventListener("click", () => {
-          if (!lightbox || !lightboxImage) return;
-
-          const image = trigger.querySelector("img");
-
-          lightboxImage.src =
-            trigger.dataset.lightboxSrc || image?.src || "";
-          lightboxImage.alt =
-            image?.alt || "VibeCheck image";
-
-          lightbox.classList.add("is-open");
-          lightbox.setAttribute("aria-hidden", "false");
-          document.body.classList.add("vibe-lightbox-open");
-
-          lightboxClose?.focus();
-        });
-      });
-
-      lightboxClose?.addEventListener("click", closeLightbox);
-
-      lightbox?.addEventListener("click", (event) => {
-        if (event.target === lightbox) {
-          closeLightbox();
-        }
-      });
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeLightbox();
-        }
-      });
-
-      /* ---------------------------------------------------
-         Contact form validation
-         --------------------------------------------------- */
-      const contactForm = document.getElementById("vibeContactForm");
-      const formStatus = document.getElementById("vibeFormStatus");
-
-      const showFieldError = (field, message) => {
-        const errorElement = document.querySelector(
-          `[data-error-for="${field.id}"]`
-        );
-
-        field.classList.toggle("has-error", Boolean(message));
-
-        if (errorElement) {
-          errorElement.textContent = message;
-        }
-      };
-
-      const validateField = (field) => {
-        const value = field.value.trim();
-
-        if (field.required && !value) {
-          showFieldError(field, "This field is required.");
-          return false;
-        }
-
-        if (
-          field.type === "email" &&
-          value &&
-          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-        ) {
-          showFieldError(field, "Enter a valid email address.");
-          return false;
-        }
-
-        if (
-          field.minLength > 0 &&
-          value.length < field.minLength
-        ) {
-          showFieldError(
-            field,
-            `Please enter at least ${field.minLength} characters.`
-          );
-          return false;
-        }
-
-        showFieldError(field, "");
-        return true;
-      };
-
-      contactForm?.querySelectorAll(
-        "input, textarea"
-      ).forEach((field) => {
-        field.addEventListener(
-          "blur",
-          () => validateField(field)
-        );
-      });
-
-      contactForm?.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const fields = [
-          ...contactForm.querySelectorAll("input, textarea")
-        ];
-
-        const valid = fields
-          .map(validateField)
-          .every(Boolean);
-
-        if (!valid) {
-          if (formStatus) {
-            formStatus.textContent =
-              "Check the highlighted fields and try again.";
-          }
-          return;
-        }
-
-        if (formStatus) {
-          formStatus.textContent =
-            "Vibe received. Extremely 49 of you.";
-        }
-
-        contactForm.reset();
-
-        fields.forEach((field) => {
-          showFieldError(field, "");
-        });
-      });
-
-      window.addEventListener("beforeunload", () => {
-        if (animationFrame) {
-          cancelAnimationFrame(animationFrame);
-        }
-      });
-    })();
-  </script>
 </body>
+
 </html>
