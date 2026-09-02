@@ -6846,3 +6846,2369 @@ body[data-study-site]
   }
 
 }
+
+/* =========================================================
+   EXPERIMENT COOKIE INTERFACE
+   Clean persistent footer design
+   ========================================================= */
+
+
+/* =========================================================
+   MAIN COOKIE BANNER
+   ========================================================= */
+
+body[data-study-site] .cookie-banner {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 4000;
+
+  width: 100%;
+
+  max-height: 52vh;
+
+  margin: 0;
+  padding:
+    18px
+    clamp(24px, 5vw, 72px);
+
+  overflow-y: auto;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  grid-template-areas:
+    "suggestion suggestion"
+    "heading actions"
+    "copy actions"
+    "settings settings";
+
+  column-gap: 48px;
+  row-gap: 5px;
+
+  align-items: center;
+
+  transform: none;
+
+  border: 0;
+  border-top: 1px solid #d9dee7;
+  border-radius: 0;
+
+  background: #ffffff;
+  color: #1f2937;
+
+  box-shadow:
+    0 -5px 20px rgba(15, 23, 42, 0.10);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/* Make the interface consistent across all mock sites */
+
+body[data-study-site] .cookie-banner h2 {
+  grid-area: heading;
+
+  margin: 0 0 2px;
+
+  color: #172033 !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+
+body[data-study-site] .cookie-banner > p {
+  grid-area: copy;
+
+  max-width: 760px;
+
+  margin: 0;
+
+  color: #5b6474 !important;
+
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   COOKIE ACTIONS
+   ========================================================= */
+
+body[data-study-site] .cookie-actions {
+  grid-area: actions;
+
+  display: flex;
+
+  flex-wrap: nowrap;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 9px;
+
+  width: auto;
+
+  margin: 0;
+}
+
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions button {
+
+  width: auto;
+
+  min-width: 118px;
+  min-height: 42px;
+
+  margin: 0;
+  padding: 9px 16px;
+
+  border-radius: 4px;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1.2;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+
+/* Reject + customise */
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.secondary-btn {
+
+  border: 1px solid #315c96;
+
+  background: #ffffff;
+
+  color: #244d83 !important;
+
+  box-shadow: none;
+}
+
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.secondary-btn:hover {
+
+  background: #f4f7fb;
+}
+
+
+/* Accept all */
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.primary-btn {
+
+  border: 1px solid #294f83;
+
+  background: #294f83;
+
+  color: #ffffff !important;
+
+  box-shadow: none;
+}
+
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.primary-btn:hover {
+
+  background: #203f69;
+  border-color: #203f69;
+}
+
+
+/* =========================================================
+   CUSTOM SETTINGS
+   ========================================================= */
+
+body[data-study-site] .settings-panel {
+  grid-area: settings;
+
+  display: none;
+
+  width: 100%;
+
+  margin-top: 14px;
+  padding: 16px 18px;
+
+  border: 1px solid #e1e6ed;
+  border-radius: 7px;
+
+  background: #f8fafc;
+
+  color: #263244;
+}
+
+
+body[data-study-site] .settings-panel.visible {
+  display: block;
+}
+
+
+body[data-study-site] .settings-panel h3 {
+  margin: 0 0 12px;
+
+  color: #172033 !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 0.95rem;
+}
+
+
+body[data-study-site] .settings-panel label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin: 7px 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+
+  color: #3f4a5b;
+
+  font-size: 0.86rem;
+}
+
+
+body[data-study-site]
+.settings-panel
+input[type="checkbox"] {
+
+  width: 17px;
+  height: 17px;
+
+  accent-color: #294f83;
+}
+
+
+/* Save custom settings button */
+
+body[data-study-site]
+.settings-panel
+.primary-btn {
+
+  margin-top: 10px;
+
+  padding: 9px 16px;
+
+  border: 1px solid #294f83;
+  border-radius: 4px;
+
+  background: #294f83;
+
+  color: #ffffff !important;
+
+  font-weight: 650;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   SUGGESTIONS CONDITION
+   =========================================================
+   Clean informational strip inside the cookie footer.
+   ========================================================= */
+
+body[data-study-site]
+.cookie-banner
+.experiment-privacy-snapshot {
+
+  grid-area: suggestion;
+
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  grid-template-areas:
+    "tipheading tipsummary tipbutton"
+    "tipdetails tipdetails tipdetails";
+
+  align-items: center;
+
+  column-gap: 16px;
+
+  width: 100%;
+
+  margin:
+    -18px
+    0
+    13px;
+
+  padding:
+    10px
+    0
+    11px;
+
+  border: 0;
+  border-bottom: 1px solid #e5e9ef;
+  border-radius: 0;
+
+  background: transparent;
+
+  color: #374151;
+
+  box-shadow: none;
+}
+
+
+/* Small "Privacy tip" label */
+
+body[data-study-site]
+.experiment-privacy-snapshot__heading {
+
+  grid-area: tipheading;
+
+  display: flex;
+
+  align-items: center;
+
+  margin: 0;
+
+  color: #294f83;
+}
+
+
+body[data-study-site]
+.experiment-privacy-snapshot__heading strong {
+
+  padding: 4px 8px;
+
+  border-radius: 4px;
+
+  background: #edf3fa;
+
+  color: #294f83;
+
+  font-size: 0.74rem;
+  font-weight: 750;
+
+  white-space: nowrap;
+}
+
+
+/*
+ * The suggestion cannot be dismissed independently.
+ */
+
+body[data-study-site]
+#dismissPrivacySuggestion {
+
+  display: none !important;
+}
+
+
+/* Suggestion explanatory sentence */
+
+body[data-study-site]
+.experiment-privacy-summary {
+
+  grid-area: tipsummary;
+
+  margin: 0 !important;
+
+  color: #4b5563 !important;
+
+  font-size: 0.79rem !important;
+  line-height: 1.45 !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-summary strong {
+
+  color: #374151;
+  font-weight: 700;
+}
+
+
+/* "Learn more" control */
+
+body[data-study-site]
+.experiment-privacy-details-toggle {
+
+  grid-area: tipbutton;
+
+  width: auto;
+
+  margin: 0;
+  padding: 5px 0;
+
+  border: 0 !important;
+
+  background: transparent !important;
+
+  color: #294f83 !important;
+
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  cursor: pointer;
+}
+
+
+/* Expanded suggestion information */
+
+body[data-study-site]
+.experiment-privacy-details {
+
+  grid-area: tipdetails;
+
+  margin-top: 12px;
+  padding-top: 12px;
+
+  border-top: 1px solid #e5e9ef;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-item {
+
+  padding: 9px 11px;
+
+  border: 1px solid #e5e9ef;
+  border-radius: 5px;
+
+  background: #f8fafc;
+
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-item strong {
+
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #273548;
+
+  font-size: 0.76rem;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-item span {
+
+  color: #667085;
+}
+
+
+body[data-study-site]
+.experiment-privacy-note {
+
+  margin:
+    9px
+    0
+    0 !important;
+
+  color: #667085 !important;
+
+  font-size: 0.74rem !important;
+  line-height: 1.4 !important;
+}
+
+
+/* =========================================================
+   AUTOMATION CONDITION
+   =========================================================
+   Same visual family as the ordinary cookie banner.
+   ========================================================= */
+
+body[data-study-site]
+.experiment-automation-notice {
+
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: auto;
+
+  z-index: 4000;
+
+  width: 100%;
+
+  min-height: 78px;
+
+  padding:
+    14px
+    clamp(24px, 5vw, 72px);
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  grid-template-areas:
+    "automationheading automationbutton"
+    "automationtext automationbutton";
+
+  align-items: center;
+
+  column-gap: 40px;
+
+  border: 0;
+  border-top: 1px solid #d9dee7;
+  border-radius: 0;
+
+  background: #ffffff;
+
+  color: #1f2937;
+
+  box-shadow:
+    0 -5px 20px rgba(15, 23, 42, 0.10);
+}
+
+
+body[data-study-site]
+.experiment-automation-notice strong {
+
+  grid-area: automationheading;
+
+  color: #172033 !important;
+
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+
+body[data-study-site]
+.experiment-automation-notice p {
+
+  grid-area: automationtext;
+
+  margin: 2px 0 0;
+
+  color: #5b6474 !important;
+
+  font-size: 0.82rem;
+}
+
+
+body[data-study-site]
+.experiment-automation-notice button {
+
+  grid-area: automationbutton;
+
+  width: auto;
+
+  min-width: 140px;
+
+  padding: 9px 16px;
+
+  border: 1px solid #315c96;
+  border-radius: 4px;
+
+  background: #ffffff;
+
+  color: #244d83;
+
+  font-size: 0.82rem;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  body[data-study-site] .cookie-banner {
+
+    grid-template-columns: 1fr;
+
+    grid-template-areas:
+      "suggestion"
+      "heading"
+      "copy"
+      "actions"
+      "settings";
+
+    row-gap: 7px;
+
+    padding:
+      16px
+      20px;
+  }
+
+
+  body[data-study-site] .cookie-actions {
+
+    justify-content: flex-start;
+
+    margin-top: 7px;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-learning-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  body[data-study-site] .cookie-banner {
+
+    max-height: 58vh;
+
+    padding:
+      14px
+      14px
+      calc(
+        14px +
+        env(safe-area-inset-bottom)
+      );
+  }
+
+
+  body[data-study-site] .cookie-actions {
+
+    display: grid;
+
+    grid-template-columns:
+      1fr
+      1fr;
+
+    gap: 8px;
+
+    width: 100%;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner
+  .cookie-actions button {
+
+    width: 100%;
+    min-width: 0;
+  }
+
+
+  body[data-study-site]
+  .cookie-actions
+  [data-choice="accept_all"] {
+
+    grid-column: 1 / -1;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner
+  .experiment-privacy-snapshot {
+
+    grid-template-columns:
+      1fr
+      auto;
+
+    grid-template-areas:
+      "tipheading tipbutton"
+      "tipsummary tipsummary"
+      "tipdetails tipdetails";
+
+    row-gap: 7px;
+
+    margin-top: -14px;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-learning-grid {
+
+    grid-template-columns: 1fr;
+  }
+
+
+  body[data-study-site]
+  .experiment-automation-notice {
+
+    grid-template-columns: 1fr;
+
+    grid-template-areas:
+      "automationheading"
+      "automationtext"
+      "automationbutton";
+
+    row-gap: 7px;
+
+    padding:
+      12px
+      14px
+      calc(
+        12px +
+        env(safe-area-inset-bottom)
+      );
+  }
+
+
+  body[data-study-site]
+  .experiment-automation-notice button {
+
+    width: 100%;
+
+    margin-top: 4px;
+  }
+
+}
+
+/* =========================================================
+   HYBRID COOKIE + PRIVACY SUGGESTION INTERFACE
+   =========================================================
+   Cookie banner:
+   - retains the clean persistent full-width footer;
+   - remains visible until a cookie choice is made.
+
+   Suggestions condition:
+   - separate card docked just above the cookie footer;
+   - left aligned on wide desktop screens;
+   - close button available;
+   - expands horizontally to avoid desktop scrolling;
+   - recentres on narrower screens.
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   COOKIE FOOTER — subtle prominence
+   --------------------------------------------------------- */
+
+body[data-study-site] .cookie-banner {
+  border-top: 1px solid #cfd7e2;
+  box-shadow:
+    0 -8px 24px rgba(15, 23, 42, 0.13);
+}
+
+
+/* ---------------------------------------------------------
+   PRIVACY SUGGESTION — DESKTOP
+   --------------------------------------------------------- */
+
+body[data-study-site]
+.experiment-privacy-snapshot {
+  position: fixed !important;
+
+  left: clamp(24px, 5vw, 72px) !important;
+  right: auto !important;
+  top: auto !important;
+
+  bottom:
+    calc(
+      var(--cookie-banner-height, 108px)
+      + 10px
+    ) !important;
+
+  z-index: 4100 !important;
+
+  width:
+    min(
+      680px,
+      calc(100vw - 144px)
+    ) !important;
+
+  max-height: none !important;
+
+  margin: 0 !important;
+  padding: 15px 18px 16px !important;
+
+  overflow: visible !important;
+
+  transform: none !important;
+
+  border: 1px solid #cbd6e5 !important;
+  border-left: 4px solid #315c96 !important;
+  border-radius: 8px !important;
+
+  background: #ffffff !important;
+  color: #273548 !important;
+
+  box-shadow:
+    0 10px 28px rgba(15, 23, 42, 0.18) !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  animation:
+    hybrid-privacy-enter-left
+    0.26s
+    ease-out
+    both !important;
+
+  transition:
+    width 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+
+/*
+ * Expanded information gets more horizontal room instead
+ * of becoming a tall scrolling panel on desktop.
+ */
+
+body[data-study-site]
+.experiment-privacy-snapshot.is-expanded {
+  width:
+    min(
+      1080px,
+      calc(100vw - 144px)
+    ) !important;
+
+  box-shadow:
+    0 12px 32px rgba(15, 23, 42, 0.20) !important;
+}
+
+
+/* Small treatment label */
+
+body[data-study-site]
+.experiment-privacy-snapshot::before {
+  display: inline-block;
+
+  margin: 0 0 6px;
+  padding: 3px 7px;
+
+  border-radius: 4px;
+
+  background: #eaf1fa;
+  color: #315c96;
+
+  content: "PRIVACY TIP";
+
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+}
+
+
+/* ---------------------------------------------------------
+   HEADING + CLOSE BUTTON
+   --------------------------------------------------------- */
+
+body[data-study-site]
+.experiment-privacy-snapshot__heading {
+  position: relative !important;
+
+  display: block !important;
+
+  margin: 0 !important;
+  padding: 0 34px 0 0 !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-snapshot__heading strong {
+  display: block;
+
+  margin: 0;
+
+  color: #182235 !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 0.96rem !important;
+  font-weight: 750 !important;
+  line-height: 1.3;
+}
+
+
+/*
+ * The suggestion can be dismissed independently.
+ * cookie-interface.js already records this dismissal.
+ */
+
+body[data-study-site]
+#dismissPrivacySuggestion {
+  position: absolute !important;
+
+  top: -25px !important;
+  right: -7px !important;
+
+  display: inline-flex !important;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 30px !important;
+  height: 30px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+  border-radius: 5px !important;
+
+  background: transparent !important;
+  color: #65748a !important;
+
+  font-family: Arial, sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+
+  cursor: pointer;
+
+  transition:
+    background 0.14s ease,
+    color 0.14s ease;
+}
+
+
+body[data-study-site]
+#dismissPrivacySuggestion:hover,
+body[data-study-site]
+#dismissPrivacySuggestion:focus-visible {
+  background: #eef2f7 !important;
+  color: #1f2937 !important;
+  outline: none;
+}
+
+
+/* ---------------------------------------------------------
+   SHORT EXPLANATION
+   --------------------------------------------------------- */
+
+body[data-study-site]
+.experiment-privacy-summary {
+  margin: 6px 0 9px !important;
+
+  color: #526071 !important;
+
+  font-size: 0.80rem !important;
+  line-height: 1.42 !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-summary strong {
+  color: #34445a !important;
+  font-weight: 700 !important;
+}
+
+
+/* ---------------------------------------------------------
+   LEARN / COMPARE BUTTON
+   --------------------------------------------------------- */
+
+body[data-study-site]
+.experiment-privacy-details-toggle {
+  display: inline-flex !important;
+
+  align-items: center;
+
+  width: auto !important;
+  min-height: 31px;
+
+  margin: 0 !important;
+  padding: 6px 10px !important;
+
+  border: 1px solid #b9c9df !important;
+  border-radius: 4px !important;
+
+  background: #f7f9fc !important;
+  color: #294f83 !important;
+
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2;
+
+  text-decoration: none !important;
+
+  cursor: pointer;
+}
+
+
+body[data-study-site]
+.experiment-privacy-details-toggle:hover,
+body[data-study-site]
+.experiment-privacy-details-toggle:focus-visible {
+  border-color: #315c96 !important;
+  background: #edf3fa !important;
+  outline: none;
+}
+
+
+/* ---------------------------------------------------------
+   EXPANDED PRIVACY INFORMATION
+   --------------------------------------------------------- */
+
+body[data-study-site]
+.experiment-privacy-details {
+  max-height: none !important;
+
+  margin-top: 11px !important;
+  padding-top: 11px !important;
+
+  overflow: visible !important;
+
+  border-top: 1px solid #e1e6ee !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-grid {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    ) !important;
+
+  gap: 8px !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-item {
+  min-width: 0;
+
+  padding: 9px 10px !important;
+
+  border: 1px solid #e1e6ed !important;
+  border-radius: 5px !important;
+
+  background: #f8fafc !important;
+  color: #647083 !important;
+
+  font-size: 0.72rem !important;
+  line-height: 1.35 !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-item strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #273548 !important;
+
+  font-size: 0.73rem !important;
+  font-weight: 750 !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-learning-item span {
+  color: #647083 !important;
+}
+
+
+body[data-study-site]
+.experiment-privacy-note {
+  margin: 7px 0 0 !important;
+
+  color: #687386 !important;
+
+  font-size: 0.70rem !important;
+  line-height: 1.35 !important;
+}
+
+
+/* ---------------------------------------------------------
+   ENTRANCE
+   --------------------------------------------------------- */
+
+@keyframes hybrid-privacy-enter-left {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   SMALLER LAPTOP / TABLET
+   ---------------------------------------------------------
+   Once the viewport becomes too narrow for comfortable
+   left alignment, recentre the suggestion automatically.
+   --------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+
+  body[data-study-site]
+  .experiment-privacy-snapshot,
+  body[data-study-site]
+  .experiment-privacy-snapshot.is-expanded {
+    left: 50% !important;
+
+    width:
+      calc(100vw - 32px) !important;
+
+    transform:
+      translateX(-50%) !important;
+
+    animation:
+      hybrid-privacy-enter-centred
+      0.26s
+      ease-out
+      both !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-learning-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      ) !important;
+  }
+
+
+  @keyframes hybrid-privacy-enter-centred {
+    from {
+      opacity: 0;
+      transform:
+        translateX(-50%)
+        translateY(7px);
+    }
+
+    to {
+      opacity: 1;
+      transform:
+        translateX(-50%)
+        translateY(0);
+    }
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+  body[data-study-site]
+  .experiment-privacy-snapshot,
+  body[data-study-site]
+  .experiment-privacy-snapshot.is-expanded {
+    left: 50% !important;
+
+    bottom:
+      calc(
+        var(--cookie-banner-height, 190px)
+        + 8px
+      ) !important;
+
+    width:
+      calc(100vw - 20px) !important;
+
+    max-height:
+      38vh !important;
+
+    padding:
+      12px
+      13px !important;
+
+    overflow-y:
+      auto !important;
+
+    transform:
+      translateX(-50%) !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-snapshot::before {
+    margin-bottom: 4px;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-snapshot__heading {
+    padding-right: 30px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-snapshot__heading strong {
+    font-size: 0.90rem !important;
+  }
+
+
+  body[data-study-site]
+  #dismissPrivacySuggestion {
+    top: -22px !important;
+    right: -4px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-summary {
+    font-size: 0.77rem !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-privacy-learning-grid {
+    grid-template-columns:
+      1fr !important;
+  }
+
+}
+
+/* =========================================================
+   FINAL COOKIE FOOTER — MORE PROMINENT HYBRID
+   =========================================================
+   Designed to be:
+   - clearly noticeable;
+   - persistent until a choice is made;
+   - more prominent than a normal passive footer;
+   - still recognisable as a realistic cookie banner;
+   - less intrusive than a central consent modal.
+   ========================================================= */
+
+
+/* =========================================================
+   DESKTOP COOKIE FOOTER
+   ========================================================= */
+
+body[data-study-site] .cookie-banner {
+
+  position: fixed !important;
+
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+
+  width: 100% !important;
+
+  /*
+   * Give the banner enough presence that it cannot simply
+   * disappear into the bottom edge of a desktop monitor.
+   */
+  min-height: 122px;
+
+  padding:
+    22px
+    clamp(28px, 5vw, 76px)
+    20px !important;
+
+  /*
+   * Stronger separation from the website.
+   */
+  border: 0 !important;
+  border-top:
+    3px solid #315c96 !important;
+
+  border-radius:
+    0 !important;
+
+  background:
+    #fbfdff !important;
+
+  color:
+    #172033 !important;
+
+  box-shadow:
+    0 -12px 34px
+    rgba(15, 23, 42, 0.18) !important;
+
+  /*
+   * Keep the clean two-part desktop layout.
+   */
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto !important;
+
+  grid-template-areas:
+    "heading actions"
+    "copy actions"
+    "settings settings" !important;
+
+  column-gap:
+    52px !important;
+
+  row-gap:
+    7px !important;
+
+  align-items:
+    center !important;
+
+  z-index:
+    4000 !important;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+body[data-study-site]
+.cookie-banner > h2 {
+
+  grid-area:
+    heading !important;
+
+  margin:
+    0 0 2px !important;
+
+  color:
+    #172033 !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size:
+    1.16rem !important;
+
+  font-weight:
+    800 !important;
+
+  line-height:
+    1.3 !important;
+
+  letter-spacing:
+    -0.01em;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+body[data-study-site]
+.cookie-banner > p {
+
+  grid-area:
+    copy !important;
+
+  max-width:
+    800px !important;
+
+  margin:
+    0 !important;
+
+  color:
+    #4f5d70 !important;
+
+  font-size:
+    0.91rem !important;
+
+  line-height:
+    1.5 !important;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions {
+
+  grid-area:
+    actions !important;
+
+  display:
+    flex !important;
+
+  flex-wrap:
+    nowrap !important;
+
+  align-items:
+    center !important;
+
+  justify-content:
+    flex-end !important;
+
+  gap:
+    10px !important;
+
+  margin:
+    0 !important;
+}
+
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions button {
+
+  width:
+    auto !important;
+
+  min-width:
+    132px !important;
+
+  min-height:
+    48px !important;
+
+  padding:
+    11px
+    18px !important;
+
+  border-radius:
+    5px !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size:
+    0.87rem !important;
+
+  font-weight:
+    700 !important;
+
+  line-height:
+    1.2 !important;
+
+  box-shadow:
+    none !important;
+}
+
+
+/* Reject optional + Customise */
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.secondary-btn {
+
+  border:
+    1.5px solid #315c96 !important;
+
+  background:
+    #ffffff !important;
+
+  color:
+    #244d83 !important;
+}
+
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.secondary-btn:hover {
+
+  background:
+    #edf4fb !important;
+}
+
+
+/*
+ * Accept all receives the strongest visual weight,
+ * as is common on real cookie interfaces.
+ */
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.primary-btn {
+
+  min-width:
+    142px !important;
+
+  border:
+    1.5px solid #294f83 !important;
+
+  background:
+    #294f83 !important;
+
+  color:
+    #ffffff !important;
+
+  box-shadow:
+    0 4px 12px
+    rgba(41, 79, 131, 0.20) !important;
+}
+
+
+body[data-study-site]
+.cookie-banner
+.cookie-actions
+.primary-btn:hover {
+
+  background:
+    #203f69 !important;
+
+  border-color:
+    #203f69 !important;
+}
+
+
+/* =========================================================
+   CUSTOM SETTINGS
+   ========================================================= */
+
+body[data-study-site]
+.cookie-banner
+.settings-panel {
+
+  grid-area:
+    settings !important;
+
+  width:
+    100% !important;
+
+  margin-top:
+    14px !important;
+
+  padding:
+    16px
+    18px !important;
+
+  border:
+    1px solid #d9e2ec !important;
+
+  border-radius:
+    7px !important;
+
+  background:
+    #f3f7fb !important;
+}
+
+
+/* =========================================================
+   AUTOMATION STATUS
+   =========================================================
+   Give automation participants a similarly noticeable
+   footer so the automatic action is not invisible.
+   ========================================================= */
+
+body[data-study-site]
+.experiment-automation-notice {
+
+  border-top:
+    3px solid #315c96 !important;
+
+  background:
+    #fbfdff !important;
+
+  box-shadow:
+    0 -12px 34px
+    rgba(15, 23, 42, 0.18) !important;
+
+  min-height:
+    100px !important;
+
+  padding:
+    18px
+    clamp(28px, 5vw, 76px) !important;
+}
+
+
+body[data-study-site]
+.experiment-automation-notice strong {
+
+  font-size:
+    1rem !important;
+
+  font-weight:
+    800 !important;
+}
+
+
+body[data-study-site]
+.experiment-automation-notice p {
+
+  font-size:
+    0.88rem !important;
+}
+
+
+body[data-study-site]
+.experiment-automation-notice button {
+
+  min-height:
+    46px !important;
+
+  padding:
+    10px
+    18px !important;
+
+  border:
+    1.5px solid #315c96 !important;
+
+  border-radius:
+    5px !important;
+
+  background:
+    #ffffff !important;
+
+  color:
+    #244d83 !important;
+
+  font-weight:
+    700 !important;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  body[data-study-site]
+  .cookie-banner {
+
+    min-height:
+      0;
+
+    padding:
+      18px
+      20px !important;
+
+    grid-template-columns:
+      1fr !important;
+
+    grid-template-areas:
+      "heading"
+      "copy"
+      "actions"
+      "settings" !important;
+
+    row-gap:
+      8px !important;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner
+  .cookie-actions {
+
+    justify-content:
+      flex-start !important;
+
+    margin-top:
+      7px !important;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  body[data-study-site]
+  .cookie-banner {
+
+    padding:
+      16px
+      14px
+      calc(
+        16px +
+        env(safe-area-inset-bottom)
+      ) !important;
+
+    max-height:
+      60vh !important;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner > h2 {
+
+    font-size:
+      1.05rem !important;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner > p {
+
+    font-size:
+      0.84rem !important;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner
+  .cookie-actions {
+
+    display:
+      grid !important;
+
+    grid-template-columns:
+      1fr
+      1fr !important;
+
+    width:
+      100% !important;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner
+  .cookie-actions button {
+
+    width:
+      100% !important;
+
+    min-width:
+      0 !important;
+
+    min-height:
+      46px !important;
+  }
+
+
+  body[data-study-site]
+  .cookie-banner
+  .cookie-actions
+  [data-choice="accept_all"] {
+
+    grid-column:
+      1 / -1 !important;
+  }
+
+}
+
+/* =========================================================
+   FINAL MOBILE WEBSITE TASK LAYOUT
+   =========================================================
+   Makes the persistent website task substantially cleaner
+   on phones without changing the experiment logic.
+
+   Main changes:
+   - compact top task card;
+   - Continue button hidden until answer submitted;
+   - short answer sets use two columns;
+   - Site 3 stays one column because its answers are longer;
+   - tighter spacing and typography;
+   - unused feedback space removed.
+   ========================================================= */
+
+
+@media (max-width: 700px) {
+
+  /* =======================================================
+     TASK CONTAINER
+     ======================================================= */
+
+  body[data-study-site] .next-box {
+
+    position: fixed !important;
+
+    top:
+      max(
+        8px,
+        env(safe-area-inset-top)
+      ) !important;
+
+    left: 8px !important;
+    right: 8px !important;
+
+    bottom: auto !important;
+
+    width: auto !important;
+
+    /*
+     * Prevent the task from occupying most of the phone.
+     * If a very short viewport genuinely needs it,
+     * the outer card can scroll.
+     */
+    max-height: 38vh !important;
+
+    margin: 0 !important;
+
+    padding: 10px !important;
+
+    gap: 6px !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    border:
+      1px solid #cbd5e1 !important;
+
+    border-radius:
+      11px !important;
+
+    background:
+      rgba(255, 255, 255, 0.985) !important;
+
+    box-shadow:
+      0 8px 24px
+      rgba(15, 23, 42, 0.16) !important;
+
+    backdrop-filter:
+      blur(8px);
+
+    -webkit-backdrop-filter:
+      blur(8px);
+
+    z-index:
+      3200 !important;
+  }
+
+
+  /* =======================================================
+     TASK HEADER
+     ======================================================= */
+
+  body[data-study-site]
+  .task-panel-header {
+
+    min-height: 27px;
+
+    margin:
+      0
+      0
+      5px !important;
+
+    gap:
+      8px !important;
+  }
+
+
+  body[data-study-site]
+  .task-panel h3 {
+
+    margin:
+      0 !important;
+
+    font-size:
+      0.68rem !important;
+
+    font-weight:
+      800 !important;
+
+    letter-spacing:
+      0.07em !important;
+
+    line-height:
+      1.2 !important;
+  }
+
+
+  body[data-study-site]
+  .task-panel h3::before {
+
+    margin-right:
+      5px !important;
+
+    font-size:
+      0.58rem !important;
+  }
+
+
+  body[data-study-site]
+  .task-collapse-button {
+
+    width:
+      27px !important;
+
+    height:
+      27px !important;
+
+    border-radius:
+      6px !important;
+
+    font-size:
+      1rem !important;
+  }
+
+
+  /* =======================================================
+     QUESTION
+     ======================================================= */
+
+  body[data-study-site]
+  .task-instruction {
+
+    margin:
+      0
+      0
+      7px !important;
+
+    font-size:
+      0.89rem !important;
+
+    font-weight:
+      700 !important;
+
+    line-height:
+      1.28 !important;
+  }
+
+
+  /* =======================================================
+     FORM
+     ======================================================= */
+
+  body[data-study-site]
+  .task-form {
+
+    gap:
+      5px !important;
+  }
+
+
+  body[data-study-site]
+  .task-answer-label {
+
+    margin:
+      0
+      0
+      2px !important;
+
+    font-size:
+      0.7rem !important;
+
+    line-height:
+      1.2 !important;
+  }
+
+
+  /* =======================================================
+     ANSWER OPTIONS
+     ======================================================= */
+
+  body[data-study-site]
+  .task-options {
+
+    gap:
+      6px !important;
+
+    margin:
+      0 !important;
+
+    overflow:
+      visible !important;
+  }
+
+
+  /*
+   * Sites 1, 2 and 4 have short answer labels.
+   * Two columns substantially reduce vertical clutter.
+   */
+
+  body[data-study-site="site1"]
+  .task-options,
+
+  body[data-study-site="site2"]
+  .task-options,
+
+  body[data-study-site="site4"]
+  .task-options {
+
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      ) !important;
+  }
+
+
+  /*
+   * Site 3 has a long first answer, so keeping one
+   * column is easier to read.
+   */
+
+  body[data-study-site="site3"]
+  .task-options {
+
+    grid-template-columns:
+      1fr !important;
+  }
+
+
+  body[data-study-site]
+  .task-option {
+
+    display:
+      flex !important;
+
+    align-items:
+      center !important;
+
+    gap:
+      7px !important;
+
+    min-height:
+      37px !important;
+
+    padding:
+      6px
+      8px !important;
+
+    border-radius:
+      7px !important;
+  }
+
+
+  body[data-study-site]
+  .task-option-input {
+
+    flex:
+      0 0 auto !important;
+
+    width:
+      15px !important;
+
+    height:
+      15px !important;
+
+    margin:
+      0 !important;
+  }
+
+
+  body[data-study-site]
+  .task-option-text {
+
+    min-width:
+      0;
+
+    font-size:
+      0.77rem !important;
+
+    line-height:
+      1.22 !important;
+  }
+
+
+  /* =======================================================
+     SUBMIT BUTTON
+     ======================================================= */
+
+  body[data-study-site]
+  .task-submit-button {
+
+    min-height:
+      39px !important;
+
+    margin-top:
+      3px !important;
+
+    padding:
+      7px
+      10px !important;
+
+    border-radius:
+      7px !important;
+
+    font-size:
+      0.82rem !important;
+
+    font-weight:
+      700 !important;
+  }
+
+
+  /* =======================================================
+     FEEDBACK
+     =======================================================
+     Do not reserve an empty line before feedback exists.
+     ======================================================= */
+
+  body[data-study-site]
+  .task-feedback {
+
+    min-height:
+      0 !important;
+
+    margin:
+      0 !important;
+
+    font-size:
+      0.76rem !important;
+
+    line-height:
+      1.3 !important;
+  }
+
+
+  body[data-study-site]
+  .task-feedback:empty {
+
+    display:
+      none !important;
+  }
+
+
+  body[data-study-site]
+  .task-feedback:not(:empty) {
+
+    display:
+      block !important;
+
+    margin-top:
+      5px !important;
+  }
+
+
+  /* =======================================================
+     CONTINUE BUTTON
+     =======================================================
+     There is no reason to display a disabled Continue
+     button before the participant submits an answer.
+     ======================================================= */
+
+  body[data-study-site]
+  .next-box:not(
+    [data-task-complete="true"]
+  )
+  > .primary-btn {
+
+    display:
+      none !important;
+  }
+
+
+  /*
+   * Once the answer has been recorded, remove the answer
+   * controls and show Continue prominently.
+   */
+
+  body[data-study-site]
+  .next-box[data-task-complete="true"]
+  .task-options,
+
+  body[data-study-site]
+  .next-box[data-task-complete="true"]
+  .task-answer-label,
+
+  body[data-study-site]
+  .next-box[data-task-complete="true"]
+  .task-submit-button {
+
+    display:
+      none !important;
+  }
+
+
+  body[data-study-site]
+  .next-box[data-task-complete="true"]
+  > .primary-btn {
+
+    display:
+      block !important;
+
+    min-height:
+      40px !important;
+
+    margin-top:
+      4px !important;
+
+    padding:
+      8px
+      10px !important;
+
+    font-size:
+      0.82rem !important;
+
+    border-radius:
+      7px !important;
+  }
+
+
+  body[data-study-site]
+  .next-box[data-task-complete="true"]
+  .task-instruction {
+
+    margin-bottom:
+      3px !important;
+
+    font-size:
+      0.84rem !important;
+  }
+
+
+  /* =======================================================
+     MANUALLY COLLAPSED TASK
+     ======================================================= */
+
+  body[data-study-site]
+  .next-box:has(
+    .task-panel[data-collapsed="true"]
+  ) {
+
+    top:
+      max(
+        8px,
+        env(safe-area-inset-top)
+      ) !important;
+
+    left:
+      auto !important;
+
+    right:
+      8px !important;
+
+    width:
+      158px !important;
+
+    min-width:
+      0 !important;
+
+    max-height:
+      none !important;
+
+    padding:
+      8px
+      9px !important;
+
+    overflow:
+      hidden !important;
+  }
+
+
+  body[data-study-site]
+  .task-panel[data-collapsed="true"]
+  .task-panel-header {
+
+    margin:
+      0 !important;
+  }
+
+}
+
+
+/* =========================================================
+   VERY NARROW PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  /*
+   * On very narrow devices even the short options are
+   * clearer as a single column.
+   */
+
+  body[data-study-site="site1"]
+  .task-options,
+
+  body[data-study-site="site2"]
+  .task-options,
+
+  body[data-study-site="site4"]
+  .task-options {
+
+    grid-template-columns:
+      1fr !important;
+  }
+
+
+  body[data-study-site]
+  .next-box {
+
+    left:
+      6px !important;
+
+    right:
+      6px !important;
+
+    padding:
+      9px !important;
+  }
+
+}
