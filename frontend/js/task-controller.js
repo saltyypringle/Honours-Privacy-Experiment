@@ -301,69 +301,85 @@ const cookieBanner =
   );
 
 
-if (
-  narrowExperimentLayout.matches &&
-  cookieBanner &&
-  !cookieBanner.classList.contains(
-    "hidden"
-  )
-) {
+/**
+ * Keep the mobile task card synchronised with the
+ * actual cookie-banner visibility.
+ *
+ * This also keeps the task card correctly collapsed
+ * when the participant reopens cookie settings later
+ * from the persistent privacy control or the
+ * Suggestions card, since neither of those dispatch
+ * a dedicated event.
+ */
+function syncTaskWithCookieBanner() {
+
+  if (
+    !narrowExperimentLayout.matches
+  ) {
+
+    setTaskCollapsed(
+      false
+    );
+
+    return;
+
+  }
+
+  const cookieInterfaceOpen =
+    Boolean(
+      cookieBanner &&
+      !cookieBanner.classList.contains(
+        "hidden"
+      )
+    );
 
   setTaskCollapsed(
-    true
-  );
-
-} else {
-
-  setTaskCollapsed(
-    false
+    cookieInterfaceOpen
   );
 
 }
 
 
-/*
- * When an existing cookie interface is opened again,
- * temporarily compact the task on smaller screens.
- */
-document.addEventListener(
-  "privacyExperiment:cookieInterfaceOpened",
-  function () {
+syncTaskWithCookieBanner();
 
-    if (
-      narrowExperimentLayout.matches
-    ) {
 
-      setTaskCollapsed(
-        true
-      );
+if (
+  cookieBanner &&
+  typeof MutationObserver !==
+    "undefined"
+) {
 
+  const cookieBannerObserver =
+    new MutationObserver(
+      syncTaskWithCookieBanner
+    );
+
+  cookieBannerObserver.observe(
+    cookieBanner,
+    {
+      attributes: true,
+      attributeFilter: [
+        "class",
+        "style"
+      ]
     }
+  );
 
-  }
-);
+}
 
 
-/*
- * Once the cookie interface is finished, expand the
- * task again so the participant's next action is clear.
- */
-document.addEventListener(
-  "privacyExperiment:cookieInterfaceClosed",
-  function () {
+if (
+  typeof narrowExperimentLayout
+    .addEventListener ===
+  "function"
+) {
 
-    if (
-      narrowExperimentLayout.matches
-    ) {
+  narrowExperimentLayout.addEventListener(
+    "change",
+    syncTaskWithCookieBanner
+  );
 
-      setTaskCollapsed(
-        false
-      );
-
-    }
-
-  }
-);
+}
 
   /*
    * Participants cannot continue until they have

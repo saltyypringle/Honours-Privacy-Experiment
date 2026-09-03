@@ -2,22 +2,116 @@
 
 import {
   getSession,
+  getEvents,
   logEvent
 } from "./experiment-core.js";
 
-const CONSENT_STORAGE_PREFIX =
-  "privacyExperimentConsent:";
+const CONSENT_STORAGE_PREFIX = "privacyExperimentConsent:";
+const BASELINE_SITES = new Set(["site1"]);
+const interfaceStates = new Map();
 
-/*
- * Revised experiment design:
- *
- * Site 1 = common baseline.
- * Sites 2 and 3 = assigned experimental treatment.
- */
-const BASELINE_SITES =
-  new Set([
-    "site1"
-  ]);
+
+/* =========================================================
+   SUGGESTION CONTENT
+   ========================================================= */
+
+const SUGGESTION_CONTEXTS = {
+
+  initial_warning: {
+    badge: "TRACKING + COOKIES",
+    icon: "👀",
+    title: "Cookies can turn clicks into a profile",
+    summary:
+      "Optional analytics and advertising cookies can record how you browse a site and help build a picture of your interests.",
+    chips: [
+      "Browsing activity",
+      "Device signals",
+      "Interests"
+    ],
+    impact:
+      "This can affect the ads, recommendations or content you are shown later.",
+    details:
+      "Analytics cookies can measure page views, clicks and other interactions. Advertising cookies can help connect activity across pages or services and infer what you may be interested in.",
+    actionLabel: "See cookie options"
+  },
+
+
+  interest_browsing: {
+    badge: "BROWSING + COOKIES",
+    icon: "🎯",
+    title: "Your clicks can reveal what interests you",
+    summary:
+      "You just interacted with content on this site. If analytics or advertising cookies are enabled, those interactions can be recorded and used to infer the topics you care about.",
+    chips: [
+      "Content viewed",
+      "Clicks",
+      "Inferred interests"
+    ],
+    impact:
+      "This can influence recommendations, personalised content or advertising.",
+    details:
+      "A single click may not say much by itself, but repeated browsing signals can be combined into an interest profile over time.",
+    actionLabel: "Review cookie settings"
+  },
+
+
+  product_browsing: {
+    badge: "SHOPPING + COOKIES",
+    icon: "🛍️",
+    title: "Product views can become tracking signals",
+    summary:
+      "You just interacted with a product. With analytics or advertising cookies enabled, product views, clicks and cart activity can be recorded.",
+    chips: [
+      "Products viewed",
+      "Cart activity",
+      "Shopping interests"
+    ],
+    impact:
+      "This can influence product recommendations and advertising based on your apparent shopping interests.",
+    details:
+      "Shopping behaviour can reveal preferences even when you do not make a purchase. Tracking technologies can use those signals to estimate what products or categories may interest you.",
+    actionLabel: "Review cookie settings"
+  },
+
+
+  account: {
+    badge: "ACCOUNT + COOKIES",
+    icon: "🔗",
+    title: "Signing in can make activity easier to connect",
+    summary:
+      "When an account is involved, activity from separate visits can potentially be associated with the same profile rather than only one browser session.",
+    chips: [
+      "Account activity",
+      "Browsing history",
+      "Shopping behaviour"
+    ],
+    impact:
+      "This can create a more continuous picture of what someone does across visits.",
+    details:
+      "Cookies can help recognise a browser. When that browser is also signed in, browsing and shopping interactions may be easier to associate with an account over time.",
+    actionLabel: "Review cookie settings"
+  },
+
+
+  delivery: {
+    badge: "LOCATION + COOKIES",
+    icon: "📍",
+    title: "A delivery location can add another piece to the profile",
+    summary:
+      "This mock checkout uses Perth, WA as its delivery location. With optional tracking enabled, location can be connected with shopping, account and checkout activity.",
+    chips: [
+      "Perth, WA",
+      "Checkout activity",
+      "Shopping interests"
+    ],
+    impact:
+      "Location combined with browsing behaviour can create a more detailed picture of a user.",
+    details:
+      "The study uses a fictional delivery location rather than your real address. In real websites, location-related information can be another signal that is combined with browsing or account activity.",
+    actionLabel: "Review cookie settings"
+  }
+
+};
 
 
 /* =========================================================
@@ -59,7 +153,7 @@ function logInterfaceEvent(
   siteId,
   eventType,
   context,
-  additionalValue = {}
+  eventValue = {}
 ) {
 
   logEvent(
@@ -76,7 +170,7 @@ function logInterfaceEvent(
       phase:
         context.phase,
 
-      ...additionalValue
+      ...eventValue
 
     }
   );
@@ -84,81 +178,7 @@ function logInterfaceEvent(
 }
 
 
-function notifyCookieInterfaceOpened(
-  siteId
-) {
-
-  document.dispatchEvent(
-    new CustomEvent(
-      "privacyExperiment:cookieInterfaceOpened",
-      {
-        detail: {
-          siteId
-        }
-      }
-    )
-  );
-
-}
-
-
-function notifyCookieInterfaceClosed(
-  siteId
-) {
-
-  document.dispatchEvent(
-    new CustomEvent(
-      "privacyExperiment:cookieInterfaceClosed",
-      {
-        detail: {
-          siteId
-        }
-      }
-    )
-  );
-
-}
-
-
-function getConsentStorageKey(
-  siteId
-) {
-
-  return (
-    `${CONSENT_STORAGE_PREFIX}${siteId}`
-  );
-
-}
-
-
-/**
- * Milliseconds since this page navigation began.
- */
-function getNavigationElapsedMilliseconds() {
-
-  if (
-    typeof performance !==
-      "undefined" &&
-    typeof performance.now ===
-      "function"
-  ) {
-
-    return Math.max(
-      0,
-      Math.round(
-        performance.now()
-      )
-    );
-
-  }
-
-
-  return null;
-
-}
-
-
-function getMonotonicTimestamp() {
+function nowMonotonic() {
 
   if (
     typeof performance !==
@@ -195,7 +215,7 @@ function elapsedSince(
   return Math.max(
     0,
     Math.round(
-      getMonotonicTimestamp() -
+      nowMonotonic() -
       startedAt
     )
   );
@@ -203,28 +223,87 @@ function elapsedSince(
 }
 
 
-/**
- * Determine how much of the website task had been
- * completed when the cookie decision occurred.
- *
- * Sites 1 and 2:
- * 0 = website task not completed
- * 1 = website task completed
- *
- * Site 3:
- * 0 = no shopping tasks completed
- * 1 = product task complete
- * 2 = login task complete
- * 3 = all shopping tasks complete
- */
-function getTaskProgressAtDecision(
+function timeFromPageLoad() {
+
+  if (
+    typeof performance !==
+      "undefined" &&
+    typeof performance.now ===
+      "function"
+  ) {
+
+    return Math.max(
+      0,
+      Math.round(
+        performance.now()
+      )
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+function millisecondsBetweenIso(
+  startIso,
+  endIso
+) {
+
+  if (
+    !startIso ||
+    !endIso
+  ) {
+
+    return null;
+
+  }
+
+
+  const start =
+    Date.parse(
+      startIso
+    );
+
+
+  const end =
+    Date.parse(
+      endIso
+    );
+
+
+  if (
+    !Number.isFinite(
+      start
+    ) ||
+    !Number.isFinite(
+      end
+    )
+  ) {
+
+    return null;
+
+  }
+
+
+  return Math.max(
+    0,
+    end - start
+  );
+
+}
+
+
+/* =========================================================
+   TASK PROGRESS
+   ========================================================= */
+
+function getTaskProgress(
   siteId
 ) {
 
-  /*
-   * Site 3 shopping controller maintains
-   * this body dataset value.
-   */
   if (
     siteId ===
     "site3"
@@ -238,56 +317,25 @@ function getTaskProgressAtDecision(
       );
 
 
-    if (
-      Number.isFinite(
-        progress
-      )
-    ) {
-
-      return Math.max(
-        0,
-        Math.min(
-          3,
-          Math.trunc(
-            progress
-          )
-        )
-      );
-
-    }
-
-
-    return 0;
+    return Number.isFinite(
+      progress
+    )
+      ? progress
+      : 0;
 
   }
 
 
-  /*
-   * Sites 1 and 2 each contain one task.
-   */
-  const session =
-    getSession();
+  const nextBox =
+    document.querySelector(
+      ".next-box"
+    );
 
 
-  const responses =
-    Array.isArray(
-      session?.taskResponses
-    )
-      ? session.taskResponses
-      : [];
-
-
-  return responses.some(
-    function (
-      response
-    ) {
-
-      return (
-        response.siteId ===
-        siteId
-      );
-
-    }
+  return (
+    nextBox?.dataset
+      .taskComplete ===
+    "true"
   )
     ? 1
     : 0;
@@ -295,11 +343,12 @@ function getTaskProgressAtDecision(
 }
 
 
-/**
- * Keep cookie settings in one consistent format.
- */
+/* =========================================================
+   COOKIE SETTINGS HELPERS
+   ========================================================= */
+
 function normaliseSettings(
-  settings
+  settings = {}
 ) {
 
   return {
@@ -309,17 +358,17 @@ function normaliseSettings(
 
     functional:
       Boolean(
-        settings?.functional
+        settings.functional
       ),
 
     analytics:
       Boolean(
-        settings?.analytics
+        settings.analytics
       ),
 
     advertising:
       Boolean(
-        settings?.advertising
+        settings.advertising
       )
 
   };
@@ -327,33 +376,27 @@ function normaliseSettings(
 }
 
 
-/**
- * Check whether a participant actually changed an
- * automatically applied preference.
- *
- * Merely opening Review or change and saving the
- * same settings should NOT count as an override.
- */
 function decisionsAreEquivalent(
   existingDecision,
-  choice,
   settings
 ) {
 
-  if (!existingDecision) {
+  if (
+    !existingDecision
+  ) {
 
     return false;
 
   }
 
 
-  const existingSettings =
+  const current =
     normaliseSettings(
       existingDecision.settings
     );
 
 
-  const nextSettings =
+  const next =
     normaliseSettings(
       settings
     );
@@ -361,25 +404,183 @@ function decisionsAreEquivalent(
 
   return (
 
-    existingDecision.choice ===
-      choice &&
+    current.functional ===
+      next.functional &&
 
-    existingSettings.functional ===
-      nextSettings.functional &&
+    current.analytics ===
+      next.analytics &&
 
-    existingSettings.analytics ===
-      nextSettings.analytics &&
-
-    existingSettings.advertising ===
-      nextSettings.advertising
+    current.advertising ===
+      next.advertising
 
   );
 
 }
 
 
+function getChoiceLabel(
+  choice
+) {
+
+  switch (
+    choice
+  ) {
+
+    case "accept_all":
+      return "Accept all";
+
+    case "reject_optional":
+      return "Reject optional";
+
+    case "custom":
+      return "Custom";
+
+    default:
+      return "Cookie preference";
+
+  }
+
+}
+
+
+function getConsentStorageKey(
+  siteId
+) {
+
+  return (
+    `${CONSENT_STORAGE_PREFIX}${siteId}`
+  );
+
+}
+
+
 /* =========================================================
-   COOKIE ELEMENTS
+   HISTORICAL SUGGESTION STATE
+   =========================================================
+   This is what prevents suggestions appearing again after
+   a refresh.
+
+   Once a suggestion type has been shown on that site,
+   that context is considered used.
+   ========================================================= */
+
+function getHistoricalSuggestionState(
+  siteId
+) {
+
+  const events =
+    getEvents();
+
+
+  const shownContexts =
+    [];
+
+
+  let everOpened =
+    false;
+
+
+  let lastContext =
+    null;
+
+
+  let exposureCount =
+    0;
+
+
+  events.forEach(
+    event => {
+
+      if (
+        event.siteId !==
+        siteId
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+
+        event.eventType ===
+          "privacy_suggestion_shown" ||
+
+        event.eventType ===
+          "privacy_suggestion_updated"
+
+      ) {
+
+        const context =
+          event.eventValue
+            ?.context;
+
+
+        if (
+          context &&
+          !shownContexts.includes(
+            context
+          )
+        ) {
+
+          shownContexts.push(
+            context
+          );
+
+        }
+
+
+        if (
+          context
+        ) {
+
+          lastContext =
+            context;
+
+        }
+
+
+        exposureCount +=
+          1;
+
+      }
+
+
+      if (
+        event.eventType ===
+        "privacy_suggestion_opened"
+      ) {
+
+        everOpened =
+          true;
+
+      }
+
+    }
+  );
+
+
+  return {
+
+    shownContexts,
+
+    everSeen:
+      exposureCount >
+      0,
+
+    everOpened,
+
+    lastContext,
+
+    exposureCount
+
+  };
+
+}
+
+
+/* =========================================================
+   COOKIE DOM
    ========================================================= */
 
 function getCookieElements() {
@@ -437,37 +638,26 @@ function getCookieElements() {
 
 
 /* =========================================================
-   BANNER VISIBILITY
+   COOKIE BANNER
    ========================================================= */
 
-/**
- * IMPORTANT:
- *
- * styles.css contains a later rule that applies
- * display: grid !important to the cookie banner.
- *
- * Therefore simply adding the "hidden" class is not
- * always sufficient.
- *
- * This helper explicitly applies:
- *
- * display: none !important
- *
- * when the banner should close.
- */
 function setBannerVisible(
   banner,
   visible
 ) {
 
-  if (!banner) {
+  if (
+    !banner
+  ) {
 
     return;
 
   }
 
 
-  if (visible) {
+  if (
+    visible
+  ) {
 
     banner.classList.remove(
       "hidden"
@@ -478,20 +668,86 @@ function setBannerVisible(
       "display"
     );
 
+
+    return;
+
   }
 
-  else {
 
-    banner.classList.add(
-      "hidden"
+  banner.classList.add(
+    "hidden"
+  );
+
+
+  /*
+   * Required because later stylesheet rules use
+   * display: grid !important.
+   */
+  banner.style.setProperty(
+    "display",
+    "none",
+    "important"
+  );
+
+}
+
+
+function setSettingsVisible(
+  elements,
+  visible
+) {
+
+  elements
+    .settingsPanel
+    ?.classList
+    .toggle(
+      "visible",
+      visible
+    );
+
+}
+
+
+function populateSettings(
+  elements,
+  settings
+) {
+
+  const normalised =
+    normaliseSettings(
+      settings
     );
 
 
-    banner.style.setProperty(
-      "display",
-      "none",
-      "important"
-    );
+  if (
+    elements.functionalCheckbox
+  ) {
+
+    elements.functionalCheckbox
+      .checked =
+        normalised.functional;
+
+  }
+
+
+  if (
+    elements.analyticsCheckbox
+  ) {
+
+    elements.analyticsCheckbox
+      .checked =
+        normalised.analytics;
+
+  }
+
+
+  if (
+    elements.advertisingCheckbox
+  ) {
+
+    elements.advertisingCheckbox
+      .checked =
+        normalised.advertising;
 
   }
 
@@ -499,22 +755,28 @@ function setBannerVisible(
 
 
 /* =========================================================
-   SAVED COOKIE DECISIONS
+   COOKIE STORAGE
    ========================================================= */
 
 function getExistingDecision(
   siteId
 ) {
 
-  const rawDecision =
-    sessionStorage.getItem(
-      getConsentStorageKey(
-        siteId
-      )
+  const key =
+    getConsentStorageKey(
+      siteId
     );
 
 
-  if (!rawDecision) {
+  const raw =
+    sessionStorage.getItem(
+      key
+    );
+
+
+  if (
+    !raw
+  ) {
 
     return null;
 
@@ -524,7 +786,7 @@ function getExistingDecision(
   try {
 
     return JSON.parse(
-      rawDecision
+      raw
     );
 
   }
@@ -540,9 +802,7 @@ function getExistingDecision(
 
 
     sessionStorage.removeItem(
-      getConsentStorageKey(
-        siteId
-      )
+      key
     );
 
 
@@ -553,22 +813,54 @@ function getExistingDecision(
 }
 
 
-function saveDecision(
+function storeDecision(
   siteId,
+  decision
+) {
+
+  sessionStorage.setItem(
+
+    getConsentStorageKey(
+      siteId
+    ),
+
+    JSON.stringify(
+      decision
+    )
+
+  );
+
+}
+
+
+/* =========================================================
+   DECISION OBJECTS
+   ========================================================= */
+
+function createInitialDecision(
   choice,
   settings,
   source,
   context
 ) {
 
-  const decision = {
+  const savedAt =
+    new Date()
+      .toISOString();
+
+
+  const normalisedSettings =
+    normaliseSettings(
+      settings
+    );
+
+
+  return {
 
     choice,
 
     settings:
-      normaliseSettings(
-        settings
-      ),
+      normalisedSettings,
 
     source,
 
@@ -581,109 +873,70 @@ function saveDecision(
     phase:
       context.phase,
 
+    initialChoice:
+      choice,
+
+    initialSettings:
+      normalisedSettings,
+
+    initialSource:
+      source,
+
+    initialSavedAt:
+      savedAt,
+
+    revisionCount:
+      0,
+
+    savedAt
+
+  };
+
+}
+
+
+function createRevisedDecision(
+  previous,
+  choice,
+  settings,
+  source
+) {
+
+  return {
+
+    ...previous,
+
+    choice,
+
+    settings:
+      normaliseSettings(
+        settings
+      ),
+
+    source,
+
+    revisionCount:
+      (
+        previous.revisionCount ??
+        0
+      ) +
+      1,
+
     savedAt:
       new Date()
         .toISOString()
 
   };
 
-
-  sessionStorage.setItem(
-    getConsentStorageKey(
-      siteId
-    ),
-    JSON.stringify(
-      decision
-    )
-  );
-
-
-  return decision;
-
-}
-
-
-function populateSettings(
-  elements,
-  settings
-) {
-
-  if (
-    elements.functionalCheckbox
-  ) {
-
-    elements.functionalCheckbox.checked =
-      Boolean(
-        settings.functional
-      );
-
-  }
-
-
-  if (
-    elements.analyticsCheckbox
-  ) {
-
-    elements.analyticsCheckbox.checked =
-      Boolean(
-        settings.analytics
-      );
-
-  }
-
-
-  if (
-    elements.advertisingCheckbox
-  ) {
-
-    elements.advertisingCheckbox.checked =
-      Boolean(
-        settings.advertising
-      );
-
-  }
-
-}
-
-
-function getChoiceLabel(
-  choice
-) {
-
-  switch (
-    choice
-  ) {
-
-    case "accept_all":
-      return "Accept all cookies";
-
-    case "reject_optional":
-      return "Reject optional cookies";
-
-    case "custom":
-      return "Custom cookie settings";
-
-    default:
-      return "Cookie preference";
-
-  }
-
 }
 
 
 /* =========================================================
-   COOKIE DECISION CONFIRMATION
+   COOKIE CONFIRMATION
    ========================================================= */
 
-/**
- * Briefly tell the participant that the cookie
- * preference was successfully saved.
- *
- * Styling is kept here so this fix does not require
- * another edit to styles.css.
- */
 function showCookieDecisionConfirmation(
-  choice
+  message
 ) {
 
   document
@@ -703,6 +956,10 @@ function showCookieDecisionConfirmation(
     "cookieDecisionConfirmation";
 
 
+  confirmation.className =
+    "experiment-cookie-confirmation";
+
+
   confirmation.setAttribute(
     "role",
     "status"
@@ -716,66 +973,7 @@ function showCookieDecisionConfirmation(
 
 
   confirmation.textContent =
-    `Cookie preference saved: ${getChoiceLabel(choice)}`;
-
-
-  Object.assign(
-    confirmation.style,
-    {
-
-      position:
-        "fixed",
-
-      left:
-        "50%",
-
-      bottom:
-        "22px",
-
-      zIndex:
-        "6500",
-
-      maxWidth:
-        "calc(100vw - 32px)",
-
-      padding:
-        "11px 16px",
-
-      border:
-        "1px solid #b7c9b9",
-
-      borderRadius:
-        "8px",
-
-      background:
-        "#f2faf4",
-
-      color:
-        "#31533a",
-
-      boxShadow:
-        "0 10px 30px rgba(15, 23, 42, 0.16)",
-
-      fontFamily:
-        'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-
-      fontSize:
-        "0.84rem",
-
-      fontWeight:
-        "700",
-
-      textAlign:
-        "center",
-
-      pointerEvents:
-        "none",
-
-      transform:
-        "translateX(-50%)"
-
-    }
-  );
+    message;
 
 
   document.body.appendChild(
@@ -783,183 +981,164 @@ function showCookieDecisionConfirmation(
   );
 
 
-  window.setTimeout(
-    function () {
+  requestAnimationFrame(
+    () => {
 
-      confirmation.remove();
+      confirmation
+        .classList
+        .add(
+          "is-visible"
+        );
+
+    }
+  );
+
+
+  window.setTimeout(
+    () => {
+
+      confirmation
+        .classList
+        .remove(
+          "is-visible"
+        );
+
+
+      window.setTimeout(
+        () => {
+
+          confirmation.remove();
+
+        },
+        220
+      );
 
     },
-    2200
+    1900
   );
 
 }
 
 
 /* =========================================================
-   PRIVACY SUGGESTION CLEAN-UP
+   PERSISTENT PRIVACY CONTROL
    ========================================================= */
 
-function removePrivacySuggestion() {
+function removePersistentPrivacyControl() {
 
-  const suggestion =
-    document.getElementById(
-      "privacySuggestion"
+  document
+    .getElementById(
+      "persistentPrivacyControl"
+    )
+    ?.remove();
+
+}
+
+
+function showPersistentPrivacyControl(
+  state
+) {
+
+  removePersistentPrivacyControl();
+
+
+  const decision =
+    getExistingDecision(
+      state.siteId
     );
 
 
-  if (!suggestion) {
+  if (
+    !decision
+  ) {
 
     return;
 
   }
 
 
-  if (
-    typeof suggestion.__privacyCleanup ===
-    "function"
-  ) {
+  const automation =
 
-    suggestion.__privacyCleanup();
-
-  }
+    state.context
+      .interfaceCondition ===
+    "automation";
 
 
-  suggestion.remove();
-
-}
-
-
-/* =========================================================
-   AUTOMATION CONDITION
-   ========================================================= */
-
-function showAutomationNotice(
-  siteId,
-  elements,
-  decision,
-  context,
-  updated = false
-) {
-
-  document
-    .getElementById(
-      "automationNotice"
-    )
-    ?.remove();
-
-
-  const notice =
+  const control =
     document.createElement(
       "aside"
     );
 
 
-  notice.id =
-    "automationNotice";
+  control.id =
+    "persistentPrivacyControl";
 
 
-  notice.className =
-    "experiment-automation-notice";
+  control.className =
+    "experiment-privacy-control";
 
 
-  notice.setAttribute(
+  control.setAttribute(
     "aria-label",
-    "Automated cookie preference"
+    "Cookie privacy preference"
   );
 
 
-  notice.innerHTML = `
-    <strong>
-      ${
-        updated
-          ? "Cookie preference updated"
-          : "Saved preference applied"
-      }
-    </strong>
+  control.innerHTML = `
 
-    <p>
-      ${getChoiceLabel(
-        decision.choice
-      )} has been applied automatically on this website.
-    </p>
+    <div class="experiment-privacy-control__copy">
+
+      <span>
+        ${
+          automation
+            ? "Privacy preference"
+            : "Cookies"
+        }
+      </span>
+
+      <strong>
+        ${getChoiceLabel(
+          decision.choice
+        )}
+      </strong>
+
+    </div>
 
     <button
       type="button"
-      id="reviewAutomatedChoice"
+      id="persistentPrivacyReviewButton"
     >
-      Review or change
+      ${
+        automation
+          ? "Review or change"
+          : "Cookie settings"
+      }
     </button>
+
   `;
 
 
   document.body.appendChild(
-    notice
+    control
   );
 
 
-  document
-    .getElementById(
-      "reviewAutomatedChoice"
+  control
+    .querySelector(
+      "#persistentPrivacyReviewButton"
     )
     ?.addEventListener(
       "click",
-      function () {
+      () => {
 
-        notice.remove();
-
-
-        /*
-         * Re-open the normal cookie footer.
-         */
-        setBannerVisible(
-          elements.banner,
-          true
-        );
-
-
-        /*
-         * Populate checkboxes with the current
-         * automated choice.
-         */
-        populateSettings(
-          elements,
-          decision.settings
-        );
-
-
-        /*
-         * Show the detailed settings immediately
-         * so the participant can review them.
-         */
-        elements
-          .settingsPanel
-          ?.classList
-          .add(
-            "visible"
-          );
-
-
-        notifyCookieInterfaceOpened(
-          siteId
-        );
-
-
-        logInterfaceEvent(
-          siteId,
-          "automation_choice_reviewed",
-          context,
+        openCookieSettings(
+          state,
           {
 
-            existingChoice:
-              decision.choice,
-
-            taskProgressAtReview:
-              getTaskProgressAtDecision(
-                siteId
-              ),
-
-            timeFromSiteLoadToReviewMilliseconds:
-              getNavigationElapsedMilliseconds()
+            origin:
+              automation
+                ? "automation_status"
+                : "persistent_control"
 
           }
         );
@@ -971,36 +1150,351 @@ function showAutomationNotice(
 
 
 /* =========================================================
-   SUGGESTIONS CONDITION
+   OPEN COOKIE SETTINGS
    ========================================================= */
 
-/**
- * Site 2:
- * general optional-cookie explanation.
- *
- * Site 3:
- * shopping-specific optional-cookie explanation.
- */
-function getSuggestionTopic(
-  siteId
+function openCookieSettings(
+  state,
+  {
+    origin =
+      "persistent_control"
+  } = {}
 ) {
 
-  return siteId ===
-    "site3"
+  const existingDecision =
+    getExistingDecision(
+      state.siteId
+    );
 
-    ? "shopping_cookie_uses"
 
-    : "data_collection";
+  if (
+    existingDecision
+  ) {
+
+    populateSettings(
+      state.elements,
+      existingDecision.settings
+    );
+
+  }
+
+
+  setBannerVisible(
+    state.elements.banner,
+    true
+  );
+
+
+  setSettingsVisible(
+    state.elements,
+    true
+  );
+
+
+  state.settingsOpenedAt =
+    nowMonotonic();
+
+
+  state.settingsOpenCount +=
+    1;
+
+
+  const reopened =
+    Boolean(
+      existingDecision
+    );
+
+
+  if (
+    reopened
+  ) {
+
+    state.settingsReopenCount +=
+      1;
+
+  }
+
+
+  logInterfaceEvent(
+
+    state.siteId,
+
+    reopened
+      ? "cookie_settings_reopened"
+      : "cookie_settings_opened",
+
+    state.context,
+
+    {
+
+      origin,
+
+      existingChoice:
+        existingDecision
+          ?.choice ??
+        null,
+
+      settingsOpenCount:
+        state.settingsOpenCount,
+
+      settingsReopenCount:
+        state.settingsReopenCount,
+
+      taskProgressAtOpen:
+        getTaskProgress(
+          state.siteId
+        ),
+
+      timeFromSiteLoadToOpenMilliseconds:
+        timeFromPageLoad()
+
+    }
+
+  );
+
+
+  if (
+
+    state.context
+      .interfaceCondition ===
+      "automation" &&
+
+    reopened
+
+  ) {
+
+    logInterfaceEvent(
+
+      state.siteId,
+
+      "automation_choice_reviewed",
+
+      state.context,
+
+      {
+
+        existingChoice:
+          existingDecision.choice,
+
+        taskProgressAtReview:
+          getTaskProgress(
+            state.siteId
+          ),
+
+        timeFromSiteLoadToReviewMilliseconds:
+          timeFromPageLoad()
+
+      }
+
+    );
+
+  }
 
 }
 
 
-function showPrivacySuggestion(
-  siteId,
-  banner,
-  context
+function closeCookieSettings(
+  state
 ) {
 
+  setSettingsVisible(
+    state.elements,
+    false
+  );
+
+
+  setBannerVisible(
+    state.elements.banner,
+    false
+  );
+
+
+  state.settingsOpenedAt =
+    null;
+
+}
+
+
+/* =========================================================
+   SUGGESTIONS
+   ========================================================= */
+
+function removePrivacySuggestion() {
+
+  document
+    .getElementById(
+      "privacySuggestion"
+    )
+    ?.remove();
+
+}
+
+
+/*
+ * Choosing a cookie preference removes the current
+ * Suggestions card.
+ *
+ * Importantly, that context remains marked as "shown".
+ * It cannot appear again afterwards.
+ */
+function hideSuggestionAfterCookieChoice(
+  state
+) {
+
+  if (
+    state.context
+      .interfaceCondition !==
+    "suggestions"
+  ) {
+
+    return;
+
+  }
+
+
+  const visibleContext =
+    state.visibleSuggestionContext;
+
+
+  if (
+    !visibleContext
+  ) {
+
+    return;
+
+  }
+
+
+  removePrivacySuggestion();
+
+
+  state.visibleSuggestionContext =
+    null;
+
+
+  state.suggestionShownAt =
+    null;
+
+
+  logInterfaceEvent(
+
+    state.siteId,
+
+    "privacy_suggestion_hidden_after_cookie_choice",
+
+    state.context,
+
+    {
+
+      context:
+        visibleContext,
+
+      taskProgress:
+        getTaskProgress(
+          state.siteId
+        )
+
+    }
+
+  );
+
+}
+
+
+function buildSuggestionChips(
+  chips
+) {
+
+  return chips
+
+    .map(
+      chip => `
+
+        <span class="experiment-contextual-privacy-tip__chip">
+          ${chip}
+        </span>
+
+      `
+    )
+
+    .join("");
+
+}
+
+
+/* =========================================================
+   RENDER PRIVACY SUGGESTION
+   ========================================================= */
+
+function renderPrivacySuggestion(
+  state,
+  contextName,
+  metadata = {}
+) {
+
+  if (
+    state.context
+      .interfaceCondition !==
+    "suggestions"
+  ) {
+
+    return false;
+
+  }
+
+
+  const definition =
+    SUGGESTION_CONTEXTS[
+      contextName
+    ];
+
+
+  if (
+    !definition
+  ) {
+
+    return false;
+
+  }
+
+
+  /* =======================================================
+     ANTI-SPAM RULE
+
+     Each privacy context can appear ONCE only.
+
+     Examples:
+       initial_warning    → once
+       interest_browsing  → once
+       product_browsing   → once
+       account            → once
+       delivery           → once
+
+     Closing it, choosing cookies, refreshing the page,
+     clicking again, focusing another field, etc. does not
+     reset it.
+     ======================================================= */
+
+  if (
+    state.shownSuggestionContexts
+      .has(
+        contextName
+      )
+  ) {
+
+    return false;
+
+  }
+
+
+  const previousContext =
+    state.lastSuggestionContext;
+
+
+  /*
+   * A genuinely NEW context replaces any older visible
+   * suggestion that the participant has ignored.
+   */
   removePrivacySuggestion();
 
 
@@ -1015,394 +1509,223 @@ function showPrivacySuggestion(
 
 
   suggestion.className =
-    "experiment-privacy-snapshot";
+    "experiment-contextual-privacy-tip";
+
+
+  suggestion.dataset.context =
+    contextName;
+
+
+  suggestion.dataset.sequence =
+    String(
+      state.suggestionExposureCount +
+      1
+    );
 
 
   suggestion.setAttribute(
     "aria-label",
-    "Privacy tip"
+    "Tracking and cookie suggestion"
   );
 
 
-  const suggestionTopic =
-    getSuggestionTopic(
-      siteId
-    );
+  suggestion.innerHTML = `
 
+    <div class="experiment-contextual-privacy-tip__topline">
 
-  /* =====================================================
-     SITE 3 — SHOPPING-SPECIFIC SUGGESTION
-     ===================================================== */
+      <div class="experiment-contextual-privacy-tip__badge-wrap">
 
-  if (
-    suggestionTopic ===
-    "shopping_cookie_uses"
-  ) {
-
-    suggestion.innerHTML = `
-      <div class="experiment-privacy-snapshot__heading">
-
-        <strong>
-          How might optional cookies be used while you shop?
-        </strong>
-
-        <button
-          type="button"
-          id="dismissPrivacySuggestion"
-          aria-label="Dismiss privacy tip"
+        <span
+          class="experiment-contextual-privacy-tip__icon"
+          aria-hidden="true"
         >
-          ×
-        </button>
+          ${definition.icon}
+        </span>
+
+        <span class="experiment-contextual-privacy-tip__badge">
+          ${definition.badge}
+        </span>
 
       </div>
-
-
-      <p class="experiment-privacy-summary">
-
-        Shopping sites may use optional cookies to understand
-        which products you view, measure how you use the site
-        and personalise recommendations or advertising.
-
-      </p>
 
 
       <button
         type="button"
-        id="showPrivacyDetails"
-        class="experiment-privacy-details-toggle"
-        aria-expanded="false"
+        id="dismissPrivacySuggestion"
+        class="experiment-contextual-privacy-tip__dismiss"
+        aria-label="Dismiss tracking insight"
       >
-        Learn what this means
+        ×
       </button>
 
-
-      <div
-        id="privacySuggestionDetails"
-        class="experiment-privacy-details"
-        hidden
-      >
-
-        <div class="experiment-privacy-learning-grid">
+    </div>
 
 
-          <div class="experiment-privacy-learning-item">
-
-            <strong>
-              Necessary
-            </strong>
-
-            <span>
-              Support core functions such as keeping an item
-              in the cart and moving through checkout.
-            </span>
-
-          </div>
+    <h3 class="experiment-contextual-privacy-tip__title">
+      ${definition.title}
+    </h3>
 
 
-          <div class="experiment-privacy-learning-item">
-
-            <strong>
-              Functional
-            </strong>
-
-            <span>
-              Can remember choices or preferences while using
-              the shopping website.
-            </span>
-
-          </div>
+    <p class="experiment-contextual-privacy-tip__summary">
+      ${definition.summary}
+    </p>
 
 
-          <div class="experiment-privacy-learning-item">
+    <div class="experiment-contextual-privacy-tip__chips">
 
-            <strong>
-              Analytics
-            </strong>
+      ${
+        buildSuggestionChips(
+          definition.chips
+        )
+      }
 
-            <span>
-              Can help measure product views, clicks and
-              other website interactions.
-            </span>
-
-          </div>
+    </div>
 
 
-          <div class="experiment-privacy-learning-item">
+    <p class="experiment-contextual-privacy-tip__impact">
 
-            <strong>
-              Advertising
-            </strong>
+      <strong>
+        This may affect you:
+      </strong>
 
-            <span>
-              Can use browsing interests to personalise ads,
-              recommendations or related content.
-            </span>
+      ${definition.impact}
 
-          </div>
+    </p>
 
 
-        </div>
-
-      </div>
-    `;
-
-  }
-
-
-  /* =====================================================
-     SITE 2 — GENERAL DATA-COLLECTION SUGGESTION
-     ===================================================== */
-
-  else {
-
-    suggestion.innerHTML = `
-      <div class="experiment-privacy-snapshot__heading">
-
-        <strong>
-          What can optional cookies learn about your visit?
-        </strong>
-
-        <button
-          type="button"
-          id="dismissPrivacySuggestion"
-          aria-label="Dismiss privacy tip"
-        >
-          ×
-        </button>
-
-      </div>
-
-
-      <p class="experiment-privacy-summary">
-
-        Optional cookies and related tracking can help a
-        website understand your
-
-        <strong>browsing activity</strong>,
-
-        <strong>device information</strong>,
-
-        <strong>approximate location</strong>
-
-        and
-
-        <strong>interests inferred from browsing</strong>.
-
-      </p>
-
+    <div class="experiment-contextual-privacy-tip__actions">
 
       <button
         type="button"
         id="showPrivacyDetails"
-        class="experiment-privacy-details-toggle"
+        class="experiment-contextual-privacy-tip__learn"
         aria-expanded="false"
       >
-        Learn what this means
+        Why does this matter?
       </button>
 
 
-      <div
-        id="privacySuggestionDetails"
-        class="experiment-privacy-details"
-        hidden
+      <button
+        type="button"
+        id="privacySuggestionSettingsButton"
+        class="experiment-contextual-privacy-tip__settings"
       >
+        ${definition.actionLabel}
+      </button>
 
-        <div class="experiment-privacy-learning-grid">
-
-
-          <div class="experiment-privacy-learning-item">
-
-            <strong>
-              Browsing activity
-            </strong>
-
-            <span>
-              Pages viewed, clicks and time spent on parts
-              of a website.
-            </span>
-
-          </div>
+    </div>
 
 
-          <div class="experiment-privacy-learning-item">
+    <div
+      id="privacySuggestionDetails"
+      class="experiment-contextual-privacy-tip__details"
+      hidden
+    >
 
-            <strong>
-              Device information
-            </strong>
+      <p>
+        ${definition.details}
+      </p>
 
-            <span>
-              Information such as browser, operating system
-              and device type.
-            </span>
+    </div>
 
-          </div>
-
-
-          <div class="experiment-privacy-learning-item">
-
-            <strong>
-              Approximate location
-            </strong>
-
-            <span>
-              A general location such as country, region
-              or approximate city.
-            </span>
-
-          </div>
+  `;
 
 
-          <div class="experiment-privacy-learning-item">
-
-            <strong>
-              Inferred interests
-            </strong>
-
-            <span>
-              Topics or products associated with patterns
-              in browsing activity.
-            </span>
-
-          </div>
-
-
-        </div>
-
-      </div>
-    `;
-
-  }
-
-
-  /*
-   * Put the separate privacy card in the page.
-   */
   document.body.appendChild(
     suggestion
   );
 
 
   /*
-   * Keep the card immediately above the
-   * persistent cookie footer.
+   * Mark it as used immediately.
+   *
+   * From this point onwards this context cannot be shown
+   * again on this site.
    */
-  function updateSuggestionPosition() {
-
-    const bannerHeight =
-      Math.ceil(
-        banner
-          .getBoundingClientRect()
-          .height
-      );
-
-
-    suggestion.style.setProperty(
-      "--cookie-banner-height",
-      `${bannerHeight}px`
+  state.shownSuggestionContexts
+    .add(
+      contextName
     );
 
-  }
+
+  state.lastSuggestionContext =
+    contextName;
 
 
-  updateSuggestionPosition();
+  state.visibleSuggestionContext =
+    contextName;
 
 
-  let bannerObserver =
-    null;
+  state.currentSuggestionOpened =
+    false;
 
 
-  if (
-    typeof ResizeObserver !==
-    "undefined"
-  ) {
-
-    bannerObserver =
-      new ResizeObserver(
-        updateSuggestionPosition
-      );
+  state.suggestionEverSeen =
+    true;
 
 
-    bannerObserver.observe(
-      banner
-    );
-
-  }
+  state.suggestionShownAt =
+    nowMonotonic();
 
 
-  window.addEventListener(
-    "resize",
-    updateSuggestionPosition
-  );
-
-
-  suggestion.__privacyCleanup =
-    function () {
-
-      bannerObserver
-        ?.disconnect();
-
-
-      window.removeEventListener(
-        "resize",
-        updateSuggestionPosition
-      );
-
-    };
-
-
-  /*
-   * Timestamp for Suggestions exposure.
-   */
-  const shownAt =
-    getMonotonicTimestamp();
+  state.suggestionExposureCount +=
+    1;
 
 
   logInterfaceEvent(
-    siteId,
-    "privacy_suggestion_shown",
-    context,
+
+    state.siteId,
+
+    state.suggestionExposureCount ===
+      1
+
+      ? "privacy_suggestion_shown"
+
+      : "privacy_suggestion_updated",
+
+    state.context,
+
     {
 
-      suggestionTopic,
+      context:
+        contextName,
+
+      previousContext,
+
+      suggestionExposureCount:
+        state.suggestionExposureCount,
 
       taskProgressAtExposure:
-        getTaskProgressAtDecision(
-          siteId
+        getTaskProgress(
+          state.siteId
         ),
 
       timeFromSiteLoadToSuggestionMilliseconds:
-        getNavigationElapsedMilliseconds()
+        timeFromPageLoad(),
+
+      ...metadata
 
     }
+
   );
 
 
   const details =
-    document.getElementById(
-      "privacySuggestionDetails"
+    suggestion.querySelector(
+      "#privacySuggestionDetails"
     );
 
 
   const detailsButton =
-    document.getElementById(
-      "showPrivacyDetails"
+    suggestion.querySelector(
+      "#showPrivacyDetails"
     );
 
-
-  const dismissButton =
-    document.getElementById(
-      "dismissPrivacySuggestion"
-    );
-
-
-  /* =======================================================
-     OPEN / CLOSE SUGGESTION DETAILS
-     ======================================================= */
 
   detailsButton
     ?.addEventListener(
       "click",
-      function () {
+      () => {
 
         const opening =
           details.hidden;
@@ -1412,18 +1735,10 @@ function showPrivacySuggestion(
           !opening;
 
 
-        suggestion
-          .classList
-          .toggle(
-            "is-expanded",
-            opening
-          );
-
-
         detailsButton.textContent =
           opening
             ? "Show less"
-            : "Learn what this means";
+            : "Why does this matter?";
 
 
         detailsButton.setAttribute(
@@ -1434,69 +1749,149 @@ function showPrivacySuggestion(
         );
 
 
+        if (
+          opening
+        ) {
+
+          state.currentSuggestionOpened =
+            true;
+
+
+          state.suggestionEverOpened =
+            true;
+
+        }
+
+
         logInterfaceEvent(
-          siteId,
+
+          state.siteId,
 
           opening
             ? "privacy_suggestion_opened"
             : "privacy_suggestion_closed",
 
-          context,
+          state.context,
 
           {
 
-            suggestionTopic,
+            context:
+              contextName,
 
             taskProgressAtInteraction:
-              getTaskProgressAtDecision(
-                siteId
+              getTaskProgress(
+                state.siteId
               ),
 
             timeSinceSuggestionShownMilliseconds:
               elapsedSince(
-                shownAt
+                state.suggestionShownAt
               )
 
           }
+
         );
 
       }
     );
 
 
-  /* =======================================================
-     DISMISS SUGGESTION
-     ======================================================= */
-
-  dismissButton
+  suggestion
+    .querySelector(
+      "#dismissPrivacySuggestion"
+    )
     ?.addEventListener(
       "click",
-      function () {
+      () => {
 
         const timeSinceShown =
           elapsedSince(
-            shownAt
+            state.suggestionShownAt
           );
 
 
         removePrivacySuggestion();
 
 
+        state.visibleSuggestionContext =
+          null;
+
+
+        state.suggestionShownAt =
+          null;
+
+
         logInterfaceEvent(
-          siteId,
+
+          state.siteId,
+
           "privacy_suggestion_dismissed",
-          context,
+
+          state.context,
+
           {
 
-            suggestionTopic,
+            context:
+              contextName,
 
             taskProgressAtDismissal:
-              getTaskProgressAtDecision(
-                siteId
+              getTaskProgress(
+                state.siteId
               ),
 
             timeSinceSuggestionShownMilliseconds:
               timeSinceShown
+
+          }
+
+        );
+
+      }
+    );
+
+
+  suggestion
+    .querySelector(
+      "#privacySuggestionSettingsButton"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+
+        logInterfaceEvent(
+
+          state.siteId,
+
+          "privacy_suggestion_settings_opened",
+
+          state.context,
+
+          {
+
+            context:
+              contextName,
+
+            taskProgressAtInteraction:
+              getTaskProgress(
+                state.siteId
+              ),
+
+            timeSinceSuggestionShownMilliseconds:
+              elapsedSince(
+                state.suggestionShownAt
+              )
+
+          }
+
+        );
+
+
+        openCookieSettings(
+          state,
+          {
+
+            origin:
+              "privacy_suggestion"
 
           }
         );
@@ -1505,17 +1900,535 @@ function showPrivacySuggestion(
     );
 
 
-  /*
-   * Return timestamp so cookie-choice timing
-   * can be measured from Suggestions exposure.
-   */
-  return shownAt;
+  return true;
 
 }
 
 
 /* =========================================================
-   MAIN COOKIE INTERFACE
+   PRIVACY CONTEXT HANDLING
+   ========================================================= */
+
+function handlePrivacyContext(
+  state,
+  contextName,
+  metadata = {}
+) {
+
+  if (
+    state.context
+      .interfaceCondition !==
+    "suggestions"
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    !SUGGESTION_CONTEXTS[
+      contextName
+    ]
+  ) {
+
+    return;
+
+  }
+
+
+  /*
+   * Do nothing at all for a context that has already
+   * appeared.
+   *
+   * This prevents repeated focus/click/input events from
+   * creating either UI spam or unnecessary privacy-context
+   * event spam.
+   */
+  if (
+    state.shownSuggestionContexts
+      .has(
+        contextName
+      )
+  ) {
+
+    return;
+
+  }
+
+
+  logInterfaceEvent(
+
+    state.siteId,
+
+    "privacy_context_detected",
+
+    state.context,
+
+    {
+
+      context:
+        contextName,
+
+      taskProgress:
+        getTaskProgress(
+          state.siteId
+        ),
+
+      ...metadata
+
+    }
+
+  );
+
+
+  renderPrivacySuggestion(
+    state,
+    contextName,
+    metadata
+  );
+
+}
+
+
+/* =========================================================
+   PUBLIC CONTEXT HOOK
+   ========================================================= */
+
+export function setPrivacyContext(
+  siteId,
+  contextName,
+  metadata = {}
+) {
+
+  const state =
+    interfaceStates.get(
+      siteId
+    );
+
+
+  if (
+    !state
+  ) {
+
+    return;
+
+  }
+
+
+  handlePrivacyContext(
+    state,
+    contextName,
+    metadata
+  );
+
+}
+
+
+/* =========================================================
+   COMPLETE COOKIE DECISION
+   ========================================================= */
+
+function completeDecision(
+  state,
+  choice,
+  settings,
+  source
+) {
+
+  const existingDecision =
+    getExistingDecision(
+      state.siteId
+    );
+
+
+  const normalisedSettings =
+    normaliseSettings(
+      settings
+    );
+
+
+  const isInitialDecision =
+    !existingDecision;
+
+
+  const unchanged =
+    decisionsAreEquivalent(
+      existingDecision,
+      normalisedSettings
+    );
+
+
+  const taskProgressAtDecision =
+    getTaskProgress(
+      state.siteId
+    );
+
+
+  const settingsOpenedAt =
+    state.settingsOpenedAt;
+
+
+  /* =======================================================
+     SAME EFFECTIVE PREFERENCE
+     ======================================================= */
+
+  if (
+    existingDecision &&
+    unchanged
+  ) {
+
+    closeCookieSettings(
+      state
+    );
+
+
+    logInterfaceEvent(
+
+      state.siteId,
+
+      "cookie_settings_saved_unchanged",
+
+      state.context,
+
+      {
+
+        choice:
+          existingDecision.choice,
+
+        previousChoice:
+          existingDecision.choice,
+
+        requestedChoice:
+          choice,
+
+        settings:
+          normalisedSettings,
+
+        effectivePreferenceChanged:
+          false,
+
+        source,
+
+        taskProgressAtDecision,
+
+        timeFromSettingsOpenToSaveMilliseconds:
+          elapsedSince(
+            settingsOpenedAt
+          )
+
+      }
+
+    );
+
+
+    hideSuggestionAfterCookieChoice(
+      state
+    );
+
+
+    showPersistentPrivacyControl(
+      state
+    );
+
+
+    if (
+      source ===
+      "manual"
+    ) {
+
+      showCookieDecisionConfirmation(
+        "Cookie preference unchanged"
+      );
+
+    }
+
+
+    return existingDecision;
+
+  }
+
+
+  /* =======================================================
+     INITIAL OR CHANGED PREFERENCE
+     ======================================================= */
+
+  const decision =
+
+    isInitialDecision
+
+      ? createInitialDecision(
+
+          choice,
+
+          normalisedSettings,
+
+          source,
+
+          state.context
+
+        )
+
+      : createRevisedDecision(
+
+          existingDecision,
+
+          choice,
+
+          normalisedSettings,
+
+          source
+
+        );
+
+
+  storeDecision(
+    state.siteId,
+    decision
+  );
+
+
+  closeCookieSettings(
+    state
+  );
+
+
+  const automationOverride =
+
+    state.context
+      .interfaceCondition ===
+      "automation" &&
+
+    source ===
+      "manual" &&
+
+    !isInitialDecision;
+
+
+  logInterfaceEvent(
+
+    state.siteId,
+
+    "cookie_choice",
+
+    state.context,
+
+    {
+
+      decisionMade:
+        true,
+
+      choice,
+
+      settings:
+        normalisedSettings,
+
+      source,
+
+      isInitialDecision,
+
+      changedFromPrevious:
+        !isInitialDecision,
+
+      previousChoice:
+        existingDecision
+          ?.choice ??
+        null,
+
+      automationOverride,
+
+      revisionCount:
+        decision.revisionCount,
+
+      taskProgressAtDecision,
+
+      timeFromSiteLoadToDecisionMilliseconds:
+        timeFromPageLoad(),
+
+      timeFromInterfaceInitialisationToDecisionMilliseconds:
+        elapsedSince(
+          state.interfaceInitialisedAt
+        ),
+
+      timeFromSettingsOpenToDecisionMilliseconds:
+        elapsedSince(
+          settingsOpenedAt
+        ),
+
+      timeFromSuggestionShownToDecisionMilliseconds:
+
+        Number.isFinite(
+          state.suggestionShownAt
+        )
+
+          ? elapsedSince(
+              state.suggestionShownAt
+            )
+
+          : null,
+
+      suggestionContextAtDecision:
+
+        state.visibleSuggestionContext ??
+
+        state.lastSuggestionContext ??
+
+        null
+
+    }
+
+  );
+
+
+  if (
+    !isInitialDecision
+  ) {
+
+    logInterfaceEvent(
+
+      state.siteId,
+
+      "cookie_preference_changed",
+
+      state.context,
+
+      {
+
+        from:
+          existingDecision.choice,
+
+        to:
+          choice,
+
+        previousSettings:
+          normaliseSettings(
+            existingDecision.settings
+          ),
+
+        settings:
+          normalisedSettings,
+
+        source,
+
+        revisionCount:
+          decision.revisionCount,
+
+        context:
+
+          state.visibleSuggestionContext ??
+
+          state.lastSuggestionContext ??
+
+          null,
+
+        suggestionSeenBeforeChange:
+          Boolean(
+            state.suggestionEverSeen
+          ),
+
+        suggestionOpenedBeforeChange:
+          Boolean(
+            state.suggestionEverOpened
+          ),
+
+        timeInitialChoiceToChangeMilliseconds:
+          millisecondsBetweenIso(
+            decision.initialSavedAt,
+            decision.savedAt
+          )
+
+      }
+
+    );
+
+  }
+
+
+  if (
+    automationOverride
+  ) {
+
+    logInterfaceEvent(
+
+      state.siteId,
+
+      "automation_override",
+
+      state.context,
+
+      {
+
+        from:
+          existingDecision.choice,
+
+        to:
+          choice,
+
+        taskProgressAtOverride:
+          taskProgressAtDecision
+
+      }
+
+    );
+
+  }
+
+
+  if (
+    isInitialDecision
+  ) {
+
+    state.initialDecisionAt =
+      nowMonotonic();
+
+  }
+
+
+  /*
+   * Remove any currently visible Suggestions card.
+   *
+   * Its context remains permanently recorded as already
+   * shown.
+   */
+  hideSuggestionAfterCookieChoice(
+    state
+  );
+
+
+  showPersistentPrivacyControl(
+    state
+  );
+
+
+  if (
+    source ===
+    "manual"
+  ) {
+
+    showCookieDecisionConfirmation(
+
+      isInitialDecision
+
+        ? `Cookie preference saved: ${getChoiceLabel(
+            choice
+          )}`
+
+        : `Cookie preference updated: ${getChoiceLabel(
+            choice
+          )}`
+
+    );
+
+  }
+
+
+  return decision;
+
+}
+
+
+/* =========================================================
+   INITIALISE COOKIE INTERFACE
    ========================================================= */
 
 export function initialiseCookieInterface(
@@ -1526,7 +2439,9 @@ export function initialiseCookieInterface(
     getSession();
 
 
-  if (!session) {
+  if (
+    !session
+  ) {
 
     throw new Error(
       "No experiment session was found."
@@ -1546,7 +2461,9 @@ export function initialiseCookieInterface(
     getCookieElements();
 
 
-  if (!elements.banner) {
+  if (
+    !elements.banner
+  ) {
 
     throw new Error(
       "The cookie banner could not be found."
@@ -1555,255 +2472,99 @@ export function initialiseCookieInterface(
   }
 
 
-  const interfaceInitialisedAt =
-    getMonotonicTimestamp();
-
-
-  /*
-   * Only populated for Suggestions participants.
-   */
-  let suggestionShownAt =
-    null;
-
-
-  logInterfaceEvent(
-    siteId,
-    "interface_initialised",
-    context,
-    {
-
-      timeFromSiteLoadMilliseconds:
-        getNavigationElapsedMilliseconds()
-
-    }
-  );
-
-
-  /* =======================================================
-     COMPLETE COOKIE DECISION
-     ======================================================= */
-
-  function completeDecision(
-    choice,
-    settings,
-    source
-  ) {
-
-    const existingDecision =
-      getExistingDecision(
-        siteId
-      );
-
-
-    const normalisedSettings =
-      normaliseSettings(
-        settings
-      );
-
-
-    const isInitialDecision =
-      !existingDecision;
-
-
-    /*
-     * A manual save following Automation counts as an
-     * override only when the actual decision changed.
-     */
-    const automationOverride =
-
-      context.interfaceCondition ===
-        "automation" &&
-
-      source ===
-        "manual" &&
-
-      existingDecision?.source ===
-        "automation" &&
-
-      !decisionsAreEquivalent(
-        existingDecision,
-        choice,
-        normalisedSettings
-      );
-
-
-    /*
-     * Record the task state at the precise point
-     * the cookie decision is completed.
-     */
-    const taskProgressAtDecision =
-      getTaskProgressAtDecision(
-        siteId
-      );
-
-
-    const decision =
-      saveDecision(
-        siteId,
-        choice,
-        normalisedSettings,
-        source,
-        context
-      );
-
-
-    /*
-     * Close cookie footer.
-     *
-     * setBannerVisible() deliberately uses an inline
-     * !important rule because styles.css currently
-     * contains display:grid!important.
-     */
-    setBannerVisible(
-      elements.banner,
-      false
-    );
-
-
-    /*
-     * Close Customise settings.
-     */
-    elements
-      .settingsPanel
-      ?.classList
-      .remove(
-        "visible"
-      );
-
-
-    /*
-     * Suggestions disappear when the cookie decision
-     * has been completed.
-     */
-    removePrivacySuggestion();
-
-
-    notifyCookieInterfaceClosed(
+  const historicalSuggestionState =
+    getHistoricalSuggestionState(
       siteId
     );
 
 
+  const state = {
+
+    siteId,
+
+    session,
+
+    context,
+
+    elements,
+
+    interfaceInitialisedAt:
+      nowMonotonic(),
+
+    initialDecisionAt:
+      null,
+
+    settingsOpenedAt:
+      null,
+
+    settingsOpenCount:
+      0,
+
+    settingsReopenCount:
+      0,
+
+    suggestionShownAt:
+      null,
+
+    lastSuggestionContext:
+      historicalSuggestionState
+        .lastContext,
+
+    visibleSuggestionContext:
+      null,
+
+    currentSuggestionOpened:
+      false,
+
+    suggestionEverSeen:
+      historicalSuggestionState
+        .everSeen,
+
+    suggestionEverOpened:
+      historicalSuggestionState
+        .everOpened,
+
+    suggestionExposureCount:
+      historicalSuggestionState
+        .exposureCount,
+
     /*
-     * Manual decisions receive a short visual confirmation.
+     * The important anti-spam state.
      *
-     * Automated decisions already receive the separate
-     * Saved preference applied notice.
+     * Contexts reconstructed from existing events remain
+     * suppressed after a refresh.
      */
-    if (
-      source ===
-      "manual"
-    ) {
+    shownSuggestionContexts:
+      new Set(
+        historicalSuggestionState
+          .shownContexts
+      )
 
-      showCookieDecisionConfirmation(
-        choice
-      );
+  };
+
+
+  interfaceStates.set(
+    siteId,
+    state
+  );
+
+
+  logInterfaceEvent(
+
+    siteId,
+
+    "interface_initialised",
+
+    context,
+
+    {
+
+      timeFromSiteLoadMilliseconds:
+        timeFromPageLoad()
 
     }
 
-
-    logInterfaceEvent(
-      siteId,
-      "cookie_choice",
-      context,
-      {
-
-        /*
-         * Was a cookie decision made?
-         */
-        decisionMade:
-          true,
-
-
-        /*
-         * Accept / Reject / Custom.
-         */
-        choice,
-
-
-        settings:
-          normalisedSettings,
-
-
-        source,
-
-
-        /*
-         * Initial choice vs later review.
-         */
-        isInitialDecision,
-
-
-        /*
-         * Automation only.
-         */
-        automationOverride,
-
-
-        /*
-         * Task progress when cookies were handled.
-         */
-        taskProgressAtDecision,
-
-
-        /*
-         * Site load → cookie decision.
-         */
-        timeFromSiteLoadToDecisionMilliseconds:
-          getNavigationElapsedMilliseconds(),
-
-
-        /*
-         * Cookie-interface initialisation → decision.
-         */
-        timeFromInterfaceInitialisationToDecisionMilliseconds:
-          elapsedSince(
-            interfaceInitialisedAt
-          ),
-
-
-        /*
-         * Suggestions exposure → decision.
-         *
-         * Null for Control and Automation.
-         */
-        timeFromSuggestionShownToDecisionMilliseconds:
-          Number.isFinite(
-            suggestionShownAt
-          )
-            ? elapsedSince(
-                suggestionShownAt
-              )
-            : null
-
-      }
-    );
-
-
-    /*
-     * After manually reviewing an Automation choice,
-     * return to the Automation status notice.
-     */
-    if (
-      context.interfaceCondition ===
-        "automation" &&
-      source ===
-        "manual"
-    ) {
-
-      showAutomationNotice(
-        siteId,
-        elements,
-        decision,
-        context,
-        true
-      );
-
-    }
-
-
-    return decision;
-
-  }
+  );
 
 
   /* =======================================================
@@ -1814,10 +2575,14 @@ export function initialiseCookieInterface(
     .acceptButton
     ?.addEventListener(
       "click",
-      function () {
+      () => {
 
         completeDecision(
+
+          state,
+
           "accept_all",
+
           {
 
             necessary:
@@ -1833,7 +2598,9 @@ export function initialiseCookieInterface(
               true
 
           },
+
           "manual"
+
         );
 
       }
@@ -1848,10 +2615,14 @@ export function initialiseCookieInterface(
     .rejectButton
     ?.addEventListener(
       "click",
-      function () {
+      () => {
 
         completeDecision(
+
+          state,
+
           "reject_optional",
+
           {
 
             necessary:
@@ -1867,7 +2638,9 @@ export function initialiseCookieInterface(
               false
 
           },
+
           "manual"
+
         );
 
       }
@@ -1882,9 +2655,10 @@ export function initialiseCookieInterface(
     .customiseButton
     ?.addEventListener(
       "click",
-      function () {
+      () => {
 
         const opening =
+
           !elements
             .settingsPanel
             ?.classList
@@ -1893,59 +2667,117 @@ export function initialiseCookieInterface(
             );
 
 
-        elements
-          .settingsPanel
-          ?.classList
-          .toggle(
-            "visible"
-          );
+        setSettingsVisible(
+          elements,
+          opening
+        );
 
 
-        /*
-         * Record actual openings rather than every click.
-         */
-        if (opening) {
+        if (
+          !opening
+        ) {
 
-          notifyCookieInterfaceOpened(
+          return;
+
+        }
+
+
+        const existingDecision =
+          getExistingDecision(
             siteId
           );
 
 
-          logInterfaceEvent(
-            siteId,
-            "cookie_settings_opened",
-            context,
-            {
+        if (
+          existingDecision
+        ) {
 
-              taskProgressAtOpen:
-                getTaskProgressAtDecision(
-                  siteId
-                ),
-
-              timeFromSiteLoadToOpenMilliseconds:
-                getNavigationElapsedMilliseconds()
-
-            }
+          populateSettings(
+            elements,
+            existingDecision.settings
           );
 
         }
+
+
+        state.settingsOpenedAt =
+          nowMonotonic();
+
+
+        state.settingsOpenCount +=
+          1;
+
+
+        if (
+          existingDecision
+        ) {
+
+          state.settingsReopenCount +=
+            1;
+
+        }
+
+
+        logInterfaceEvent(
+
+          siteId,
+
+          existingDecision
+
+            ? "cookie_settings_reopened"
+
+            : "cookie_settings_opened",
+
+          context,
+
+          {
+
+            origin:
+              "banner_customise",
+
+            existingChoice:
+              existingDecision
+                ?.choice ??
+              null,
+
+            settingsOpenCount:
+              state.settingsOpenCount,
+
+            settingsReopenCount:
+              state.settingsReopenCount,
+
+            taskProgressAtOpen:
+              getTaskProgress(
+                siteId
+              ),
+
+            timeFromSiteLoadToOpenMilliseconds:
+              timeFromPageLoad()
+
+          }
+
+        );
 
       }
     );
 
 
   /* =======================================================
-     SAVE CUSTOM SETTINGS
+     SAVE CUSTOM
      ======================================================= */
 
   elements
     .saveSettingsButton
     ?.addEventListener(
       "click",
-      function () {
+      () => {
 
         completeDecision(
+
+          state,
+
           "custom",
+
           {
 
             necessary:
@@ -1970,7 +2802,9 @@ export function initialiseCookieInterface(
               false
 
           },
+
           "manual"
+
         );
 
       }
@@ -1978,7 +2812,58 @@ export function initialiseCookieInterface(
 
 
   /* =======================================================
-     RESTORE AN EXISTING DECISION
+     GENERIC PRIVACY CONTEXT EVENT
+     ======================================================= */
+
+  document.addEventListener(
+
+    "privacyExperiment:privacyContext",
+
+    event => {
+
+      const detail =
+        event.detail ??
+        {};
+
+
+      if (
+        detail.siteId &&
+        detail.siteId !==
+          siteId
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+        !detail.context
+      ) {
+
+        return;
+
+      }
+
+
+      handlePrivacyContext(
+
+        state,
+
+        detail.context,
+
+        detail.metadata ??
+          {}
+
+      );
+
+    }
+
+  );
+
+
+  /* =======================================================
+     RESTORE EXISTING COOKIE DECISION
      ======================================================= */
 
   const existingDecision =
@@ -1987,11 +2872,9 @@ export function initialiseCookieInterface(
     );
 
 
-  /*
-   * This is mainly used when the participant refreshes
-   * a website after already making its cookie decision.
-   */
-  if (existingDecision) {
+  if (
+    existingDecision
+  ) {
 
     setBannerVisible(
       elements.banner,
@@ -1999,64 +2882,78 @@ export function initialiseCookieInterface(
     );
 
 
+    setSettingsVisible(
+      elements,
+      false
+    );
+
+
+    populateSettings(
+      elements,
+      existingDecision.settings
+    );
+
+
     logInterfaceEvent(
+
       siteId,
+
       "cookie_choice_restored",
+
       context,
+
       {
 
         choice:
           existingDecision.choice,
 
         source:
-          existingDecision.source
+          existingDecision.source,
+
+        revisionCount:
+          existingDecision
+            .revisionCount ??
+          0
 
       }
+
     );
 
 
-    if (
-      context.interfaceCondition ===
-      "automation"
-    ) {
-
-      showAutomationNotice(
-        siteId,
-        elements,
-        existingDecision,
-        context
-      );
-
-    }
+    showPersistentPrivacyControl(
+      state
+    );
 
 
+    /*
+     * Do not automatically restore a Suggestions card.
+     *
+     * Only a privacy context that has NEVER been shown
+     * before may appear after the refresh.
+     */
     return;
 
   }
 
 
   /* =======================================================
-     AUTOMATION CONDITION
+     AUTOMATION
      ======================================================= */
 
   if (
-    context.interfaceCondition ===
+    context
+      .interfaceCondition ===
     "automation"
   ) {
 
     const preference =
-      session.automationPreference;
+      session
+        .automationPreference;
 
 
-    /*
-     * Safety fallback:
-     *
-     * An Automation participant should normally have
-     * selected a preference after Site 1.
-     *
-     * If none exists, show the normal manual footer.
-     */
-    if (!preference) {
+    if (
+      !preference
+    ) {
 
       setBannerVisible(
         elements.banner,
@@ -2065,33 +2962,43 @@ export function initialiseCookieInterface(
 
 
       logInterfaceEvent(
+
         siteId,
+
         "automation_preference_missing",
+
         context,
+
         {
 
           timeFromSiteLoadMilliseconds:
-            getNavigationElapsedMilliseconds()
+            timeFromPageLoad()
 
         }
+
       );
 
 
       logInterfaceEvent(
+
         siteId,
+
         "cookie_banner_shown",
+
         context,
+
         {
 
           taskProgressAtExposure:
-            getTaskProgressAtDecision(
+            getTaskProgress(
               siteId
             ),
 
           timeFromSiteLoadMilliseconds:
-            getNavigationElapsedMilliseconds()
+            timeFromPageLoad()
 
         }
+
       );
 
 
@@ -2100,15 +3007,6 @@ export function initialiseCookieInterface(
     }
 
 
-    /*
-     * The transition page stores the preference using
-     * these top-level fields:
-     *
-     * choice
-     * functional
-     * analytics
-     * advertising
-     */
     const settings = {
 
       necessary:
@@ -2132,32 +3030,28 @@ export function initialiseCookieInterface(
     };
 
 
-    /*
-     * Apply the saved preference immediately.
-     */
     const decision =
       completeDecision(
+
+        state,
+
         preference.choice,
+
         settings,
+
         "automation"
+
       );
 
 
-    /*
-     * Show status and allow review/change.
-     */
-    showAutomationNotice(
-      siteId,
-      elements,
-      decision,
-      context
-    );
-
-
     logInterfaceEvent(
+
       siteId,
+
       "automation_preference_applied",
+
       context,
+
       {
 
         choice:
@@ -2167,14 +3061,24 @@ export function initialiseCookieInterface(
           decision.settings,
 
         taskProgressAtApplication:
-          getTaskProgressAtDecision(
+          getTaskProgress(
             siteId
           ),
 
         timeFromSiteLoadToApplicationMilliseconds:
-          getNavigationElapsedMilliseconds()
+          timeFromPageLoad()
 
       }
+
+    );
+
+
+    showCookieDecisionConfirmation(
+
+      `Saved privacy preference applied: ${getChoiceLabel(
+        decision.choice
+      )}`
+
     );
 
 
@@ -2184,12 +3088,9 @@ export function initialiseCookieInterface(
 
 
   /* =======================================================
-     CONTROL + SUGGESTIONS
+     MANUAL COOKIE BANNER
      ======================================================= */
 
-  /*
-   * Manual cookie footer appears immediately.
-   */
   setBannerVisible(
     elements.banner,
     true
@@ -2197,42 +3098,55 @@ export function initialiseCookieInterface(
 
 
   logInterfaceEvent(
+
     siteId,
+
     "cookie_banner_shown",
+
     context,
+
     {
 
       taskProgressAtExposure:
-        getTaskProgressAtDecision(
+        getTaskProgress(
           siteId
         ),
 
       timeFromSiteLoadMilliseconds:
-        getNavigationElapsedMilliseconds()
+        timeFromPageLoad()
 
     }
+
   );
 
 
-  /*
-   * Site 1 is always baseline/control.
-   *
-   * Therefore Suggestions appears only on:
-   *
-   * Site 2
-   * Site 3
-   */
+  /* =======================================================
+     INITIAL SUGGESTIONS WARNING
+     ======================================================= */
+
   if (
-    context.interfaceCondition ===
+    context
+      .interfaceCondition ===
     "suggestions"
   ) {
 
-    suggestionShownAt =
-      showPrivacySuggestion(
-        siteId,
-        elements.banner,
-        context
-      );
+    handlePrivacyContext(
+
+      state,
+
+      "initial_warning",
+
+      {
+
+        trigger:
+          "site_load",
+
+        initialContext:
+          true
+
+      }
+
+    );
 
   }
 
@@ -2240,7 +3154,7 @@ export function initialiseCookieInterface(
 
 
 /* =========================================================
-   DEVELOPMENT / TESTING
+   DEVELOPMENT RESET
    ========================================================= */
 
 export function resetCookiePreferences(
@@ -2252,5 +3166,23 @@ export function resetCookiePreferences(
       siteId
     )
   );
+
+
+  interfaceStates.delete(
+    siteId
+  );
+
+
+  removePersistentPrivacyControl();
+
+
+  removePrivacySuggestion();
+
+
+  document
+    .getElementById(
+      "cookieDecisionConfirmation"
+    )
+    ?.remove();
 
 }

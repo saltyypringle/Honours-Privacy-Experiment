@@ -7,7 +7,8 @@ import {
 } from "./experiment-core.js";
 
 import {
-  initialiseCookieInterface
+  initialiseCookieInterface,
+  setPrivacyContext
 } from "./cookie-interface.js";
 
 import {
@@ -15,20 +16,6 @@ import {
 } from "./task-controller.js";
 
 
-/*
- * Multiple-choice task configuration.
- *
- * Site 1 = PlainPath Travel
- *          Common baseline.
- *
- * Site 2 = VibeCheck / 7 × 7 = 49
- *          First experimental website.
- *
- * Site 3 = BOXDROP Collectibles
- *          Interactive shopping tasks.
- *          These are handled separately by
- *          shopping-controller.js.
- */
 const SITE_CONFIGS = {
 
   site1: {
@@ -99,31 +86,18 @@ const SITE_CONFIGS = {
 };
 
 
-/*
- * Record the time at which the participant
- * entered the current website.
- */
 const pageStartedAt =
   Date.now();
 
 
-/*
- * Count relevant interactions made on the
- * current website.
- */
 let relevantInteractionCount =
   0;
 
 
-/**
- * Get the study site identifier from the HTML body.
- *
- * Example:
- *
- * <body data-study-site="site1">
- *
- * @returns {string}
- */
+/* =========================================================
+   SITE IDENTIFIER
+   ========================================================= */
+
 function getSiteKey() {
 
   return (
@@ -134,12 +108,10 @@ function getSiteKey() {
 }
 
 
-/**
- * Record completion information for the
- * current website.
- *
- * @param {string} siteKey
- */
+/* =========================================================
+   SITE COMPLETION
+   ========================================================= */
+
 function recordSiteCompletion(
   siteKey
 ) {
@@ -161,24 +133,10 @@ function recordSiteCompletion(
 }
 
 
-/**
- * Advance the participant through the
- * revised three-site experiment.
- *
- * Site 1
- *   ↓
- * transition.html
- *   ↓
- * Site 2
- *   ↓
- * transition.html
- *   ↓
- * Site 3
- *   ↓
- * complete.html
- *
- * @param {string} siteKey
- */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
 function advanceToNextSite(
   siteKey
 ) {
@@ -187,17 +145,15 @@ function advanceToNextSite(
     getSession();
 
 
-  if (!session) {
+  if (
+    !session
+  ) {
 
     return;
 
   }
 
 
-  /*
-   * Record completion of the website
-   * that the participant is leaving.
-   */
   recordSiteCompletion(
     siteKey
   );
@@ -218,13 +174,15 @@ function advanceToNextSite(
       "Current site is not in the site order."
     );
 
+
     return;
 
   }
 
 
   const nextIndex =
-    currentIndex + 1;
+    currentIndex +
+    1;
 
 
   session.currentSiteIndex =
@@ -232,7 +190,7 @@ function advanceToNextSite(
 
 
   /*
-   * Another website remains.
+   * Another site remains.
    */
   if (
     nextIndex <
@@ -245,21 +203,19 @@ function advanceToNextSite(
 
 
     /*
-     * Both Site 1 and Site 2 are followed
-     * by transition.html.
-     *
-     * transition.html determines which
-     * transition screen to display using
-     * session.currentSiteIndex.
+     * Site 1 and Site 2 both use transition.html.
      */
     if (
-      siteKey === "site1" ||
-      siteKey === "site2"
+      siteKey ===
+        "site1" ||
+      siteKey ===
+        "site2"
     ) {
 
       window.location.assign(
         "transition.html"
       );
+
 
       return;
 
@@ -277,7 +233,7 @@ function advanceToNextSite(
 
 
   /*
-   * No websites remain.
+   * Experiment complete.
    */
   session.experimentCompleted =
     true;
@@ -308,12 +264,10 @@ function advanceToNextSite(
 }
 
 
-/**
- * Prevent links on the mock websites from
- * taking participants outside the study.
- *
- * @param {string} siteKey
- */
+/* =========================================================
+   EXTERNAL LINKS
+   ========================================================= */
+
 function blockExternalLinks(
   siteKey
 ) {
@@ -323,15 +277,11 @@ function blockExternalLinks(
       'a[href^="http"], a[href^="mailto:"]'
     )
     .forEach(
-      function (
-        link
-      ) {
+      link => {
 
         link.addEventListener(
           "click",
-          function (
-            event
-          ) {
+          event => {
 
             event.preventDefault();
 
@@ -366,31 +316,34 @@ function blockExternalLinks(
 }
 
 
-/**
- * Record relevant interface interactions.
- *
- * IMPORTANT:
- *
- * This deliberately records only structural
- * information about the interface.
- *
- * It does NOT record the value typed into
- * form inputs.
- *
- * This becomes particularly important on the
- * BOXDROP shopping website.
- *
- * @param {string} siteKey
- */
+/* =========================================================
+   GENERAL INTERACTION LOGGING
+   =========================================================
+   Record structural interface interactions only.
+
+   Values typed into form controls are never read or logged
+   by this function.
+   ========================================================= */
+
 function trackRelevantInteractions(
   siteKey
 ) {
 
   document.addEventListener(
     "click",
-    function (
-      event
-    ) {
+    event => {
+
+      if (
+        !(
+          event.target instanceof
+          Element
+        )
+      ) {
+
+        return;
+
+      }
+
 
       const interactiveElement =
         event.target.closest(
@@ -411,10 +364,6 @@ function trackRelevantInteractions(
         1;
 
 
-      /*
-       * Prefer an experiment-defined action
-       * identifier where one exists.
-       */
       let action =
 
         interactiveElement
@@ -441,11 +390,10 @@ function trackRelevantInteractions(
 
 
         /*
-         * Button and link text is safe because
-         * it is text we placed on the website.
+         * Text from buttons and links is mock-site content
+         * that we created ourselves.
          *
-         * We deliberately do NOT read text/value
-         * from input fields.
+         * Input values are deliberately not read.
          */
         if (
           tagName ===
@@ -455,6 +403,7 @@ function trackRelevantInteractions(
         ) {
 
           action =
+
             interactiveElement
               .textContent
               ?.trim()
@@ -462,6 +411,7 @@ function trackRelevantInteractions(
                 0,
                 80
               ) ||
+
             "unknown";
 
         }
@@ -497,23 +447,215 @@ function trackRelevantInteractions(
 }
 
 
-/**
- * Display an error when a participant reaches
- * a mock website without an active session.
- */
+/* =========================================================
+   RESEARCH-INTERFACE FILTER
+   =========================================================
+   These controls belong to the experiment itself rather
+   than the mock website.
+
+   They must not trigger Site 2's contextual Suggestions.
+   ========================================================= */
+
+function isExperimentInterfaceElement(
+  element
+) {
+
+  return Boolean(
+    element.closest(
+      [
+
+        ".next-box",
+
+        ".cookie-banner",
+
+        ".experiment-privacy-control",
+
+        ".experiment-contextual-privacy-tip"
+
+      ].join(
+        ", "
+      )
+    )
+  );
+
+}
+
+
+/* =========================================================
+   SITE 2 — DYNAMIC PRIVACY CONTEXT
+   =========================================================
+
+   cookie-interface.js shows:
+
+     👀 initial_warning
+
+   when a Suggestions participant first enters Site 2.
+
+   Genuine mock-site interactions then trigger:
+
+     🎯 interest_browsing
+
+
+   This works BEFORE OR AFTER cookies are selected.
+
+   Example A:
+
+   initial warning
+      ↓
+   participant ignores cookies
+      ↓
+   clicks website content
+      ↓
+   warning changes to interest_browsing
+
+
+   Example B:
+
+   initial warning
+      ↓
+   participant chooses cookies
+      ↓
+   warning disappears
+      ↓
+   participant interacts with website
+      ↓
+   interest_browsing appears
+
+
+   Example C:
+
+   interest_browsing
+      ↓
+   participant presses ×
+      ↓
+   card remains closed
+      ↓
+   participant makes another genuine interaction
+      ↓
+   interest_browsing can appear again
+   ========================================================= */
+
+function initialiseSite2PrivacyContexts() {
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      if (
+        !(
+          event.target instanceof
+          Element
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      const interactiveElement =
+        event.target.closest(
+          "button, a, input, select, textarea"
+        );
+
+
+      if (
+        !interactiveElement
+      ) {
+
+        return;
+
+      }
+
+
+      /*
+       * Ignore the research task, cookies and privacy
+       * assistant itself.
+       */
+      if (
+        isExperimentInterfaceElement(
+          interactiveElement
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      const tagName =
+        interactiveElement
+          .tagName
+          .toLowerCase();
+
+
+      /*
+       * Record only structural information describing
+       * what kind of mock-site control caused the context.
+       *
+       * We never inspect values entered by the participant.
+       */
+      const action =
+
+        interactiveElement
+          .dataset
+          .action ||
+
+        interactiveElement.id ||
+
+        (
+          tagName ===
+            "a"
+
+            ? "site_link"
+
+            : tagName ===
+                "button"
+
+              ? "site_button"
+
+              : "site_control"
+        );
+
+
+      setPrivacyContext(
+        "site2",
+        "interest_browsing",
+        {
+
+          trigger:
+            "site_content_interaction",
+
+          interactionElement:
+            tagName,
+
+          interactionAction:
+            action
+
+        }
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   MISSING SESSION
+   ========================================================= */
+
 function showMissingSessionMessage() {
 
   document.body.innerHTML = `
 
     <main
-
       style="
         max-width: 650px;
         margin: 60px auto;
         padding: 30px;
         font-family: Arial, sans-serif;
       "
-
     >
 
       <h1>
@@ -521,8 +663,8 @@ function showMissingSessionMessage() {
       </h1>
 
       <p>
-        Please return to the original survey and use
-        the experiment link provided there.
+        Please return to the original survey and use the
+        experiment link provided there.
       </p>
 
     </main>
@@ -532,19 +674,10 @@ function showMissingSessionMessage() {
 }
 
 
-/**
- * Initialise Site 3's action-based shopping tasks.
- *
- * The dynamic import is deliberate.
- *
- * It means Site 1 and Site 2 continue working while
- * we are developing shopping-controller.js.
- *
- * Once Site 3 exists, shopping-controller.js will
- * expose initialiseShoppingController().
- *
- * @param {string} siteKey
- */
+/* =========================================================
+   SITE 3 — SHOPPING CONTROLLER
+   ========================================================= */
+
 async function initialiseShoppingSite(
   siteKey
 ) {
@@ -566,19 +699,13 @@ async function initialiseShoppingSite(
           siteKey,
 
 
-        /*
-         * Site 3 calls this after all
-         * three shopping tasks are complete
-         * and the participant presses Finish.
-         */
-        onContinue:
-          function () {
+        onContinue() {
 
-            advanceToNextSite(
-              siteKey
-            );
+          advanceToNextSite(
+            siteKey
+          );
 
-          }
+        }
 
       }
     );
@@ -595,12 +722,6 @@ async function initialiseShoppingSite(
     );
 
 
-    /*
-     * Site 3 will contain this element.
-     *
-     * If the shopping controller cannot load during
-     * development, a readable error can be shown.
-     */
     const message =
       document.getElementById(
         "shoppingTaskError"
@@ -625,19 +746,16 @@ async function initialiseShoppingSite(
 }
 
 
-/**
- * Initialise the current mock website.
- */
+/* =========================================================
+   INITIALISE CURRENT SITE
+   ========================================================= */
+
 function initialiseSiteController() {
 
   const siteKey =
     getSiteKey();
 
 
-  /*
-   * Only these three sites exist in the
-   * revised experiment.
-   */
   if (
     ![
       "site1",
@@ -652,6 +770,7 @@ function initialiseSiteController() {
       "Unknown study site:",
       siteKey
     );
+
 
     return;
 
@@ -668,15 +787,12 @@ function initialiseSiteController() {
 
     showMissingSessionMessage();
 
+
     return;
 
   }
 
 
-  /*
-   * Make sure this page belongs to the
-   * active experiment.
-   */
   const currentIndex =
     session.siteOrder.indexOf(
       siteKey
@@ -693,14 +809,14 @@ function initialiseSiteController() {
       siteKey
     );
 
+
     return;
 
   }
 
 
   /*
-   * Keep the participant's current position
-   * in sync with the website being displayed.
+   * Keep the session position aligned with the page.
    */
   session.currentSiteIndex =
     currentIndex;
@@ -711,13 +827,10 @@ function initialiseSiteController() {
   );
 
 
-  /*
-   * Record arrival on the website.
-   *
-   * The timestamp recorded by logEvent() will
-   * later let us calculate time from website
-   * load to cookie decision.
-   */
+  /* =======================================================
+     SITE LOAD EVENT
+     ======================================================= */
+
   logEvent(
     siteKey,
     "site_loaded",
@@ -730,38 +843,58 @@ function initialiseSiteController() {
   );
 
 
-  /*
-   * Begin general interaction tracking.
-   */
+  /* =======================================================
+     SHARED WEBSITE BEHAVIOUR
+     ======================================================= */
+
   trackRelevantInteractions(
     siteKey
   );
 
 
-  /*
-   * Block links that would leave the
-   * mock experiment.
-   */
   blockExternalLinks(
     siteKey
   );
 
 
   /*
-   * Initialise the cookie interface immediately
-   * when every website loads.
+   * Site 1 remains the common baseline inside
+   * cookie-interface.js.
+   *
+   * Sites 2 and 3 use the participant's assigned
+   * experimental condition.
    */
   initialiseCookieInterface(
     siteKey
   );
 
 
-  /*
-   * SITE 3
-   *
-   * BOXDROP uses real website actions to complete
-   * tasks instead of multiple-choice questions.
-   */
+  /* =======================================================
+     SITE 2 SUGGESTIONS
+     =======================================================
+     The initial_warning comes from cookie-interface.js.
+
+     This listener supplies interest_browsing whenever the
+     participant genuinely interacts with Site 2.
+
+     Control and Automation conditions safely ignore
+     setPrivacyContext().
+     ======================================================= */
+
+  if (
+    siteKey ===
+    "site2"
+  ) {
+
+    initialiseSite2PrivacyContexts();
+
+  }
+
+
+  /* =======================================================
+     SITE 3
+     ======================================================= */
+
   if (
     siteKey ===
     "site3"
@@ -777,12 +910,10 @@ function initialiseSiteController() {
   }
 
 
-  /*
-   * SITES 1 AND 2
-   *
-   * These continue to use the standard
-   * multiple-choice task controller.
-   */
+  /* =======================================================
+     SITES 1 + 2 STANDARD TASKS
+     ======================================================= */
+
   const config =
     SITE_CONFIGS[
       siteKey
@@ -798,6 +929,7 @@ function initialiseSiteController() {
       siteKey
     );
 
+
     return;
 
   }
@@ -809,14 +941,13 @@ function initialiseSiteController() {
       ...config,
 
 
-      onContinue:
-        function () {
+      onContinue() {
 
-          advanceToNextSite(
-            siteKey
-          );
+        advanceToNextSite(
+          siteKey
+        );
 
-        }
+      }
 
     }
   );
@@ -824,7 +955,8 @@ function initialiseSiteController() {
 }
 
 
-/*
- * Start the site controller.
- */
+/* =========================================================
+   START
+   ========================================================= */
+
 initialiseSiteController();
