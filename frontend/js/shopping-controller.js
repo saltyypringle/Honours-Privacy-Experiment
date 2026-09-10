@@ -10,8 +10,13 @@ import {
   setPrivacyContext
 } from "./cookie-interface.js";
 
+import {
+  simulateTrackingActivity
+} from "./tracking-simulator.js";
 
-const SITE_ID = "site3";
+
+const SITE_ID =
+  "site3";
 
 
 /* =========================================================
@@ -294,14 +299,8 @@ export function initialiseShoppingController(
   /*
    * Suggestions are interaction-driven.
    *
-   * Do not deduplicate contexts here.
-   *
-   * cookie-interface.js decides whether the current
-   * suggestion should update, remain visible, or reappear
-   * after the participant has dismissed it.
-   *
-   * This means a later meaningful interaction can trigger
-   * the same context again after dismissal.
+   * cookie-interface.js decides whether a contextual
+   * suggestion is actually shown.
    */
   function triggerPrivacyContext(
     contextName,
@@ -326,150 +325,125 @@ export function initialiseShoppingController(
       "shoppingTaskBox"
     );
 
-
   const taskPanel =
     document.getElementById(
       "shoppingTaskPanel"
     );
-
 
   const taskInstruction =
     document.getElementById(
       "shoppingTaskInstruction"
     );
 
-
   const taskDetails =
     document.getElementById(
       "shoppingTaskDetails"
     );
-
 
   const taskFeedback =
     document.getElementById(
       "shoppingTaskFeedback"
     );
 
-
   const collapseButton =
     document.getElementById(
       "shoppingTaskCollapseButton"
     );
-
 
   const finishButton =
     document.getElementById(
       "shoppingFinishButton"
     );
 
-
   const accountButton =
     document.getElementById(
       "boxdropAccountButton"
     );
-
 
   const cartButton =
     document.getElementById(
       "boxdropCartButton"
     );
 
-
   const cartCount =
     document.getElementById(
       "boxdropCartCount"
     );
-
 
   const cartSection =
     document.getElementById(
       "cartSection"
     );
 
-
   const emptyCart =
     document.getElementById(
       "boxdropEmptyCart"
     );
-
 
   const cartContents =
     document.getElementById(
       "boxdropCartContents"
     );
 
-
   const cartProductName =
     document.getElementById(
       "boxdropCartProductName"
     );
-
 
   const cartProductPrice =
     document.getElementById(
       "boxdropCartProductPrice"
     );
 
-
   const accountSection =
     document.getElementById(
       "accountSection"
     );
-
 
   const demoLoginForm =
     document.getElementById(
       "demoLoginForm"
     );
 
-
   const demoEmail =
     document.getElementById(
       "demoEmail"
     );
-
 
   const demoPassword =
     document.getElementById(
       "demoPassword"
     );
 
-
   const demoLoginFeedback =
     document.getElementById(
       "demoLoginFeedback"
     );
-
 
   const demoSignedInState =
     document.getElementById(
       "demoSignedInState"
     );
 
-
   const deliverySection =
     document.getElementById(
       "deliverySection"
     );
-
 
   const confirmDeliveryButton =
     document.getElementById(
       "confirmDeliveryButton"
     );
 
-
   const deliveryOptionFeedback =
     document.getElementById(
       "deliveryOptionFeedback"
     );
 
-
   const completeSection =
     document.getElementById(
       "shoppingCompleteSection"
     );
-
 
   const toast =
     document.getElementById(
@@ -716,10 +690,6 @@ export function initialiseShoppingController(
       "false";
 
 
-    /* -------------------------
-       TASK 1
-       ------------------------- */
-
     if (
       state.taskProgress ===
       0
@@ -740,10 +710,6 @@ export function initialiseShoppingController(
 
     }
 
-
-    /* -------------------------
-       TASK 2
-       ------------------------- */
 
     if (
       state.taskProgress ===
@@ -766,10 +732,6 @@ export function initialiseShoppingController(
     }
 
 
-    /* -------------------------
-       TASK 3
-       ------------------------- */
-
     if (
       state.taskProgress ===
       2
@@ -790,10 +752,6 @@ export function initialiseShoppingController(
 
     }
 
-
-    /* -------------------------
-       COMPLETE
-       ------------------------- */
 
     taskInstruction.textContent =
       "All three shopping tasks have been completed.";
@@ -922,7 +880,6 @@ export function initialiseShoppingController(
   function renderDelivery() {
 
     deliverySection.hidden =
-
       !(
         state.signedIn &&
         state.taskProgress >=
@@ -931,7 +888,6 @@ export function initialiseShoppingController(
 
 
     completeSection.hidden =
-
       !(
         state.completed ||
         state.taskProgress >=
@@ -939,10 +895,6 @@ export function initialiseShoppingController(
       );
 
 
-    /*
-     * Restore a previously selected delivery option
-     * after a refresh.
-     */
     if (
       state.selectedDeliveryOption
     ) {
@@ -1026,10 +978,6 @@ export function initialiseShoppingController(
             );
 
 
-            /*
-             * Only opening the product is treated as
-             * viewing it.
-             */
             if (
               opening
             ) {
@@ -1049,12 +997,59 @@ export function initialiseShoppingController(
 
 
               /*
-               * NEW:
+               * Ordinary analytics tracking.
                *
-               * The shopping/privacy suggestion appears
-               * because the participant actually viewed a
-               * product — not because BOXDROP loaded.
+               * This mock tracker respects the current
+               * analytics-cookie preference.
                */
+              const tracking =
+                simulateTrackingActivity(
+                  siteId,
+                  {
+
+                    trackingId:
+                      "site3_product_view_analytics",
+
+                    trackerType:
+                      "analytics",
+
+                    cookieCategory:
+                      "analytics",
+
+                    dataCategory:
+                      "product_interest",
+
+                    dataLabel:
+                      "Product viewed",
+
+                    purpose:
+                      "Measure product engagement",
+
+                    purposeClass:
+                      "analytics_measurement",
+
+                    disclosureStatus:
+                      "disclosed",
+
+                    consentRelevant:
+                      true,
+
+                    respectsPreference:
+                      true,
+
+                    privacyContext:
+                      "product_browsing",
+
+                    metadata: {
+
+                      productId
+
+                    }
+
+                  }
+                );
+
+
               triggerPrivacyContext(
                 "product_browsing",
                 {
@@ -1068,7 +1063,9 @@ export function initialiseShoppingController(
                   productId,
 
                   taskProgress:
-                    state.taskProgress
+                    state.taskProgress,
+
+                  tracking
 
                 }
               );
@@ -1158,13 +1155,61 @@ export function initialiseShoppingController(
 
 
             /*
-             * Adding something to the cart is another
-             * meaningful shopping/tracking signal.
+             * A cart action is also an analytics signal.
              *
-             * If a product suggestion was previously
-             * dismissed, this new interaction may cause it
-             * to reappear.
+             * This provides tracking ground truth even if
+             * the participant adds a product without first
+             * pressing View details.
              */
+            const cartTracking =
+              simulateTrackingActivity(
+                siteId,
+                {
+
+                  trackingId:
+                    "site3_cart_activity_analytics",
+
+                  trackerType:
+                    "analytics",
+
+                  cookieCategory:
+                    "analytics",
+
+                  dataCategory:
+                    "cart_activity",
+
+                  dataLabel:
+                    "Product added to cart",
+
+                  purpose:
+                    "Measure shopping engagement",
+
+                  purposeClass:
+                    "analytics_measurement",
+
+                  disclosureStatus:
+                    "disclosed",
+
+                  consentRelevant:
+                    true,
+
+                  respectsPreference:
+                    true,
+
+                  privacyContext:
+                    "product_browsing",
+
+                  metadata: {
+
+                    productId:
+                      product.id
+
+                  }
+
+                }
+              );
+
+
             triggerPrivacyContext(
               "product_browsing",
               {
@@ -1179,15 +1224,15 @@ export function initialiseShoppingController(
                   product.id,
 
                 taskProgress:
-                  state.taskProgress
+                  state.taskProgress,
+
+                tracking:
+                  cartTracking
 
               }
             );
 
 
-            /*
-             * Only evaluate Task 1 while Task 1 is active.
-             */
             if (
               state.taskProgress ===
               0
@@ -1241,16 +1286,6 @@ export function initialiseShoppingController(
               );
 
 
-              /*
-               * IMPORTANT:
-               *
-               * Do NOT switch the Suggestions context to
-               * account here.
-               *
-               * The account suggestion should appear only
-               * after the participant actually interacts
-               * with the account feature.
-               */
               taskFeedback.textContent =
                 "Item added. Task recorded.";
 
@@ -1326,10 +1361,6 @@ export function initialiseShoppingController(
       );
 
 
-      /*
-       * Opening a populated cart is another genuine
-       * shopping interaction.
-       */
       if (
         state.cartProductId
       ) {
@@ -1402,29 +1433,6 @@ export function initialiseShoppingController(
       }
 
 
-      /*
-       * NEW:
-       *
-       * Account Suggestions now come from an actual account
-       * interaction.
-       */
-      triggerPrivacyContext(
-        "account",
-        {
-
-          trigger:
-            "account_feature_opened",
-
-          interaction:
-            "open_account",
-
-          taskProgress:
-            state.taskProgress
-
-        }
-      );
-
-
       scrollToElement(
         accountSection
       );
@@ -1436,51 +1444,6 @@ export function initialiseShoppingController(
   /* =======================================================
      DEMO LOGIN
      ======================================================= */
-
-  /*
-   * Focusing a demo-account field is an actual account
-   * interaction.
-   *
-   * We pass only the structural interaction. The email or
-   * password itself is never passed to the Suggestions
-   * system, event log or storage.
-   */
-  demoLoginForm.addEventListener(
-    "focusin",
-    function (
-      event
-    ) {
-
-      if (
-        !event.target.matches(
-          "input"
-        )
-      ) {
-
-        return;
-
-      }
-
-
-      triggerPrivacyContext(
-        "account",
-        {
-
-          trigger:
-            "demo_account_field_focused",
-
-          interaction:
-            "use_account_form",
-
-          taskProgress:
-            state.taskProgress
-
-        }
-      );
-
-    }
-  );
-
 
   demoLoginForm.addEventListener(
     "submit",
@@ -1500,38 +1463,12 @@ export function initialiseShoppingController(
       }
 
 
-      /*
-       * Submitting the demo sign-in form is another
-       * meaningful account interaction.
-       *
-       * This also lets the account suggestion reappear if
-       * the participant dismissed it while filling in the
-       * form.
-       */
-      triggerPrivacyContext(
-        "account",
-        {
-
-          trigger:
-            "demo_login_submitted",
-
-          interaction:
-            "submit_account_form",
-
-          taskProgress:
-            state.taskProgress
-
-        }
-      );
-
-
       loginAttemptNumber +=
         1;
 
 
       /*
-       * These values are used ONLY for immediate fictional
-       * demo-account validation.
+       * Values are used only for immediate validation.
        *
        * They are never logged or persisted.
        */
@@ -1587,8 +1524,7 @@ export function initialiseShoppingController(
 
 
       /*
-       * Remove the fictional credentials immediately after
-       * successful validation.
+       * Remove fictional credentials immediately.
        */
       demoEmail.value =
         "";
@@ -1600,6 +1536,74 @@ export function initialiseShoppingController(
 
       demoLoginFeedback.textContent =
         "";
+
+
+      /*
+       * ACCOUNT-LINKED ACTIVITY
+       *
+       * This deliberately does not depend on optional
+       * cookies.
+       */
+      const accountTracking =
+        simulateTrackingActivity(
+          siteId,
+          {
+
+            trackingId:
+              "site3_account_linkage",
+
+            trackerType:
+              "first_party_account",
+
+            cookieCategory:
+              null,
+
+            dataCategory:
+              "account_linked_activity",
+
+            dataLabel:
+              "Shopping activity linked to the demo account",
+
+            purpose:
+              "Maintain the signed-in shopping session",
+
+            purposeClass:
+              "service_function",
+
+            disclosureStatus:
+              "disclosed",
+
+            consentRelevant:
+              false,
+
+            respectsPreference:
+              true,
+
+            privacyContext:
+              "account"
+
+          }
+        );
+
+
+      triggerPrivacyContext(
+        "account",
+        {
+
+          trigger:
+            "demo_login_success",
+
+          interaction:
+            "account_linked",
+
+          taskProgress:
+            state.taskProgress,
+
+          tracking:
+            accountTracking
+
+        }
+      );
 
 
       renderAccount();
@@ -1648,18 +1652,6 @@ export function initialiseShoppingController(
         );
 
 
-        /*
-         * IMPORTANT:
-         *
-         * Do NOT automatically show the delivery/location
-         * Suggestions context here.
-         *
-         * Merely making the delivery section available is
-         * not enough.
-         *
-         * The participant must actually interact with one
-         * of the delivery controls first.
-         */
         taskFeedback.textContent =
           "Sign-in recorded.";
 
@@ -1700,88 +1692,9 @@ export function initialiseShoppingController(
      DELIVERY
      ======================================================= */
 
-  /*
-   * The delivery/location suggestion is triggered only by
-   * actual interaction with delivery controls.
-   *
-   * "Perth WA 6000" is fixed fictional content displayed
-   * by the mock website.
-   *
-   * No real participant location is collected or inferred.
-   */
-  document
-    .querySelectorAll(
-      'input[name="deliveryOption"]'
-    )
-    .forEach(
-      function (
-        option
-      ) {
-
-        option.addEventListener(
-          "change",
-          function () {
-
-            triggerPrivacyContext(
-              "delivery",
-              {
-
-                trigger:
-                  "delivery_option_interacted",
-
-                interaction:
-                  "select_delivery_option",
-
-                option:
-                  option.value,
-
-                mockLocation:
-                  "Perth WA 6000",
-
-                taskProgress:
-                  state.taskProgress
-
-              }
-            );
-
-          }
-        );
-
-      }
-    );
-
-
   confirmDeliveryButton.addEventListener(
     "click",
     function () {
-
-      /*
-       * Confirming delivery is another meaningful delivery
-       * interaction.
-       *
-       * If the location suggestion was dismissed after
-       * selecting an option, clicking Confirm can therefore
-       * make it reappear.
-       */
-      triggerPrivacyContext(
-        "delivery",
-        {
-
-          trigger:
-            "delivery_confirm_clicked",
-
-          interaction:
-            "confirm_delivery",
-
-          mockLocation:
-            "Perth WA 6000",
-
-          taskProgress:
-            state.taskProgress
-
-        }
-      );
-
 
       const selected =
         document.querySelector(
@@ -1802,17 +1715,89 @@ export function initialiseShoppingController(
       }
 
 
+      /*
+       * DELIBERATE SECONDARY-USE CASE
+       *
+       * The fixed fictional location is reused by a mock
+       * advertising tracker.
+       *
+       * The tracker intentionally ignores the participant's
+       * advertising-cookie preference.
+       *
+       * If Advertising is disabled this therefore becomes a
+       * known preference mismatch.
+       *
+       * No real location is collected.
+       */
+      const deliveryTracking =
+        simulateTrackingActivity(
+          siteId,
+          {
+
+            trackingId:
+              "site3_delivery_location_advertising",
+
+            trackerType:
+              "advertising",
+
+            cookieCategory:
+              "advertising",
+
+            dataCategory:
+              "mock_delivery_location",
+
+            dataLabel:
+              "Mock delivery location: Perth WA 6000",
+
+            purpose:
+              "Personalise advertising",
+
+            purposeClass:
+              "secondary_use",
+
+            disclosureStatus:
+              "not_explicitly_disclosed",
+
+            consentRelevant:
+              true,
+
+            respectsPreference:
+              false,
+
+            privacyContext:
+              "delivery"
+
+          }
+        );
+
+
+      triggerPrivacyContext(
+        "delivery",
+        {
+
+          trigger:
+            "delivery_confirm_clicked",
+
+          interaction:
+            "confirm_delivery",
+
+          mockLocation:
+            "Perth WA 6000",
+
+          taskProgress:
+            state.taskProgress,
+
+          tracking:
+            deliveryTracking
+
+        }
+      );
+
+
       const option =
         selected.value;
 
 
-      /*
-       * Standard = FREE / 5–7 business days
-       * Express  = $12.95 / 1–2 business days
-       * Priority = $19.95 / next business day
-       *
-       * Fastest option below $15 = Express.
-       */
       const correct =
         option ===
         "express";
@@ -2053,10 +2038,6 @@ export function initialiseShoppingController(
   }
 
 
-  /*
-   * Observe the actual cookie-banner state so reopening
-   * cookie settings also collapses the mobile task card.
-   */
   if (
     cookieBanner &&
     typeof MutationObserver !==
@@ -2142,13 +2123,8 @@ export function initialiseShoppingController(
 
 
   /*
-   * IMPORTANT:
-   *
-   * Do not restore or automatically infer a Suggestions
-   * context simply from task progress.
-   *
-   * On a refreshed page, a new meaningful interaction must
-   * occur before a contextual Suggestions message appears.
+   * Do not automatically infer a Suggestions context after
+   * refresh. A new meaningful interaction should occur.
    */
   logEvent(
     siteId,

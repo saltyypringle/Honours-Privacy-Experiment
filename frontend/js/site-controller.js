@@ -15,6 +15,10 @@ import {
   initialiseTaskController
 } from "./task-controller.js";
 
+import {
+  simulateTrackingActivity
+} from "./tracking-simulator.js";
+
 
 const SITE_CONFIGS = {
 
@@ -449,11 +453,6 @@ function trackRelevantInteractions(
 
 /* =========================================================
    RESEARCH-INTERFACE FILTER
-   =========================================================
-   These controls belong to the experiment itself rather
-   than the mock website.
-
-   They must not trigger Site 2's contextual Suggestions.
    ========================================================= */
 
 function isExperimentInterfaceElement(
@@ -463,15 +462,10 @@ function isExperimentInterfaceElement(
   return Boolean(
     element.closest(
       [
-
         ".next-box",
-
         ".cookie-banner",
-
         ".experiment-privacy-control",
-
         ".experiment-contextual-privacy-tip"
-
       ].join(
         ", "
       )
@@ -483,56 +477,6 @@ function isExperimentInterfaceElement(
 
 /* =========================================================
    SITE 2 — DYNAMIC PRIVACY CONTEXT
-   =========================================================
-
-   cookie-interface.js shows:
-
-     👀 initial_warning
-
-   when a Suggestions participant first enters Site 2.
-
-   Genuine mock-site interactions then trigger:
-
-     🎯 interest_browsing
-
-
-   This works BEFORE OR AFTER cookies are selected.
-
-   Example A:
-
-   initial warning
-      ↓
-   participant ignores cookies
-      ↓
-   clicks website content
-      ↓
-   warning changes to interest_browsing
-
-
-   Example B:
-
-   initial warning
-      ↓
-   participant chooses cookies
-      ↓
-   warning disappears
-      ↓
-   participant interacts with website
-      ↓
-   interest_browsing appears
-
-
-   Example C:
-
-   interest_browsing
-      ↓
-   participant presses ×
-      ↓
-   card remains closed
-      ↓
-   participant makes another genuine interaction
-      ↓
-   interest_browsing can appear again
    ========================================================= */
 
 function initialiseSite2PrivacyContexts() {
@@ -569,8 +513,8 @@ function initialiseSite2PrivacyContexts() {
 
 
       /*
-       * Ignore the research task, cookies and privacy
-       * assistant itself.
+       * Ignore the research task, cookie interface
+       * and privacy assistant.
        */
       if (
         isExperimentInterfaceElement(
@@ -590,10 +534,9 @@ function initialiseSite2PrivacyContexts() {
 
 
       /*
-       * Record only structural information describing
-       * what kind of mock-site control caused the context.
+       * Record structural information only.
        *
-       * We never inspect values entered by the participant.
+       * No participant-entered values are inspected.
        */
       const action =
 
@@ -618,6 +561,72 @@ function initialiseSite2PrivacyContexts() {
         );
 
 
+      /*
+       * Objective simulated tracking ground truth.
+       *
+       * Site 2 represents ordinary analytics tracking that
+       * respects the participant's current analytics-cookie
+       * preference.
+       */
+      const tracking =
+        simulateTrackingActivity(
+          "site2",
+          {
+
+            trackingId:
+              "site2_content_engagement",
+
+            trackerType:
+              "analytics",
+
+            cookieCategory:
+              "analytics",
+
+            dataCategory:
+              "content_interaction",
+
+            dataLabel:
+              "Content views and clicks",
+
+            purpose:
+              "Measure engagement with site content",
+
+            purposeClass:
+              "analytics_measurement",
+
+            disclosureStatus:
+              "disclosed",
+
+            consentRelevant:
+              true,
+
+            respectsPreference:
+              true,
+
+            privacyContext:
+              "interest_browsing",
+
+            metadata: {
+
+              interactionElement:
+                tagName,
+
+              interactionAction:
+                action
+
+            }
+
+          }
+        );
+
+
+      /*
+       * Suggestions participants see an interpretation of
+       * the simulated tracking event.
+       *
+       * Control and Automation conditions ignore this
+       * contextual Suggestions call.
+       */
       setPrivacyContext(
         "site2",
         "interest_browsing",
@@ -630,7 +639,9 @@ function initialiseSite2PrivacyContexts() {
             tagName,
 
           interactionAction:
-            action
+            action,
+
+          tracking
 
         }
       );
@@ -870,15 +881,7 @@ function initialiseSiteController() {
 
 
   /* =======================================================
-     SITE 2 SUGGESTIONS
-     =======================================================
-     The initial_warning comes from cookie-interface.js.
-
-     This listener supplies interest_browsing whenever the
-     participant genuinely interacts with Site 2.
-
-     Control and Automation conditions safely ignore
-     setPrivacyContext().
+     SITE 2 TRACKING + SUGGESTIONS
      ======================================================= */
 
   if (

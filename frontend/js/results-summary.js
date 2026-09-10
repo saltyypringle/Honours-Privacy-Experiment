@@ -101,12 +101,10 @@ function getLastEvent(
 
   return matches.length >
     0
-
     ? matches[
         matches.length -
         1
       ]
-
     : null;
 
 }
@@ -146,9 +144,7 @@ function booleanOrNull(
 
   return typeof value ===
     "boolean"
-
     ? value
-
     : null;
 
 }
@@ -265,10 +261,6 @@ function eventOccurredBy(
   }
 
 
-  /*
-   * sequenceNumber is preferable because it represents
-   * the actual chronological event order.
-   */
   if (
     Number.isFinite(
       event.sequenceNumber
@@ -286,9 +278,6 @@ function eventOccurredBy(
   }
 
 
-  /*
-   * Timestamp fallback for older event records.
-   */
   const eventTime =
     timestampMilliseconds(
       event
@@ -364,7 +353,6 @@ function uniqueOrdered(
 
 /* =========================================================
    STANDARD TASK RESPONSES
-   SITES 1 AND 2
    ========================================================= */
 
 function getTaskResponse(
@@ -383,12 +371,7 @@ function getTaskResponse(
       : [];
 
 
-  /*
-   * Search backwards in case an updated response for
-   * the same site exists.
-   */
   for (
-
     let index =
       responses.length -
       1;
@@ -398,7 +381,6 @@ function getTaskResponse(
 
     index -=
       1
-
   ) {
 
     if (
@@ -528,11 +510,6 @@ function buildShoppingSummary(
     );
 
 
-  /*
-   * shoppingState contains safe structural state only.
-   *
-   * No raw login or other personal information is stored.
-   */
   const storedState =
 
     isObject(
@@ -566,19 +543,13 @@ function buildShoppingSummary(
     )
 
       ? Math.max(
-
           0,
-
           Math.min(
-
             3,
-
             Math.trunc(
               storedState.taskProgress
             )
-
           )
-
         )
 
       : completedTaskCount;
@@ -586,32 +557,21 @@ function buildShoppingSummary(
 
   return {
 
-    /* -------------------------
-       OVERALL SHOPPING PROGRESS
-       ------------------------- */
-
     task_progress:
       finalTaskProgress,
-
 
     completed_task_count:
       completedTaskCount,
 
-
-    /* -------------------------
-       TASK 1 — PRODUCT
-       ------------------------- */
 
     task_1_completed:
       Boolean(
         task1
       ),
 
-
     task_1_completed_at:
       task1?.timestamp ??
       null,
-
 
     task_1_product_id:
       getEventValue(
@@ -620,30 +580,20 @@ function buildShoppingSummary(
       null,
 
 
-    /* -------------------------
-       TASK 2 — DEMO ACCOUNT
-       ------------------------- */
-
     task_2_completed:
       Boolean(
         task2
       ),
-
 
     task_2_completed_at:
       task2?.timestamp ??
       null,
 
 
-    /* -------------------------
-       TASK 3 — DELIVERY
-       ------------------------- */
-
     task_3_completed:
       Boolean(
         task3
       ),
-
 
     task_3_completed_at:
       task3?.timestamp ??
@@ -652,17 +602,11 @@ function buildShoppingSummary(
 
     all_tasks_completed:
       Boolean(
-
         task1 &&
         task2 &&
         task3
-
       ),
 
-
-    /* -------------------------
-       PRODUCT BROWSING
-       ------------------------- */
 
     product_view_count:
       countEvents(
@@ -670,7 +614,6 @@ function buildShoppingSummary(
         siteId,
         "product_viewed"
       ),
-
 
     product_add_count:
       countEvents(
@@ -680,41 +623,28 @@ function buildShoppingSummary(
       ),
 
 
-    /* -------------------------
-       DEMO LOGIN
-       ------------------------- */
-
     demo_login_attempt_count:
       loginAttempts.length,
-
 
     demo_login_failed_attempt_count:
 
       loginAttempts.filter(
         event => (
-
           getEventValue(
             event
           ).success ===
           false
-
         )
       ).length,
 
 
-    /* -------------------------
-       CHECKOUT
-       ------------------------- */
-
     checkout_started:
-
       countEvents(
         events,
         siteId,
         "checkout_started"
       ) >
       0,
-
 
     checkout_start_count:
       countEvents(
@@ -727,12 +657,10 @@ function buildShoppingSummary(
     delivery_option_attempt_count:
       deliverySelections.length,
 
-
     final_delivery_option:
       finalDeliveryValue
         .option ??
       null,
-
 
     final_delivery_correct:
       booleanOrNull(
@@ -742,7 +670,6 @@ function buildShoppingSummary(
 
 
     shopping_site_finished:
-
       countEvents(
         events,
         siteId,
@@ -886,7 +813,7 @@ function buildCookieSummary(
 
 
   /* =======================================================
-     SUGGESTIONS EXPOSURE
+     SUGGESTIONS
      ======================================================= */
 
   const suggestionUpdatedEvents =
@@ -897,12 +824,6 @@ function buildCookieSummary(
     );
 
 
-  /*
-   * A Suggestions exposure consists of either:
-   *
-   * - the first card being shown; or
-   * - the existing card updating to another context.
-   */
   const suggestionExposureEvents =
 
     events.filter(
@@ -947,26 +868,16 @@ function buildCookieSummary(
     );
 
 
-  /*
-   * Use actual displayed Suggestions contexts rather
-   * than merely every privacy_context_detected event.
-   *
-   * This avoids counting a context that was detected
-   * but never displayed.
-   */
   const suggestionContextsSeen =
 
     uniqueOrdered(
 
       suggestionExposureEvents.map(
         event => (
-
           getEventValue(
             event
           ).context ??
-
           null
-
         )
       )
 
@@ -993,17 +904,12 @@ function buildCookieSummary(
       : null;
 
 
-  /* =======================================================
-     SUGGESTIONS BEFORE FIRST COOKIE CHANGE
-     ======================================================= */
-
   const exposuresBeforeFirstChange =
 
     firstPreferenceChangedEvent
 
       ? suggestionExposureEvents.filter(
           event =>
-
             eventOccurredBy(
               event,
               firstPreferenceChangedEvent
@@ -1020,10 +926,6 @@ function buildCookieSummary(
     null;
 
 
-  /*
-   * Most recently displayed Suggestions context before
-   * the participant changed their cookie preference.
-   */
   const activeExposureBeforeChange =
 
     exposuresBeforeFirstChange.length >
@@ -1038,7 +940,6 @@ function buildCookieSummary(
 
 
   const suggestionSeenBeforeChangeDerived =
-
     exposuresBeforeFirstChange.length >
     0;
 
@@ -1049,7 +950,6 @@ function buildCookieSummary(
 
       ? suggestionOpenedEvents.some(
           event =>
-
             eventOccurredBy(
               event,
               firstPreferenceChangedEvent
@@ -1059,12 +959,6 @@ function buildCookieSummary(
       : false;
 
 
-  /*
-   * Prefer the value explicitly captured at the moment
-   * of the cookie change.
-   *
-   * Fall back to chronological derivation for older logs.
-   */
   const suggestionSeenBeforeChange =
 
     typeof firstPreferenceChangedValue
@@ -1097,13 +991,6 @@ function buildCookieSummary(
         : null;
 
 
-  /*
-   * Most recent Suggestions exposure → first genuine
-   * cookie-preference change.
-   *
-   * This is the main contextual Suggestions timing
-   * measure.
-   */
   const suggestionToCookieChangeMs =
     millisecondsBetweenEvents(
       activeExposureBeforeChange,
@@ -1111,17 +998,111 @@ function buildCookieSummary(
     );
 
 
-  /*
-   * First Suggestions exposure on this website →
-   * first genuine cookie-preference change.
-   *
-   * Kept separately because it captures cumulative
-   * exposure rather than the currently active context.
-   */
   const firstSuggestionToCookieChangeMs =
     millisecondsBetweenEvents(
       firstExposureBeforeChange,
       firstPreferenceChangedEvent
+    );
+
+
+  /* =======================================================
+     SIMULATED TRACKING GROUND TRUTH
+     ======================================================= */
+
+  const trackingEvents =
+    getMatchingEvents(
+      events,
+      siteId,
+      "simulated_tracking_activity"
+    );
+
+
+  const trackingValues =
+    trackingEvents.map(
+      event =>
+        getEventValue(
+          event
+        )
+    );
+
+
+  const recordedTrackingValues =
+    trackingValues.filter(
+      value =>
+        value.outcome ===
+        "recorded"
+    );
+
+
+  const blockedTrackingValues =
+    trackingValues.filter(
+      value =>
+        value.outcome ===
+        "blocked"
+    );
+
+
+  const preferenceMismatchValues =
+    trackingValues.filter(
+      value =>
+        value.preferenceMismatch ===
+        true
+    );
+
+
+  const disclosureMismatchValues =
+    trackingValues.filter(
+      value =>
+        value.disclosureMismatch ===
+        true
+    );
+
+
+  const recordedBeforeChoiceValues =
+    trackingValues.filter(
+      value =>
+        value.recordedBeforeChoice ===
+        true
+    );
+
+
+  const trackingIds =
+    uniqueOrdered(
+      trackingValues.map(
+        value =>
+          value.trackingId ??
+          null
+      )
+    );
+
+
+  const trackingDataCategories =
+    uniqueOrdered(
+      trackingValues.map(
+        value =>
+          value.dataCategory ??
+          null
+      )
+    );
+
+
+  const trackingPurposes =
+    uniqueOrdered(
+      trackingValues.map(
+        value =>
+          value.purposeClass ??
+          null
+      )
+    );
+
+
+  const trackingClassifications =
+    uniqueOrdered(
+      trackingValues.map(
+        value =>
+          value.behaviourClassification ??
+          null
+      )
     );
 
 
@@ -1159,10 +1140,6 @@ function buildCookieSummary(
     );
 
 
-  /* =======================================================
-     RETURN COOKIE SUMMARY
-     ======================================================= */
-
   return {
 
     /* -------------------------
@@ -1176,14 +1153,12 @@ function buildCookieSummary(
         .assignedCondition ??
       null,
 
-
     interface_condition:
       interfaceValue
         .interfaceCondition ??
       firstCookieValue
         .interfaceCondition ??
       null,
-
 
     phase:
       interfaceValue
@@ -1202,46 +1177,32 @@ function buildCookieSummary(
         firstCookieEvent
       ),
 
-
     cookie_initial_choice:
       firstCookieValue
         .choice ??
       null,
-
 
     cookie_initial_source:
       firstCookieValue
         .source ??
       null,
 
-
     cookie_initial_functional:
-
       firstCookieEvent
-
         ? initialSettings
             .functional
-
         : null,
-
 
     cookie_initial_analytics:
-
       firstCookieEvent
-
         ? initialSettings
             .analytics
-
         : null,
 
-
     cookie_initial_advertising:
-
       firstCookieEvent
-
         ? initialSettings
             .advertising
-
         : null,
 
 
@@ -1254,87 +1215,59 @@ function buildCookieSummary(
         .choice ??
       null,
 
-
     cookie_final_source:
       finalCookieValue
         .source ??
       null,
 
-
     cookie_final_functional:
-
       finalCookieEvent
-
         ? finalSettings
             .functional
-
         : null,
-
 
     cookie_final_analytics:
-
       finalCookieEvent
-
         ? finalSettings
             .analytics
-
         : null,
 
-
     cookie_final_advertising:
-
       finalCookieEvent
-
         ? finalSettings
             .advertising
-
         : null,
 
 
     /*
-     * Backwards-compatible aliases.
-     *
-     * These represent the FINAL preference.
+     * Backwards-compatible final-choice aliases.
      */
     cookie_choice:
       finalCookieValue
         .choice ??
       null,
 
-
     cookie_source:
       finalCookieValue
         .source ??
       null,
 
-
     cookie_functional:
-
       finalCookieEvent
-
         ? finalSettings
             .functional
-
         : null,
-
 
     cookie_analytics:
-
       finalCookieEvent
-
         ? finalSettings
             .analytics
-
         : null,
 
-
     cookie_advertising:
-
       finalCookieEvent
-
         ? finalSettings
             .advertising
-
         : null,
 
 
@@ -1343,42 +1276,28 @@ function buildCookieSummary(
        ------------------------- */
 
     cookie_choice_changed:
-
       preferenceChangedEvents.length >
       0,
-
 
     cookie_change_count:
       preferenceChangedEvents.length,
 
-
     cookie_settings_reopened:
-
       settingsReopenCount >
       0,
 
-
     cookie_settings_reopen_count:
       settingsReopenCount,
-
 
     cookie_settings_saved_unchanged_count:
       settingsSavedUnchangedCount,
 
 
-    /*
-     * Initial cookie decision → first genuine
-     * preference change.
-     *
-     * Prefer the precise value generated by
-     * cookie-interface.js.
-     */
     time_initial_choice_to_change_ms:
 
       firstPreferenceChangedEvent
 
         ? (
-
             finiteOrNull(
               firstPreferenceChangedValue
                 .timeInitialChoiceToChangeMilliseconds
@@ -1388,7 +1307,6 @@ function buildCookieSummary(
               firstCookieEvent,
               firstPreferenceChangedEvent
             )
-
           )
 
         : null,
@@ -1413,7 +1331,6 @@ function buildCookieSummary(
        ------------------------- */
 
     customise_opened:
-
       (
         settingsOpenCount +
         settingsReopenCount
@@ -1421,18 +1338,11 @@ function buildCookieSummary(
       0,
 
 
-    /*
-     * Initial settings-panel openings before a decision.
-     */
     cookie_settings_open_count:
       settingsOpenCount,
 
 
-    /*
-     * Includes both initial openings and later reopenings.
-     */
     cookie_settings_total_open_count:
-
       settingsOpenCount +
       settingsReopenCount,
 
@@ -1473,18 +1383,11 @@ function buildCookieSummary(
        SUGGESTIONS
        ------------------------- */
 
-    /*
-     * Compatibility alias for the older field name.
-     *
-     * It now correctly represents the FIRST contextual
-     * Suggestions topic shown on the website.
-     */
     suggestion_topic:
       firstSuggestionContext,
 
 
     suggestion_shown:
-
       suggestionExposureEvents.length >
       0,
 
@@ -1494,7 +1397,6 @@ function buildCookieSummary(
 
 
     suggestion_opened:
-
       suggestionOpenedEvents.length >
       0,
 
@@ -1504,7 +1406,6 @@ function buildCookieSummary(
 
 
     suggestion_dismissed:
-
       suggestionDismissedEvents.length >
       0,
 
@@ -1518,7 +1419,6 @@ function buildCookieSummary(
 
 
     suggestion_settings_opened:
-
       suggestionSettingsOpenedEvents.length >
       0,
 
@@ -1539,34 +1439,80 @@ function buildCookieSummary(
       finalSuggestionContext,
 
 
-    /*
-     * Context active immediately before the first
-     * genuine preference change.
-     */
     context_before_first_cookie_change:
-
       getEventValue(
         activeExposureBeforeChange
       ).context ??
-
       firstPreferenceChangedValue
         .context ??
-
       null,
 
 
-    /*
-     * Active Suggestions context → cookie change.
-     */
     suggestion_to_cookie_change_ms:
       suggestionToCookieChangeMs,
 
 
-    /*
-     * First Suggestions exposure → cookie change.
-     */
     first_suggestion_to_cookie_change_ms:
       firstSuggestionToCookieChangeMs,
+
+
+    /* -------------------------
+       SIMULATED TRACKING
+       ------------------------- */
+
+    tracking_event_count:
+      trackingEvents.length,
+
+
+    tracking_recorded_count:
+      recordedTrackingValues.length,
+
+
+    tracking_blocked_count:
+      blockedTrackingValues.length,
+
+
+    tracking_preference_mismatch:
+      preferenceMismatchValues.length >
+      0,
+
+
+    tracking_preference_mismatch_count:
+      preferenceMismatchValues.length,
+
+
+    tracking_disclosure_mismatch:
+      disclosureMismatchValues.length >
+      0,
+
+
+    tracking_disclosure_mismatch_count:
+      disclosureMismatchValues.length,
+
+
+    tracking_recorded_before_choice:
+      recordedBeforeChoiceValues.length >
+      0,
+
+
+    tracking_recorded_before_choice_count:
+      recordedBeforeChoiceValues.length,
+
+
+    tracking_ids:
+      trackingIds,
+
+
+    tracking_data_categories:
+      trackingDataCategories,
+
+
+    tracking_purpose_classes:
+      trackingPurposes,
+
+
+    tracking_behaviour_classifications:
+      trackingClassifications,
 
 
     /* -------------------------
@@ -1593,7 +1539,6 @@ function buildCookieSummary(
 
 
     automation_reviewed:
-
       automationReviewCount >
       0,
 
@@ -1603,7 +1548,6 @@ function buildCookieSummary(
 
 
     automation_override:
-
       automationOverrideCount >
       0,
 
@@ -1669,10 +1613,6 @@ function buildSiteSummary(
 
   return {
 
-    /* -------------------------
-       TASK
-       ------------------------- */
-
     task_id:
 
       siteId ===
@@ -1685,10 +1625,6 @@ function buildSiteSummary(
           null,
 
 
-    /*
-     * Preserve the participant's actual selected answer
-     * for the information tasks.
-     */
     task_answer:
 
       siteId ===
@@ -1701,9 +1637,6 @@ function buildSiteSummary(
           null,
 
 
-    /*
-     * Useful for later validation/reanalysis.
-     */
     task_correct_answer:
 
       siteId ===
@@ -1747,16 +1680,8 @@ function buildSiteSummary(
           null,
 
 
-    /* -------------------------
-       PRIVACY / COOKIE DATA
-       ------------------------- */
-
     ...cookie,
 
-
-    /* -------------------------
-       GENERAL SITE BEHAVIOUR
-       ------------------------- */
 
     time_on_site_ms:
       finiteOrNull(
@@ -1781,10 +1706,6 @@ function buildSiteSummary(
             "interface_interaction"
           ),
 
-
-    /* -------------------------
-       SITE 3 ONLY
-       ------------------------- */
 
     shopping
 
@@ -1867,25 +1788,17 @@ export function buildResultsSummary() {
         )
 
         ? Math.max(
-
             0,
-
             Date.now() -
             session.startedAtMilliseconds
-
           )
 
         : null;
 
 
-  /* =======================================================
-     INFORMATION TASK TOTAL
-     ======================================================= */
-
   const informationCorrectCount =
 
     INFORMATION_SITE_IDS.reduce(
-
       (
         total,
         siteId
@@ -1906,18 +1819,11 @@ export function buildResultsSummary() {
         )
 
       ),
-
       0
-
     );
 
 
-  /* =======================================================
-     SHOPPING TASK TOTAL
-     ======================================================= */
-
   const shoppingCompletedCount =
-
     sites
       .site3
       .shopping
@@ -1926,10 +1832,6 @@ export function buildResultsSummary() {
 
   return {
 
-    /*
-     * Keep the backend-facing schema version unchanged
-     * until we inspect the Cloudflare Worker.
-     */
     schema_version:
       "1.0",
 
@@ -1938,12 +1840,8 @@ export function buildResultsSummary() {
       "three_site_v2",
 
 
-    /*
-     * More precise revision marker for the current
-     * derived-results structure.
-     */
     results_schema_revision:
-      "2026-09-contextual-privacy-v2",
+      "2026-09-tracking-awareness-v1",
 
 
     participant_id:
@@ -1973,10 +1871,8 @@ export function buildResultsSummary() {
 
 
     completed_at:
-
       completionEvent
         ?.timestamp ??
-
       new Date()
         .toISOString(),
 
@@ -1994,13 +1890,6 @@ export function buildResultsSummary() {
 
     totals: {
 
-      /*
-       * Five behavioural tasks:
-       *
-       * Site 1 = 1
-       * Site 2 = 1
-       * Site 3 = 3
-       */
       expected_task_count:
         5,
 
@@ -2014,19 +1903,13 @@ export function buildResultsSummary() {
 
 
       correct_task_count:
-
         informationCorrectCount +
         shoppingCompletedCount,
 
 
-      /* -------------------------
-         COOKIE DECISIONS
-         ------------------------- */
-
       cookie_decision_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
@@ -2039,96 +1922,75 @@ export function buildResultsSummary() {
                 siteId
               ]
                 .cookie_decision_made
-
                 ? 1
-
                 : 0
             )
 
           ),
-
           0
-
         ),
 
 
       cookie_change_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .cookie_change_count
 
           ),
-
           0
-
         ),
 
 
       cookie_settings_reopen_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .cookie_settings_reopen_count
 
           ),
-
           0
-
         ),
 
 
       cookie_settings_saved_unchanged_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .cookie_settings_saved_unchanged_count
 
           ),
-
           0
-
         ),
 
-
-      /* -------------------------
-         GENERAL INTERACTIONS
-         ------------------------- */
 
       interaction_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
@@ -2145,183 +2007,235 @@ export function buildResultsSummary() {
             )
 
           ),
-
           0
-
         ),
 
 
-      /*
-       * Initial settings-panel opens.
-       *
-       * Reopens are counted separately above.
-       */
       customise_open_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .cookie_settings_open_count
 
           ),
-
           0
-
         ),
 
-
-      /* -------------------------
-         SUGGESTIONS
-         ------------------------- */
 
       suggestion_exposure_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .suggestion_exposure_count
 
           ),
-
           0
-
         ),
 
 
       suggestion_open_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .suggestion_open_count
 
           ),
-
           0
-
         ),
 
 
       suggestion_dismiss_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .suggestion_dismiss_count
 
           ),
-
           0
-
         ),
 
 
       suggestion_settings_open_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .suggestion_settings_open_count
 
           ),
-
           0
-
         ),
 
 
-      /* -------------------------
-         AUTOMATION
-         ------------------------- */
-
-      automation_review_count:
+      tracking_event_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
+            sites[
+              siteId
+            ]
+              .tracking_event_count
 
+          ),
+          0
+        ),
+
+
+      tracking_recorded_count:
+
+        SITE_IDS.reduce(
+          (
+            total,
+            siteId
+          ) => (
+
+            total +
+            sites[
+              siteId
+            ]
+              .tracking_recorded_count
+
+          ),
+          0
+        ),
+
+
+      tracking_blocked_count:
+
+        SITE_IDS.reduce(
+          (
+            total,
+            siteId
+          ) => (
+
+            total +
+            sites[
+              siteId
+            ]
+              .tracking_blocked_count
+
+          ),
+          0
+        ),
+
+
+      tracking_preference_mismatch_count:
+
+        SITE_IDS.reduce(
+          (
+            total,
+            siteId
+          ) => (
+
+            total +
+            sites[
+              siteId
+            ]
+              .tracking_preference_mismatch_count
+
+          ),
+          0
+        ),
+
+
+      tracking_disclosure_mismatch_count:
+
+        SITE_IDS.reduce(
+          (
+            total,
+            siteId
+          ) => (
+
+            total +
+            sites[
+              siteId
+            ]
+              .tracking_disclosure_mismatch_count
+
+          ),
+          0
+        ),
+
+
+      automation_review_count:
+
+        SITE_IDS.reduce(
+          (
+            total,
+            siteId
+          ) => (
+
+            total +
             sites[
               siteId
             ]
               .automation_review_count
 
           ),
-
           0
-
         ),
 
 
       automation_override_count:
 
         SITE_IDS.reduce(
-
           (
             total,
             siteId
           ) => (
 
             total +
-
             sites[
               siteId
             ]
               .automation_override_count
 
           ),
-
           0
-
         )
 
     }
@@ -2365,8 +2279,8 @@ function encodeBoolean(
 
 
 /**
- * Convert the nested participant summary into flat
- * name/value pairs suitable for Qualtrics Embedded Data.
+ * Convert nested results into flat values suitable for
+ * Qualtrics Embedded Data.
  */
 export function flattenResultsSummary(
   summary
@@ -2374,53 +2288,38 @@ export function flattenResultsSummary(
 
   const flattened = {
 
-    /* -------------------------
-       PARTICIPANT
-       ------------------------- */
-
     participant_id:
       summary.participant_id,
 
-
     condition:
       summary.condition,
-
 
     site_order:
       summary.site_order
         .join(","),
 
-
     total_duration_ms:
       summary.total_duration_ms ??
       "",
 
-
     total_event_count:
       summary.total_event_count,
 
-
-    /* -------------------------
-       TASK TOTALS
-       ------------------------- */
 
     expected_task_count:
       summary
         .totals
         .expected_task_count,
 
-
     correct_task_count:
       summary
         .totals
         .correct_task_count,
 
-
     correct_information_task_count:
       summary
         .totals
         .correct_information_task_count,
-
 
     shopping_task_completed_count:
       summary
@@ -2428,27 +2327,20 @@ export function flattenResultsSummary(
         .shopping_task_completed_count,
 
 
-    /* -------------------------
-       COOKIE TOTALS
-       ------------------------- */
-
     cookie_decision_count:
       summary
         .totals
         .cookie_decision_count,
-
 
     cookie_change_count:
       summary
         .totals
         .cookie_change_count,
 
-
     cookie_settings_reopen_count:
       summary
         .totals
         .cookie_settings_reopen_count,
-
 
     cookie_settings_saved_unchanged_count:
       summary
@@ -2456,15 +2348,10 @@ export function flattenResultsSummary(
         .cookie_settings_saved_unchanged_count,
 
 
-    /* -------------------------
-       GENERAL TOTALS
-       ------------------------- */
-
     total_interaction_count:
       summary
         .totals
         .interaction_count,
-
 
     customise_open_count:
       summary
@@ -2472,27 +2359,20 @@ export function flattenResultsSummary(
         .customise_open_count,
 
 
-    /* -------------------------
-       SUGGESTIONS TOTALS
-       ------------------------- */
-
     suggestion_exposure_count:
       summary
         .totals
         .suggestion_exposure_count,
-
 
     suggestion_open_count:
       summary
         .totals
         .suggestion_open_count,
 
-
     suggestion_dismiss_count:
       summary
         .totals
         .suggestion_dismiss_count,
-
 
     suggestion_settings_open_count:
       summary
@@ -2500,15 +2380,36 @@ export function flattenResultsSummary(
         .suggestion_settings_open_count,
 
 
-    /* -------------------------
-       AUTOMATION TOTALS
-       ------------------------- */
+    tracking_event_count:
+      summary
+        .totals
+        .tracking_event_count,
+
+    tracking_recorded_count:
+      summary
+        .totals
+        .tracking_recorded_count,
+
+    tracking_blocked_count:
+      summary
+        .totals
+        .tracking_blocked_count,
+
+    tracking_preference_mismatch_count:
+      summary
+        .totals
+        .tracking_preference_mismatch_count,
+
+    tracking_disclosure_mismatch_count:
+      summary
+        .totals
+        .tracking_disclosure_mismatch_count,
+
 
     automation_review_count:
       summary
         .totals
         .automation_review_count,
-
 
     automation_override_count:
       summary
@@ -2517,10 +2418,6 @@ export function flattenResultsSummary(
 
   };
 
-
-  /* =======================================================
-     SITE-LEVEL VARIABLES
-     ======================================================= */
 
   SITE_IDS.forEach(
     siteId => {
@@ -2531,10 +2428,6 @@ export function flattenResultsSummary(
             siteId
           ];
 
-
-      /* -------------------------
-         TASK
-         ------------------------- */
 
       flattened[
         `${siteId}_task_correct`
@@ -2552,10 +2445,6 @@ export function flattenResultsSummary(
         "";
 
 
-      /* -------------------------
-         INTERFACE ASSIGNMENT
-         ------------------------- */
-
       flattened[
         `${siteId}_interface_condition`
       ] =
@@ -2571,10 +2460,6 @@ export function flattenResultsSummary(
           .phase ??
         "";
 
-
-      /* -------------------------
-         INITIAL COOKIE CHOICE
-         ------------------------- */
 
       flattened[
         `${siteId}_cookie_decision_made`
@@ -2624,13 +2509,6 @@ export function flattenResultsSummary(
         );
 
 
-      /* -------------------------
-         FINAL COOKIE CHOICE
-         ------------------------- */
-
-      /*
-       * Backwards-compatible aliases.
-       */
       flattened[
         `${siteId}_cookie_choice`
       ] =
@@ -2686,10 +2564,6 @@ export function flattenResultsSummary(
           site.cookie_final_advertising
         );
 
-
-      /* -------------------------
-         COOKIE CHANGE
-         ------------------------- */
 
       flattened[
         `${siteId}_cookie_choice_changed`
@@ -2760,10 +2634,6 @@ export function flattenResultsSummary(
         );
 
 
-      /* -------------------------
-         SETTINGS INTERACTION
-         ------------------------- */
-
       flattened[
         `${siteId}_customise_opened`
       ] =
@@ -2785,10 +2655,6 @@ export function flattenResultsSummary(
         site
           .cookie_settings_total_open_count;
 
-
-      /* -------------------------
-         COOKIE TIMING
-         ------------------------- */
 
       flattened[
         `${siteId}_cookie_decision_time_ms`
@@ -2821,10 +2687,6 @@ export function flattenResultsSummary(
           .task_progress_at_final_cookie_decision ??
         "";
 
-
-      /* -------------------------
-         SUGGESTIONS
-         ------------------------- */
 
       flattened[
         `${siteId}_suggestion_topic`
@@ -2950,6 +2812,108 @@ export function flattenResultsSummary(
 
 
       /* -------------------------
+         TRACKING GROUND TRUTH
+         ------------------------- */
+
+      flattened[
+        `${siteId}_tracking_event_count`
+      ] =
+        site
+          .tracking_event_count;
+
+
+      flattened[
+        `${siteId}_tracking_recorded_count`
+      ] =
+        site
+          .tracking_recorded_count;
+
+
+      flattened[
+        `${siteId}_tracking_blocked_count`
+      ] =
+        site
+          .tracking_blocked_count;
+
+
+      flattened[
+        `${siteId}_tracking_preference_mismatch`
+      ] =
+        encodeBoolean(
+          site.tracking_preference_mismatch
+        );
+
+
+      flattened[
+        `${siteId}_tracking_preference_mismatch_count`
+      ] =
+        site
+          .tracking_preference_mismatch_count;
+
+
+      flattened[
+        `${siteId}_tracking_disclosure_mismatch`
+      ] =
+        encodeBoolean(
+          site.tracking_disclosure_mismatch
+        );
+
+
+      flattened[
+        `${siteId}_tracking_disclosure_mismatch_count`
+      ] =
+        site
+          .tracking_disclosure_mismatch_count;
+
+
+      flattened[
+        `${siteId}_tracking_recorded_before_choice`
+      ] =
+        encodeBoolean(
+          site.tracking_recorded_before_choice
+        );
+
+
+      flattened[
+        `${siteId}_tracking_recorded_before_choice_count`
+      ] =
+        site
+          .tracking_recorded_before_choice_count;
+
+
+      flattened[
+        `${siteId}_tracking_ids`
+      ] =
+        site
+          .tracking_ids
+          .join(",");
+
+
+      flattened[
+        `${siteId}_tracking_data_categories`
+      ] =
+        site
+          .tracking_data_categories
+          .join(",");
+
+
+      flattened[
+        `${siteId}_tracking_purpose_classes`
+      ] =
+        site
+          .tracking_purpose_classes
+          .join(",");
+
+
+      flattened[
+        `${siteId}_tracking_behaviour_classifications`
+      ] =
+        site
+          .tracking_behaviour_classifications
+          .join(",");
+
+
+      /* -------------------------
          AUTOMATION
          ------------------------- */
 
@@ -3007,10 +2971,6 @@ export function flattenResultsSummary(
           .automation_override_count;
 
 
-      /* -------------------------
-         GENERAL SITE BEHAVIOUR
-         ------------------------- */
-
       flattened[
         `${siteId}_time_ms`
       ] =
@@ -3031,7 +2991,7 @@ export function flattenResultsSummary(
 
 
   /* =======================================================
-     SITE 3 — SHOPPING VARIABLES
+     SITE 3 SHOPPING
      ======================================================= */
 
   const shopping =
@@ -3147,12 +3107,6 @@ export function flattenResultsSummary(
    LEGACY QUALTRICS URL HELPER
    ========================================================= */
 
-/**
- * Convert the flattened summary to query parameters.
- *
- * We may later use postMessage instead, but preserving
- * this helper keeps the existing architecture compatible.
- */
 export function buildQualtricsUrl(
   baseUrl,
   summary

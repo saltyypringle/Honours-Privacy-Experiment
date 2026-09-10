@@ -20,18 +20,18 @@ const SUGGESTION_CONTEXTS = {
   initial_warning: {
     badge: "TRACKING + COOKIES",
     icon: "👀",
-    title: "Cookies can turn clicks into a profile",
+    title: "Website tracking is not always obvious",
     summary:
-      "Optional analytics and advertising cookies can record how you browse a site and help build a picture of your interests.",
+      "As you browse, this privacy tool may highlight tracking activity on the mock website and explain how it relates to your cookie preference.",
     chips: [
       "Browsing activity",
-      "Device signals",
-      "Interests"
+      "Cookie preferences",
+      "Tracking"
     ],
     impact:
-      "This can affect the ads, recommendations or content you are shown later.",
+      "Seeing what a website records can make it easier to understand what your privacy choice actually changes.",
     details:
-      "Analytics cookies can measure page views, clicks and other interactions. Advertising cookies can help connect activity across pages or services and infer what you may be interested in.",
+      "Some website tracking is expected and supports normal site functions. Other tracking is optional, used for analytics or advertising, or may not match the preference a user selected.",
     actionLabel: "See cookie options"
   },
 
@@ -75,39 +75,39 @@ const SUGGESTION_CONTEXTS = {
 
 
   account: {
-    badge: "ACCOUNT + COOKIES",
+    badge: "ACCOUNT ACTIVITY",
     icon: "🔗",
-    title: "Signing in can make activity easier to connect",
+    title: "Signing in can connect activity to an account",
     summary:
-      "When an account is involved, activity from separate visits can potentially be associated with the same profile rather than only one browser session.",
+      "A signed-in website can associate browsing or shopping activity with an account even when optional cookies are disabled.",
     chips: [
       "Account activity",
-      "Browsing history",
-      "Shopping behaviour"
+      "Shopping history",
+      "Signed-in session"
     ],
     impact:
-      "This can create a more continuous picture of what someone does across visits.",
+      "Not all website tracking depends on optional cookies. Some account-linked activity is part of providing the signed-in service.",
     details:
-      "Cookies can help recognise a browser. When that browser is also signed in, browsing and shopping interactions may be easier to associate with an account over time.",
+      "Cookie preferences mainly control particular browser-based tracking categories. Signing in can still let a website associate actions with an account through its own first-party systems.",
     actionLabel: "Review cookie settings"
   },
 
 
   delivery: {
-    badge: "LOCATION + COOKIES",
+    badge: "LOCATION USE",
     icon: "📍",
-    title: "A delivery location can add another piece to the profile",
+    title: "Location information can be reused for other purposes",
     summary:
-      "This mock checkout uses Perth, WA as its delivery location. With optional tracking enabled, location can be connected with shopping, account and checkout activity.",
+      "A delivery location may be needed to provide shipping, but the same information can also be reused for analytics, profiling or advertising.",
     chips: [
       "Perth, WA",
-      "Checkout activity",
-      "Shopping interests"
+      "Delivery context",
+      "Secondary use"
     ],
     impact:
-      "Location combined with browsing behaviour can create a more detailed picture of a user.",
+      "The privacy issue is not only what information is collected, but also whether it is used for a purpose the user expected or agreed to.",
     details:
-      "The study uses a fictional delivery location rather than your real address. In real websites, location-related information can be another signal that is combined with browsing or account activity.",
+      "This study uses the fixed fictional location Perth, WA 6000. No real participant location is collected. The mock site can therefore demonstrate secondary use without processing a participant's real address.",
     actionLabel: "Review cookie settings"
   }
 
@@ -1421,6 +1421,214 @@ function buildSuggestionChips(
 
 }
 
+/* =========================================================
+   TRACKING ACTIVITY CALLOUT
+   ========================================================= */
+
+function buildTrackingActivityHtml(
+  tracking
+) {
+
+  if (
+    !tracking ||
+    typeof tracking !==
+      "object"
+  ) {
+
+    return "";
+
+  }
+
+
+  const dataLabel =
+    tracking.dataLabel ||
+    "this activity";
+
+
+  const purpose =
+    tracking.purpose ||
+    "website tracking";
+
+
+  const cookieCategory =
+
+    tracking.cookieCategory
+
+      ? (
+
+          tracking.cookieCategory
+            .charAt(0)
+            .toUpperCase() +
+
+          tracking.cookieCategory
+            .slice(1)
+
+        )
+
+      : null;
+
+
+  let status =
+    "recorded";
+
+
+  let title =
+    "Tracking detected";
+
+
+  let message =
+    `This mock site recorded ${dataLabel.toLowerCase()} for ${purpose.toLowerCase()}.`;
+
+
+  /*
+   * The website attempted optional tracking, but the
+   * participant's preference prevented it.
+   */
+  if (
+    tracking.outcome ===
+    "blocked"
+  ) {
+
+    status =
+      "blocked";
+
+
+    title =
+      "Tracking attempt blocked";
+
+
+    if (
+      tracking.preferenceState ===
+      "no_cookie_decision"
+    ) {
+
+      message =
+        `This mock site attempted to record ${dataLabel.toLowerCase()}, but the optional ${tracking.cookieCategory || "tracking"} category had not been enabled.`;
+
+    }
+
+    else {
+
+      message =
+        `This mock site attempted to record ${dataLabel.toLowerCase()}, but your current ${tracking.cookieCategory || "cookie"} preference blocked it.`;
+
+    }
+
+  }
+
+
+  /*
+   * Most important experimental case:
+   *
+   * the participant disabled the relevant cookie category
+   * but the mock site recorded the activity anyway.
+   */
+  else if (
+    tracking.preferenceMismatch
+  ) {
+
+    status =
+      "mismatch";
+
+
+    title =
+      "Preference mismatch detected";
+
+
+    message =
+      `This mock site recorded ${dataLabel.toLowerCase()} even though ${cookieCategory || "the relevant optional tracking"} is turned off in your current preference.`;
+
+
+    if (
+      tracking.disclosureMismatch
+    ) {
+
+      message +=
+        " This use was also not explicitly described in the cookie message.";
+
+    }
+
+  }
+
+
+  /*
+   * The information was used for a secondary purpose that
+   * was not explicitly disclosed.
+   */
+  else if (
+    tracking.disclosureMismatch
+  ) {
+
+    status =
+      "unexpected";
+
+
+    title =
+      "Unexpected secondary use detected";
+
+
+    message =
+      `This mock site used ${dataLabel.toLowerCase()} for ${purpose.toLowerCase()}, a use that was not explicitly described in the cookie message.`;
+
+  }
+
+
+  /*
+   * Account/service activity that is not controlled by the
+   * optional-cookie preference.
+   */
+  else if (
+    tracking.consentRelevant ===
+    false
+  ) {
+
+    status =
+      "service";
+
+
+    title =
+      "Account-linked activity detected";
+
+
+    message =
+      `This mock site associated ${dataLabel.toLowerCase()} with the signed-in demo session. This can happen independently of optional-cookie settings.`;
+
+  }
+
+
+  /*
+   * Ordinary allowed tracking.
+   */
+  else if (
+    tracking.categoryAllowed ===
+    true
+  ) {
+
+    message +=
+      ` This is consistent with your current ${tracking.cookieCategory} setting.`;
+
+  }
+
+
+  return `
+    <div
+      class="experiment-contextual-privacy-tip__tracking"
+      data-status="${status}"
+    >
+
+      <strong>
+        ${title}
+      </strong>
+
+      <p>
+        ${message}
+      </p>
+
+    </div>
+  `;
+
+}
+
 
 /* =========================================================
    RENDER PRIVACY SUGGESTION
@@ -1447,6 +1655,10 @@ function renderPrivacySuggestion(
     SUGGESTION_CONTEXTS[
       contextName
     ];
+
+  const tracking =
+    metadata?.tracking ??
+    null;  
 
 
   if (
@@ -1515,6 +1727,15 @@ function renderPrivacySuggestion(
   suggestion.dataset.context =
     contextName;
 
+    if (
+      tracking?.behaviourClassification
+  ) {
+
+    suggestion.dataset.trackingStatus =
+      tracking.behaviourClassification;
+
+  }  
+
 
   suggestion.dataset.sequence =
     String(
@@ -1579,7 +1800,14 @@ function renderPrivacySuggestion(
         )
       }
 
-    </div>
+        </div>
+
+
+    ${
+      buildTrackingActivityHtml(
+        tracking
+      )
+    }
 
 
     <p class="experiment-contextual-privacy-tip__impact">
@@ -3124,10 +3352,13 @@ export function initialiseCookieInterface(
      INITIAL SUGGESTIONS WARNING
      ======================================================= */
 
-  if (
+    if (
     context
       .interfaceCondition ===
-    "suggestions"
+      "suggestions" &&
+
+    siteId ===
+      "site2"
   ) {
 
     handlePrivacyContext(

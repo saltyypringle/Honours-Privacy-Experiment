@@ -12456,3 +12456,101 @@ body[data-study-site]
     none !important;
 
 }
+
+/* =========================================================
+   CONTEXTUAL PRIVACY TIP — MOCK TRACKING STATUS
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+
+  border: 1px solid rgba(38, 42, 51, 0.16);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.72);
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking strong {
+  display: block;
+
+  margin: 0 0 4px;
+
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking p {
+  margin: 0 !important;
+
+  color: inherit !important;
+
+  font-size: 0.8rem;
+  line-height: 1.48;
+}
+
+
+/*
+ * Participant's preference successfully prevented the
+ * attempted optional tracking.
+ */
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking[
+  data-status="blocked"
+] {
+  border-color: rgba(38, 117, 74, 0.28);
+  background: rgba(234, 249, 239, 0.9);
+}
+
+
+/*
+ * Account/service activity that does not depend on
+ * optional-cookie settings.
+ */
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking[
+  data-status="service"
+] {
+  border-color: rgba(74, 91, 138, 0.26);
+  background: rgba(239, 243, 255, 0.9);
+}
+
+
+/*
+ * Secondary use that was not clearly disclosed.
+ */
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking[
+  data-status="unexpected"
+] {
+  border-color: rgba(169, 105, 19, 0.3);
+  background: rgba(255, 247, 226, 0.94);
+}
+
+
+/*
+ * Strongest experimental case:
+ * site behaviour conflicts with the selected preference.
+ */
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking[
+  data-status="mismatch"
+] {
+  border-color: rgba(169, 61, 61, 0.34);
+  background: rgba(255, 238, 238, 0.95);
+}
+
+
+@media (max-width: 700px) {
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__tracking {
+    padding: 10px 12px;
+  }
+
+}
