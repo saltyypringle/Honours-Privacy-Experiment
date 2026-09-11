@@ -1,0 +1,823 @@
+/* =========================================================
+   PRIVACY INTERFACE — RESPONSIVE OVERRIDES
+
+   Loaded automatically by cookie-interface.js.
+
+   Goals:
+   - keep Suggestions compact;
+   - stop the card becoming tall and empty;
+   - maintain a gap above the cookie banner;
+   - avoid overlap with full cookie settings;
+   - keep Sites 2 and 3 visually consistent;
+   - make warnings easy to scan.
+   ========================================================= */
+
+
+/* =========================================================
+   SHARED VARIABLES
+   ========================================================= */
+
+body[data-study-site] {
+  --privacy-ui-ink: #1f1b24;
+  --privacy-ui-muted: #5f5968;
+  --privacy-ui-border: rgba(35, 28, 46, 0.14);
+  --privacy-ui-shadow: 0 16px 42px rgba(26, 20, 38, 0.18);
+
+  --privacy-tip-bg: #f1e7ff;
+  --privacy-tip-accent: #7650c6;
+  --privacy-tip-accent-dark: #482778;
+  --privacy-tip-chip: rgba(255, 255, 255, 0.72);
+
+  --privacy-tip-bottom: 18px;
+  --privacy-tip-max-height: 500px;
+}
+
+
+/* =========================================================
+   MAIN SUGGESTIONS CARD
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip {
+  position: fixed !important;
+
+  top: auto !important;
+  right: auto !important;
+  bottom: var(--privacy-tip-bottom, 18px) !important;
+  left: clamp(14px, 2.2vw, 28px) !important;
+
+  z-index: 4700 !important;
+
+  display: block !important;
+
+  width: min(420px, calc(100vw - 32px)) !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: var(--privacy-tip-max-height, 500px) !important;
+
+  margin: 0 !important;
+  padding: 16px 17px 15px !important;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+
+  overscroll-behavior: contain;
+
+  box-sizing: border-box !important;
+
+  border: 2px solid var(--privacy-tip-accent) !important;
+  border-left-width: 6px !important;
+  border-radius: 16px !important;
+
+  background: var(--privacy-tip-bg) !important;
+  color: var(--privacy-ui-ink) !important;
+
+  box-shadow: var(--privacy-ui-shadow) !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  line-height: 1.4 !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+
+  transform: none !important;
+
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease !important;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+
+/*
+ * The older shared stylesheet contains positioning rules
+ * involving :has(...). These selectors deliberately have
+ * enough specificity to override those rules.
+ */
+body[data-study-site]:has(
+  .cookie-banner:not(.hidden)
+)
+.experiment-contextual-privacy-tip,
+body[data-study-site]:has(
+  .settings-panel.visible
+)
+.experiment-contextual-privacy-tip {
+  top: auto !important;
+  bottom: var(--privacy-tip-bottom, 18px) !important;
+}
+
+
+/*
+ * When the full cookie-settings panel is open, temporarily
+ * hide the Suggestions card.
+ *
+ * This avoids the large purple panel sitting directly on top
+ * of the large cookie-settings interface.
+ */
+body[data-study-site][data-cookie-settings-open="true"]
+.experiment-contextual-privacy-tip {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+
+  transform: translateY(8px) !important;
+}
+
+
+/* =========================================================
+   CONTEXT COLOURS
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[data-context="initial_warning"] {
+  --privacy-tip-bg: #fff3b7;
+  --privacy-tip-accent: #dca800;
+  --privacy-tip-accent-dark: #654b00;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[data-context="interest_browsing"] {
+  --privacy-tip-bg: #ffe6cf;
+  --privacy-tip-accent: #df6b2f;
+  --privacy-tip-accent-dark: #753316;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[data-context="product_browsing"] {
+  --privacy-tip-bg: #ffe1ee;
+  --privacy-tip-accent: #d84e83;
+  --privacy-tip-accent-dark: #742041;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[data-context="account"] {
+  --privacy-tip-bg: #eee2ff;
+  --privacy-tip-accent: #7650c6;
+  --privacy-tip-accent-dark: #482778;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[data-context="delivery"] {
+  --privacy-tip-bg: #d9f2f5;
+  --privacy-tip-accent: #218b99;
+  --privacy-tip-accent-dark: #075662;
+}
+
+
+/*
+ * Important outcomes override the normal context colour.
+ */
+body[data-study-site]
+.experiment-contextual-privacy-tip[
+  data-tracking-status="preference_inconsistent"
+] {
+  --privacy-tip-bg: #fff0f1;
+  --privacy-tip-accent: #c94b57;
+  --privacy-tip-accent-dark: #7c2831;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[
+  data-tracking-status="blocked_by_preference"
+] {
+  --privacy-tip-bg: #ebf8ef;
+  --privacy-tip-accent: #368456;
+  --privacy-tip-accent-dark: #245c3b;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[
+  data-tracking-status="not_explicitly_disclosed"
+] {
+  --privacy-tip-bg: #fff5dc;
+  --privacy-tip-accent: #c38322;
+  --privacy-tip-accent-dark: #71490d;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip[
+  data-tracking-status="service_related"
+] {
+  --privacy-tip-bg: #eee7ff;
+  --privacy-tip-accent: #6d54b8;
+  --privacy-tip-accent-dark: #423177;
+}
+
+
+/* =========================================================
+   TOP LINE
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__topline {
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  gap: 10px !important;
+
+  margin: 0 0 10px !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__badge-wrap {
+  display: flex !important;
+
+  align-items: center !important;
+
+  min-width: 0 !important;
+
+  gap: 8px !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__icon {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 auto !important;
+
+  width: 30px !important;
+  height: 30px !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 9px !important;
+
+  background: rgba(255, 255, 255, 0.76) !important;
+
+  box-shadow: 0 3px 8px rgba(20, 16, 30, 0.07) !important;
+
+  font-size: 0.95rem !important;
+  line-height: 1 !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__badge {
+  display: inline-flex !important;
+
+  align-items: center !important;
+
+  min-width: 0 !important;
+  min-height: 27px !important;
+
+  padding: 5px 10px !important;
+
+  overflow: hidden !important;
+
+  border: 1px solid var(--privacy-tip-accent) !important;
+  border-radius: 999px !important;
+
+  background: rgba(255, 255, 255, 0.58) !important;
+  color: var(--privacy-tip-accent-dark) !important;
+
+  font-size: 0.67rem !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+
+  letter-spacing: 0.07em !important;
+
+  text-overflow: ellipsis !important;
+  text-transform: uppercase !important;
+
+  white-space: nowrap !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip
+.experiment-contextual-privacy-tip__dismiss {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 auto !important;
+
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+  border-radius: 50% !important;
+
+  background: rgba(255, 255, 255, 0.52) !important;
+  color: var(--privacy-tip-accent-dark) !important;
+
+  box-shadow: none !important;
+
+  font-family:
+    Arial,
+    sans-serif !important;
+
+  font-size: 1.18rem !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+
+  cursor: pointer !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip
+.experiment-contextual-privacy-tip__dismiss:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+
+/* =========================================================
+   MAIN COPY
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__title {
+  margin: 0 0 7px !important;
+
+  color: var(--privacy-ui-ink) !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: clamp(1rem, 1.25vw, 1.18rem) !important;
+  font-weight: 850 !important;
+  line-height: 1.22 !important;
+
+  letter-spacing: -0.02em !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__summary {
+  margin: 0 0 10px !important;
+
+  color: var(--privacy-ui-ink) !important;
+
+  font-size: 0.84rem !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+}
+
+
+/* =========================================================
+   CHIPS
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__chips {
+  display: flex !important;
+
+  flex-wrap: wrap !important;
+
+  gap: 6px !important;
+
+  margin: 0 0 11px !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__chip {
+  display: inline-flex !important;
+
+  align-items: center !important;
+
+  min-height: 27px !important;
+
+  padding: 4px 9px !important;
+
+  border: 1px solid rgba(20, 20, 20, 0.12) !important;
+  border-radius: 999px !important;
+
+  background: var(--privacy-tip-chip) !important;
+  color: var(--privacy-ui-ink) !important;
+
+  box-shadow: none !important;
+
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+}
+
+
+/* =========================================================
+   ACTIONABLE PRIVACY ADVICE
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__advice {
+  margin: 0 0 11px !important;
+
+  padding: 10px 11px !important;
+
+  border: 1px solid rgba(124, 40, 49, 0.22) !important;
+  border-radius: 10px !important;
+
+  background: rgba(255, 255, 255, 0.68) !important;
+  color: #4e2026 !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__advice strong {
+  display: block !important;
+
+  margin: 0 0 3px !important;
+
+  color: #762d36 !important;
+
+  font-size: 0.76rem !important;
+  font-weight: 850 !important;
+  line-height: 1.3 !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__advice p {
+  margin: 0 !important;
+
+  color: #4e2026 !important;
+
+  font-size: 0.76rem !important;
+  font-weight: 500 !important;
+  line-height: 1.42 !important;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__actions {
+  display: flex !important;
+
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  flex-wrap: wrap !important;
+
+  gap: 8px 10px !important;
+
+  margin: 0 !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__learn {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: flex-start !important;
+
+  min-height: 34px !important;
+
+  margin: 0 !important;
+
+  padding: 5px 2px !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+
+  background: transparent !important;
+  color: var(--privacy-tip-accent-dark) !important;
+
+  box-shadow: none !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+
+  text-decoration: underline !important;
+  text-decoration-thickness: 1.5px !important;
+  text-underline-offset: 3px !important;
+
+  cursor: pointer !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip
+.experiment-contextual-privacy-tip__settings {
+  display: inline-flex !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 auto !important;
+
+  min-height: 38px !important;
+
+  margin: 0 !important;
+
+  padding: 8px 12px !important;
+
+  border: 2px solid var(--privacy-tip-accent-dark) !important;
+  border-radius: 8px !important;
+
+  background: var(--privacy-tip-accent-dark) !important;
+  color: #ffffff !important;
+
+  box-shadow: 0 4px 10px rgba(22, 17, 31, 0.13) !important;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 0.74rem !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+
+  white-space: nowrap !important;
+
+  cursor: pointer !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip
+.experiment-contextual-privacy-tip__settings:hover {
+  filter: brightness(0.95);
+}
+
+
+/* =========================================================
+   EXPANDED "WHY?" COPY
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__details {
+  margin: 11px 0 0 !important;
+
+  padding: 10px 0 0 !important;
+
+  border-top: 1px solid rgba(25, 20, 34, 0.13) !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__details[hidden] {
+  display: none !important;
+}
+
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__details p {
+  margin: 0 !important;
+
+  color: var(--privacy-ui-muted) !important;
+
+  font-size: 0.76rem !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+}
+
+
+/* =========================================================
+   OLD STATUS / IMPACT COMPONENTS
+
+   The current JS no longer uses these. Hiding them prevents
+   old cached styles or markup from creating duplicated boxes.
+   ========================================================= */
+
+body[data-study-site]
+.experiment-contextual-privacy-tip__impact,
+body[data-study-site]
+.experiment-contextual-privacy-tip__tracking {
+  display: none !important;
+}
+
+
+/* =========================================================
+   PERSISTENT COOKIE CONTROL
+   ========================================================= */
+
+body[data-study-site]
+.experiment-privacy-control {
+  z-index: 4400 !important;
+
+  height: auto !important;
+  min-height: 52px !important;
+
+  border-radius: 12px !important;
+
+  background: rgba(255, 255, 255, 0.98) !important;
+
+  box-shadow:
+    0 9px 26px
+    rgba(20, 16, 30, 0.14) !important;
+}
+
+
+body[data-study-site][data-cookie-settings-open="true"]
+.experiment-privacy-control {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+
+/* =========================================================
+   COOKIE BANNER
+   ========================================================= */
+
+body[data-study-site]
+.cookie-banner.hidden {
+  display: none !important;
+}
+
+
+/* =========================================================
+   TABLET / SMALL LAPTOP
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip {
+    left: 12px !important;
+
+    width:
+      min(
+        400px,
+        calc(100vw - 24px)
+      ) !important;
+
+    padding: 15px !important;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip {
+    left: 8px !important;
+    right: 8px !important;
+
+    width: auto !important;
+    max-width: none !important;
+
+    padding: 13px !important;
+
+    border-left-width: 5px !important;
+    border-radius: 13px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__topline {
+    margin-bottom: 8px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__title {
+    font-size: 1rem !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__summary {
+    margin-bottom: 8px !important;
+
+    font-size: 0.79rem !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__chips {
+    margin-bottom: 9px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__chip {
+    min-height: 25px !important;
+
+    padding: 4px 7px !important;
+
+    font-size: 0.65rem !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__advice {
+    margin-bottom: 9px !important;
+
+    padding: 9px 10px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__actions {
+    gap: 6px 8px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip
+  .experiment-contextual-privacy-tip__settings {
+    min-height: 36px !important;
+
+    padding: 7px 10px !important;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip {
+    left: 6px !important;
+    right: 6px !important;
+
+    padding: 12px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__badge {
+    max-width: 170px !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip__actions {
+    align-items: stretch !important;
+
+    flex-direction: column !important;
+  }
+
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip
+  .experiment-contextual-privacy-tip__settings {
+    width: 100% !important;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  body[data-study-site]
+  .experiment-contextual-privacy-tip,
+  body[data-study-site]
+  .experiment-privacy-control {
+    transition: none !important;
+  }
+
+}

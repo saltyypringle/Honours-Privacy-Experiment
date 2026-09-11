@@ -10,108 +10,455 @@ const CONSENT_STORAGE_PREFIX = "privacyExperimentConsent:";
 const BASELINE_SITES = new Set(["site1"]);
 const interfaceStates = new Map();
 
+const PRIVACY_STYLESHEET_ID =
+  "experimentPrivacyInterfaceStyles";
+
+const PRIVACY_STYLESHEET_HREF =
+  "css/privacy-interface.css";
+
+let privacyLayoutSyncQueued =
+  false;
+
+let privacyLayoutListenersReady =
+  false;
+
 
 /* =========================================================
    SUGGESTION CONTENT
+
+   Participant-facing wording is deliberately short.
+   The goal is quick attention and recall rather than
+   detailed technical explanation.
    ========================================================= */
 
 const SUGGESTION_CONTEXTS = {
 
   initial_warning: {
-    badge: "TRACKING + COOKIES",
+    badge: "PRIVACY TIP",
     icon: "👀",
-    title: "Website tracking is not always obvious",
+    title: "This site may track what you do",
     summary:
-      "As you browse, this privacy tool may highlight tracking activity on the mock website and explain how it relates to your cookie preference.",
+      "Clicks and browsing can be recorded to learn about your interests.",
     chips: [
-      "Browsing activity",
-      "Cookie preferences",
-      "Tracking"
+      "Clicks",
+      "Browsing",
+      "Interests"
     ],
-    impact:
-      "Seeing what a website records can make it easier to understand what your privacy choice actually changes.",
     details:
-      "Some website tracking is expected and supports normal site functions. Other tracking is optional, used for analytics or advertising, or may not match the preference a user selected.",
-    actionLabel: "See cookie options"
+      "Analytics can measure what you view and click. Advertising tools can use that activity to learn what may interest you.",
+    actionLabel: "Cookie settings"
   },
 
 
   interest_browsing: {
-    badge: "BROWSING + COOKIES",
+    badge: "TRACKING",
     icon: "🎯",
-    title: "Your clicks can reveal what interests you",
+    title: "This site tracked your clicks",
     summary:
-      "You just interacted with content on this site. If analytics or advertising cookies are enabled, those interactions can be recorded and used to infer the topics you care about.",
+      "Your activity can show what content you are interested in.",
     chips: [
-      "Content viewed",
       "Clicks",
-      "Inferred interests"
+      "Content",
+      "Interests"
     ],
-    impact:
-      "This can influence recommendations, personalised content or advertising.",
     details:
-      "A single click may not say much by itself, but repeated browsing signals can be combined into an interest profile over time.",
-    actionLabel: "Review cookie settings"
+      "Analytics can record page views and clicks. Advertising tools may use the same activity to personalise content or ads.",
+    actionLabel: "Cookie settings"
   },
 
 
   product_browsing: {
-    badge: "SHOPPING + COOKIES",
+    badge: "SHOPPING TRACKING",
     icon: "🛍️",
-    title: "Product views can become tracking signals",
+    title: "This site noticed what you viewed",
     summary:
-      "You just interacted with a product. With analytics or advertising cookies enabled, product views, clicks and cart activity can be recorded.",
+      "Product views can be used to work out what you like.",
     chips: [
-      "Products viewed",
+      "Product views",
       "Cart activity",
-      "Shopping interests"
+      "Interests"
     ],
-    impact:
-      "This can influence product recommendations and advertising based on your apparent shopping interests.",
     details:
-      "Shopping behaviour can reveal preferences even when you do not make a purchase. Tracking technologies can use those signals to estimate what products or categories may interest you.",
-    actionLabel: "Review cookie settings"
+      "Shopping sites can learn from the products you view or add to your cart, even when you do not buy anything.",
+    actionLabel: "Cookie settings"
   },
 
 
   account: {
     badge: "ACCOUNT ACTIVITY",
     icon: "🔗",
-    title: "Signing in can connect activity to an account",
+    title: "Your activity was linked to an account",
     summary:
-      "A signed-in website can associate browsing or shopping activity with an account even when optional cookies are disabled.",
+      "Signing in can connect what you do across different visits.",
     chips: [
-      "Account activity",
-      "Shopping history",
-      "Signed-in session"
+      "Account",
+      "Browsing",
+      "Shopping"
     ],
-    impact:
-      "Not all website tracking depends on optional cookies. Some account-linked activity is part of providing the signed-in service.",
     details:
-      "Cookie preferences mainly control particular browser-based tracking categories. Signing in can still let a website associate actions with an account through its own first-party systems.",
-    actionLabel: "Review cookie settings"
+      "A signed-in site can link actions to an account even when optional cookies are off.",
+    actionLabel: "Cookie settings"
   },
 
 
   delivery: {
     badge: "LOCATION USE",
     icon: "📍",
-    title: "Location information can be reused for other purposes",
+    title: "Your delivery location was used",
     summary:
-      "A delivery location may be needed to provide shipping, but the same information can also be reused for analytics, profiling or advertising.",
+      "A location given for delivery can also be used for other purposes, such as advertising.",
     chips: [
-      "Perth, WA",
-      "Delivery context",
-      "Secondary use"
+      "Location",
+      "Delivery",
+      "Advertising"
     ],
-    impact:
-      "The privacy issue is not only what information is collected, but also whether it is used for a purpose the user expected or agreed to.",
     details:
-      "This study uses the fixed fictional location Perth, WA 6000. No real participant location is collected. The mock site can therefore demonstrate secondary use without processing a participant's real address.",
-    actionLabel: "Review cookie settings"
+      "This experiment uses the fictional location Perth WA 6000. No real address or location is collected.",
+    actionLabel: "Cookie settings"
   }
 
 };
+
+
+/* =========================================================
+   PRIVACY INTERFACE STYLES + RESPONSIVE POSITIONING
+   ========================================================= */
+
+function ensurePrivacyInterfaceStylesheet() {
+
+  if (
+    document.getElementById(
+      PRIVACY_STYLESHEET_ID
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const link =
+    document.createElement(
+      "link"
+    );
+
+
+  link.id =
+    PRIVACY_STYLESHEET_ID;
+
+
+  link.rel =
+    "stylesheet";
+
+
+  link.href =
+    PRIVACY_STYLESHEET_HREF;
+
+
+  link.addEventListener(
+    "load",
+    schedulePrivacyLayoutSync
+  );
+
+
+  document.head.appendChild(
+    link
+  );
+
+}
+
+
+function elementIsVisible(
+  element
+) {
+
+  if (
+    !element ||
+    !element.isConnected
+  ) {
+
+    return false;
+
+  }
+
+
+  const style =
+    window.getComputedStyle(
+      element
+    );
+
+
+  if (
+    style.display ===
+      "none" ||
+    style.visibility ===
+      "hidden"
+  ) {
+
+    return false;
+
+  }
+
+
+  const rect =
+    element.getBoundingClientRect();
+
+
+  return (
+    rect.width >
+      0 &&
+    rect.height >
+      0
+  );
+
+}
+
+
+function syncPrivacyOverlayLayout() {
+
+  const body =
+    document.body;
+
+
+  if (
+    !body?.dataset?.studySite
+  ) {
+
+    return;
+
+  }
+
+
+  const viewportHeight =
+    window.innerHeight ||
+    document.documentElement.clientHeight ||
+    800;
+
+
+  const viewportWidth =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    1200;
+
+
+  const gap =
+    viewportWidth <=
+      700
+      ? 10
+      : 16;
+
+
+  const edge =
+    viewportWidth <=
+      700
+      ? 8
+      : 18;
+
+
+  let bottomClearance =
+    edge;
+
+
+  const cookieBanner =
+    document.getElementById(
+      "cookieBanner"
+    );
+
+
+  const privacyControl =
+    document.getElementById(
+      "persistentPrivacyControl"
+    );
+
+
+  const settingsOpen =
+    body.dataset
+      .cookieSettingsOpen ===
+    "true";
+
+
+  /*
+   * The full settings panel temporarily hides the tip, so
+   * there is no need to force both large interfaces into the
+   * same viewport space.
+   */
+  if (
+    !settingsOpen &&
+    elementIsVisible(
+      cookieBanner
+    )
+  ) {
+
+    const bannerRect =
+      cookieBanner
+        .getBoundingClientRect();
+
+
+    bottomClearance =
+      Math.max(
+        edge,
+        viewportHeight -
+          bannerRect.top +
+          gap
+      );
+
+  }
+
+  else if (
+    viewportWidth <=
+      760 &&
+    elementIsVisible(
+      privacyControl
+    )
+  ) {
+
+    const controlRect =
+      privacyControl
+        .getBoundingClientRect();
+
+
+    bottomClearance =
+      Math.max(
+        edge,
+        viewportHeight -
+          controlRect.top +
+          gap
+      );
+
+  }
+
+
+  const availableHeight =
+    Math.max(
+      190,
+      viewportHeight -
+        bottomClearance -
+        edge
+    );
+
+
+  const cardMaxHeight =
+    Math.min(
+      500,
+      availableHeight
+    );
+
+
+  body.style.setProperty(
+    "--privacy-tip-bottom",
+    `${Math.round(
+      bottomClearance
+    )}px`
+  );
+
+
+  body.style.setProperty(
+    "--privacy-tip-max-height",
+    `${Math.round(
+      cardMaxHeight
+    )}px`
+  );
+
+}
+
+
+function schedulePrivacyLayoutSync() {
+
+  if (
+    privacyLayoutSyncQueued
+  ) {
+
+    return;
+
+  }
+
+
+  privacyLayoutSyncQueued =
+    true;
+
+
+  window.requestAnimationFrame(
+    () => {
+
+      privacyLayoutSyncQueued =
+        false;
+
+
+      syncPrivacyOverlayLayout();
+
+    }
+  );
+
+}
+
+
+function initialisePrivacyLayoutSync(
+  elements
+) {
+
+  if (
+    privacyLayoutListenersReady
+  ) {
+
+    schedulePrivacyLayoutSync();
+
+
+    return;
+
+  }
+
+
+  privacyLayoutListenersReady =
+    true;
+
+
+  window.addEventListener(
+    "resize",
+    schedulePrivacyLayoutSync,
+    {
+      passive: true
+    }
+  );
+
+
+  if (
+    typeof ResizeObserver !==
+    "undefined"
+  ) {
+
+    const resizeObserver =
+      new ResizeObserver(
+        schedulePrivacyLayoutSync
+      );
+
+
+    if (
+      elements.banner
+    ) {
+
+      resizeObserver.observe(
+        elements.banner
+      );
+
+    }
+
+
+    if (
+      elements.settingsPanel
+    ) {
+
+      resizeObserver.observe(
+        elements.settingsPanel
+      );
+
+    }
+
+  }
+
+
+  schedulePrivacyLayoutSync();
+
+}
 
 
 /* =========================================================
@@ -456,12 +803,9 @@ function getConsentStorageKey(
 
 /* =========================================================
    HISTORICAL SUGGESTION STATE
-   =========================================================
-   This is what prevents suggestions appearing again after
-   a refresh.
 
-   Once a suggestion type has been shown on that site,
-   that context is considered used.
+   Prevents the same Suggestions context from appearing
+   again after a refresh.
    ========================================================= */
 
 function getHistoricalSuggestionState(
@@ -669,6 +1013,9 @@ function setBannerVisible(
     );
 
 
+    schedulePrivacyLayoutSync();
+
+
     return;
 
   }
@@ -689,6 +1036,9 @@ function setBannerVisible(
     "important"
   );
 
+
+  schedulePrivacyLayoutSync();
+
 }
 
 
@@ -704,6 +1054,16 @@ function setSettingsVisible(
       "visible",
       visible
     );
+
+
+  document.body.dataset
+    .cookieSettingsOpen =
+      visible
+        ? "true"
+        : "false";
+
+
+  schedulePrivacyLayoutSync();
 
 }
 
@@ -1032,6 +1392,9 @@ function removePersistentPrivacyControl() {
     )
     ?.remove();
 
+
+  schedulePrivacyLayoutSync();
+
 }
 
 
@@ -1121,6 +1484,9 @@ function showPersistentPrivacyControl(
   document.body.appendChild(
     control
   );
+
+
+  schedulePrivacyLayoutSync();
 
 
   control
@@ -1327,15 +1693,17 @@ function removePrivacySuggestion() {
     )
     ?.remove();
 
+
+  schedulePrivacyLayoutSync();
+
 }
 
 
 /*
- * Choosing a cookie preference removes the current
- * Suggestions card.
+ * Choosing a cookie preference removes the currently
+ * visible Suggestions card.
  *
- * Importantly, that context remains marked as "shown".
- * It cannot appear again afterwards.
+ * The context is still remembered as having been shown.
  */
 function hideSuggestionAfterCookieChoice(
   state
@@ -1421,13 +1789,36 @@ function buildSuggestionChips(
 
 }
 
+
 /* =========================================================
-   TRACKING ACTIVITY CALLOUT
+   TRACKING STATUS
+
+   The wording changes based on what the mock website
+   actually did.
+
+   This keeps the message simple and makes the important
+   privacy cases easy to remember.
    ========================================================= */
 
-function buildTrackingActivityHtml(
+function getSuggestionDisplay(
+  contextName,
   tracking
 ) {
+
+  const base =
+    SUGGESTION_CONTEXTS[
+      contextName
+    ];
+
+
+  if (
+    !base
+  ) {
+
+    return null;
+
+  }
+
 
   if (
     !tracking ||
@@ -1435,196 +1826,273 @@ function buildTrackingActivityHtml(
       "object"
   ) {
 
-    return "";
+    return {
+      ...base
+    };
 
   }
 
 
-  const dataLabel =
-    tracking.dataLabel ||
-    "this activity";
+  const isDeliveryLocation =
+    tracking.dataCategory ===
+    "mock_delivery_location";
 
 
-  const purpose =
-    tracking.purpose ||
-    "website tracking";
+  const isProductActivity =
+    tracking.dataCategory ===
+      "product_interest" ||
+    tracking.dataCategory ===
+      "cart_activity";
 
 
-  const cookieCategory =
+  /* =======================================================
+     PRIVACY CHOICE IGNORED
+     ======================================================= */
 
-    tracking.cookieCategory
+  if (
+    tracking.preferenceMismatch
+  ) {
 
-      ? (
+    return {
 
-          tracking.cookieCategory
-            .charAt(0)
-            .toUpperCase() +
+      ...base,
 
-          tracking.cookieCategory
-            .slice(1)
+      badge:
+        "PRIVACY WARNING",
 
-        )
+      icon:
+        "⚠️",
 
-      : null;
+      title:
+        "This site ignored your privacy choice",
+
+      summary:
+        isDeliveryLocation
+          ? "Advertising was off, but this mock site still used the delivery location for ads."
+          : "Tracking was turned off, but this mock site recorded the activity anyway.",
+
+      chips:
+        isDeliveryLocation
+          ? [
+              "Privacy choice",
+              "Location",
+              "Ads"
+            ]
+          : [
+              "Privacy choice",
+              "Tracking",
+              "Recorded"
+            ],
+
+      details:
+        "Cookie settings show what you want, but a site can still ignore them if it does not follow your choice.",
+
+      actionLabel:
+        "Check my settings"
+
+    };
+
+  }
 
 
-  let status =
-    "recorded";
+  /* =======================================================
+     TRACKING BLOCKED
+     ======================================================= */
 
-
-  let title =
-    "Tracking detected";
-
-
-  let message =
-    `This mock site recorded ${dataLabel.toLowerCase()} for ${purpose.toLowerCase()}.`;
-
-
-  /*
-   * The website attempted optional tracking, but the
-   * participant's preference prevented it.
-   */
   if (
     tracking.outcome ===
     "blocked"
   ) {
 
-    status =
-      "blocked";
+    return {
 
+      ...base,
 
-    title =
-      "Tracking attempt blocked";
+      badge:
+        "BLOCKED",
 
+      icon:
+        "✓",
 
-    if (
-      tracking.preferenceState ===
-      "no_cookie_decision"
-    ) {
+      title:
+        tracking.preferenceState ===
+          "no_cookie_decision"
+          ? "This tracking was blocked"
+          : isProductActivity
+            ? "Your settings blocked product tracking"
+            : "Your settings blocked this tracking",
 
-      message =
-        `This mock site attempted to record ${dataLabel.toLowerCase()}, but the optional ${tracking.cookieCategory || "tracking"} category had not been enabled.`;
+      summary:
+        tracking.preferenceState ===
+          "no_cookie_decision"
+          ? "The site tried to record this activity before you had allowed Analytics."
+          : isProductActivity
+            ? "The site tried to record your shopping activity, but Analytics was off."
+            : "The site tried to record this activity, but the matching cookie setting was off.",
 
-    }
+      chips:
+        isProductActivity
+          ? [
+              "Blocked",
+              "Analytics",
+              "Shopping"
+            ]
+          : [
+              "Blocked",
+              "Analytics"
+            ],
 
-    else {
+      details:
+        "In this mock site, the analytics tracker followed your cookie choice and did not record the activity.",
 
-      message =
-        `This mock site attempted to record ${dataLabel.toLowerCase()}, but your current ${tracking.cookieCategory || "cookie"} preference blocked it.`;
+      actionLabel:
+        "Cookie settings"
 
-    }
-
-  }
-
-
-  /*
-   * Most important experimental case:
-   *
-   * the participant disabled the relevant cookie category
-   * but the mock site recorded the activity anyway.
-   */
-  else if (
-    tracking.preferenceMismatch
-  ) {
-
-    status =
-      "mismatch";
-
-
-    title =
-      "Preference mismatch detected";
-
-
-    message =
-      `This mock site recorded ${dataLabel.toLowerCase()} even though ${cookieCategory || "the relevant optional tracking"} is turned off in your current preference.`;
-
-
-    if (
-      tracking.disclosureMismatch
-    ) {
-
-      message +=
-        " This use was also not explicitly described in the cookie message.";
-
-    }
+    };
 
   }
 
 
-  /*
-   * The information was used for a secondary purpose that
-   * was not explicitly disclosed.
-   */
-  else if (
+  /* =======================================================
+     INFORMATION REUSED FOR ANOTHER PURPOSE
+     ======================================================= */
+
+  if (
     tracking.disclosureMismatch
   ) {
 
-    status =
-      "unexpected";
+    return {
 
+      ...base,
 
-    title =
-      "Unexpected secondary use detected";
+      badge:
+        "PRIVACY NOTICE",
 
+      icon:
+        "↗",
 
-    message =
-      `This mock site used ${dataLabel.toLowerCase()} for ${purpose.toLowerCase()}, a use that was not explicitly described in the cookie message.`;
+      title:
+        "Your information was used in another way",
+
+      summary:
+        isDeliveryLocation
+          ? "The delivery location was needed for shipping, but this mock site also used it for advertising."
+          : "The site used this information for a purpose that was not clearly explained.",
+
+      chips:
+        isDeliveryLocation
+          ? [
+              "Location",
+              "Shipping",
+              "Advertising"
+            ]
+          : [
+              "Extra use",
+              "Privacy"
+            ],
+
+      details:
+        "Information given for one reason can sometimes be reused for another reason. The important question is whether that extra use was clear to you.",
+
+      actionLabel:
+        "Cookie settings"
+
+    };
 
   }
 
 
-  /*
-   * Account/service activity that is not controlled by the
-   * optional-cookie preference.
-   */
-  else if (
+  /* =======================================================
+     ACCOUNT-LINKED ACTIVITY
+     ======================================================= */
+
+  if (
     tracking.consentRelevant ===
     false
   ) {
 
-    status =
-      "service";
+    return {
 
+      ...base,
 
-    title =
-      "Account-linked activity detected";
+      badge:
+        "ACCOUNT ACTIVITY",
 
+      icon:
+        "🔗",
 
-    message =
-      `This mock site associated ${dataLabel.toLowerCase()} with the signed-in demo session. This can happen independently of optional-cookie settings.`;
+      title:
+        "Your activity was linked to an account",
+
+      summary:
+        "Signing in let this mock site connect shopping activity to the demo account.",
+
+      chips: [
+        "Account",
+        "Shopping",
+        "Linked"
+      ],
+
+      details:
+        "This kind of account activity can happen even when optional cookies are off because the site already knows which account is signed in.",
+
+      actionLabel:
+        "Cookie settings"
+
+    };
 
   }
 
 
-  /*
-   * Ordinary allowed tracking.
-   */
-  else if (
-    tracking.categoryAllowed ===
-    true
+  return {
+    ...base
+  };
+
+}
+
+
+/* =========================================================
+   ACTIONABLE ADVICE
+
+   Only appears when the website ignores the user's privacy
+   preference.
+
+   It is phrased as advice for a real website so we do not
+   encourage the participant to leave the experiment itself.
+   ========================================================= */
+
+function buildTrackingAdviceHtml(
+  tracking
+) {
+
+  if (
+    !tracking ||
+    tracking.preferenceMismatch !==
+      true
   ) {
 
-    message +=
-      ` This is consistent with your current ${tracking.cookieCategory} setting.`;
+    return "";
 
   }
 
 
   return `
+
     <div
-      class="experiment-contextual-privacy-tip__tracking"
-      data-status="${status}"
+      class="experiment-contextual-privacy-tip__advice"
+      role="note"
     >
 
       <strong>
-        ${title}
+        What can you do?
       </strong>
 
       <p>
-        ${message}
+        On a real site, share less personal information. If a site ignores your privacy choices and you do not trust it, consider leaving.
       </p>
 
     </div>
+
   `;
 
 }
@@ -1651,18 +2119,20 @@ function renderPrivacySuggestion(
   }
 
 
-  const definition =
-    SUGGESTION_CONTEXTS[
-      contextName
-    ];
-
   const tracking =
     metadata?.tracking ??
-    null;  
+    null;
+
+
+  const display =
+    getSuggestionDisplay(
+      contextName,
+      tracking
+    );
 
 
   if (
-    !definition
+    !display
   ) {
 
     return false;
@@ -1670,23 +2140,13 @@ function renderPrivacySuggestion(
   }
 
 
-  /* =======================================================
-     ANTI-SPAM RULE
-
-     Each privacy context can appear ONCE only.
-
-     Examples:
-       initial_warning    → once
-       interest_browsing  → once
-       product_browsing   → once
-       account            → once
-       delivery           → once
-
-     Closing it, choosing cookies, refreshing the page,
-     clicking again, focusing another field, etc. does not
-     reset it.
-     ======================================================= */
-
+  /*
+   * Each privacy context appears once only.
+   *
+   * Closing it, choosing cookies, refreshing the page,
+   * clicking again or focusing another field does not reset
+   * it.
+   */
   if (
     state.shownSuggestionContexts
       .has(
@@ -1704,8 +2164,8 @@ function renderPrivacySuggestion(
 
 
   /*
-   * A genuinely NEW context replaces any older visible
-   * suggestion that the participant has ignored.
+   * A genuinely new context replaces an older visible
+   * suggestion.
    */
   removePrivacySuggestion();
 
@@ -1727,14 +2187,15 @@ function renderPrivacySuggestion(
   suggestion.dataset.context =
     contextName;
 
-    if (
-      tracking?.behaviourClassification
+
+  if (
+    tracking?.behaviourClassification
   ) {
 
     suggestion.dataset.trackingStatus =
       tracking.behaviourClassification;
 
-  }  
+  }
 
 
   suggestion.dataset.sequence =
@@ -1746,7 +2207,7 @@ function renderPrivacySuggestion(
 
   suggestion.setAttribute(
     "aria-label",
-    "Tracking and cookie suggestion"
+    "Website privacy and tracking information"
   );
 
 
@@ -1760,66 +2221,49 @@ function renderPrivacySuggestion(
           class="experiment-contextual-privacy-tip__icon"
           aria-hidden="true"
         >
-          ${definition.icon}
+          ${display.icon}
         </span>
 
         <span class="experiment-contextual-privacy-tip__badge">
-          ${definition.badge}
+          ${display.badge}
         </span>
 
       </div>
-
 
       <button
         type="button"
         id="dismissPrivacySuggestion"
         class="experiment-contextual-privacy-tip__dismiss"
-        aria-label="Dismiss tracking insight"
+        aria-label="Dismiss privacy tip"
       >
         ×
       </button>
 
     </div>
 
-
     <h3 class="experiment-contextual-privacy-tip__title">
-      ${definition.title}
+      ${display.title}
     </h3>
 
-
     <p class="experiment-contextual-privacy-tip__summary">
-      ${definition.summary}
+      ${display.summary}
     </p>
-
 
     <div class="experiment-contextual-privacy-tip__chips">
 
       ${
         buildSuggestionChips(
-          definition.chips
+          display.chips
         )
       }
 
-        </div>
-
+    </div>
 
     ${
-      buildTrackingActivityHtml(
+      buildTrackingAdviceHtml(
         tracking
       )
     }
-
-
-    <p class="experiment-contextual-privacy-tip__impact">
-
-      <strong>
-        This may affect you:
-      </strong>
-
-      ${definition.impact}
-
-    </p>
-
 
     <div class="experiment-contextual-privacy-tip__actions">
 
@@ -1829,20 +2273,18 @@ function renderPrivacySuggestion(
         class="experiment-contextual-privacy-tip__learn"
         aria-expanded="false"
       >
-        Why does this matter?
+        Why?
       </button>
-
 
       <button
         type="button"
         id="privacySuggestionSettingsButton"
         class="experiment-contextual-privacy-tip__settings"
       >
-        ${definition.actionLabel}
+        ${display.actionLabel}
       </button>
 
     </div>
-
 
     <div
       id="privacySuggestionDetails"
@@ -1851,7 +2293,7 @@ function renderPrivacySuggestion(
     >
 
       <p>
-        ${definition.details}
+        ${display.details}
       </p>
 
     </div>
@@ -1864,11 +2306,11 @@ function renderPrivacySuggestion(
   );
 
 
+  schedulePrivacyLayoutSync();
+
+
   /*
-   * Mark it as used immediately.
-   *
-   * From this point onwards this context cannot be shown
-   * again on this site.
+   * Mark the context as used immediately.
    */
   state.shownSuggestionContexts
     .add(
@@ -1966,7 +2408,7 @@ function renderPrivacySuggestion(
         detailsButton.textContent =
           opening
             ? "Show less"
-            : "Why does this matter?";
+            : "Why?";
 
 
         detailsButton.setAttribute(
@@ -1989,6 +2431,9 @@ function renderPrivacySuggestion(
             true;
 
         }
+
+
+        schedulePrivacyLayoutSync();
 
 
         logInterfaceEvent(
@@ -2166,12 +2611,7 @@ function handlePrivacyContext(
 
 
   /*
-   * Do nothing at all for a context that has already
-   * appeared.
-   *
-   * This prevents repeated focus/click/input events from
-   * creating either UI spam or unnecessary privacy-context
-   * event spam.
+   * Avoid duplicate UI and duplicate context events.
    */
   if (
     state.shownSuggestionContexts
@@ -2220,7 +2660,7 @@ function handlePrivacyContext(
 
 
 /* =========================================================
-   PUBLIC CONTEXT HOOK
+   PUBLIC PRIVACY CONTEXT HOOK
    ========================================================= */
 
 export function setPrivacyContext(
@@ -2602,21 +3042,10 @@ function completeDecision(
   }
 
 
-  if (
-    isInitialDecision
-  ) {
-
-    state.initialDecisionAt =
-      nowMonotonic();
-
-  }
-
-
   /*
-   * Remove any currently visible Suggestions card.
+   * Remove the current suggestion after a cookie action.
    *
-   * Its context remains permanently recorded as already
-   * shown.
+   * Future new contexts can still appear.
    */
   hideSuggestionAfterCookieChoice(
     state
@@ -2663,6 +3092,9 @@ export function initialiseCookieInterface(
   siteId
 ) {
 
+  ensurePrivacyInterfaceStylesheet();
+
+
   const session =
     getSession();
 
@@ -2700,6 +3132,11 @@ export function initialiseCookieInterface(
   }
 
 
+  initialisePrivacyLayoutSync(
+    elements
+  );
+
+
   const historicalSuggestionState =
     getHistoricalSuggestionState(
       siteId
@@ -2718,9 +3155,6 @@ export function initialiseCookieInterface(
 
     interfaceInitialisedAt:
       nowMonotonic(),
-
-    initialDecisionAt:
-      null,
 
     settingsOpenedAt:
       null,
@@ -2756,12 +3190,6 @@ export function initialiseCookieInterface(
       historicalSuggestionState
         .exposureCount,
 
-    /*
-     * The important anti-spam state.
-     *
-     * Contexts reconstructed from existing events remain
-     * suppressed after a refresh.
-     */
     shownSuggestionContexts:
       new Set(
         historicalSuggestionState
@@ -3153,12 +3581,6 @@ export function initialiseCookieInterface(
     );
 
 
-    /*
-     * Do not automatically restore a Suggestions card.
-     *
-     * Only a privacy context that has NEVER been shown
-     * before may appear after the refresh.
-     */
     return;
 
   }
@@ -3348,11 +3770,12 @@ export function initialiseCookieInterface(
   );
 
 
-  /* =======================================================
-     INITIAL SUGGESTIONS WARNING
-     ======================================================= */
-
-    if (
+  /*
+   * Site 2 starts with one brief privacy tip.
+   *
+   * Site 3 waits for a real shopping interaction.
+   */
+  if (
     context
       .interfaceCondition ===
       "suggestions" &&
@@ -3415,5 +3838,13 @@ export function resetCookiePreferences(
       "cookieDecisionConfirmation"
     )
     ?.remove();
+
+
+  document.body.dataset
+    .cookieSettingsOpen =
+      "false";
+
+
+  schedulePrivacyLayoutSync();
 
 }
