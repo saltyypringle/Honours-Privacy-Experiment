@@ -105,7 +105,7 @@ Qualtrics survey responses are stored separately in Qualtrics. The participant i
 
 The GitHub source alone is **not sufficient** to recreate the full participant journey. A full handover also needs:
 
-1. The **Qualtrics `.qsf` export**, containing the survey questions, blocks, Survey Flow, and embedded-data configuration (but not participant responses).
+1. The **Qualtrics_Export `.qsf` export**, containing the survey questions, blocks, Survey Flow, and embedded-data configuration (but not participant responses).
 2. The Qualtrics-to-website launch configuration: the URL passes `pid` and `condition` as query parameters. Check the links and any account-specific settings after importing the `.qsf` file.
 3. A Cloudflare D1 database with the required table schema and an updated `database_id` in `wrangler.jsonc` for the new Cloudflare account.
 4. If needed for analysis, separately provided, appropriately de-identified Qualtrics response exports and D1 experiment records, subject to research ethics and data-management requirements.
